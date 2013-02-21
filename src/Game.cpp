@@ -1,0 +1,302 @@
+#include "Game.h"
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+Dijkstra* Game::path_control;
+std::map<int, Sprite*> Game::grid_control;
+TTF_Font* Game::standard_font_48;
+TTF_Font* Game::standard_font_46;
+TTF_Font* Game::standard_font_42;
+TTF_Font* Game::standard_font_32;
+TTF_Font* Game::standard_font_20;
+TTF_Font* Game::standard_font_18;
+TTF_Font* Game::standard_font_16;
+TTF_Font* Game::standard_font_12;
+
+
+//TODO Click here to come to the great TO-DO-list!
+
+//TODO 4/12  -10	Leta buggar(bara F11) med extrema värden. Sätt startpengar till 10000 t.ex.
+//TODO 5/12  -10	Different music for Menues and gameplay. Intromusic?
+//TODO 6/12  -10	Show the money earned when killing an enemy
+//TODO 7/12  -10    Set all kinds of pointers to NULL in game constructor (so they are nullpointers until Init is run
+
+Game::Game()
+{
+	level_control = new Level;
+	path_control = new Dijkstra;
+	FPS_MAX = 100;						//Defines max FPS. Slow computers may experience lower FPS though.
+	fullscreen = false;
+	game_running = true;
+	game_state = DEVSCREEN;			//In which state we start the game.
+	game_started = false;			//If false, display "Press enter to start"
+	current_selection = NULL;
+	timer = 0;
+	old_timer = 0;
+	current_fps = 0;
+
+	/* Flags */
+	building_flag = false;
+	grid_visible = true;
+	snap_to_grid = true;
+	option_box_visible = false;
+	music_enabled = true;
+	sound_enabled = true;
+
+	money = STARTING_MONEY;
+	score = 0;
+	lives = STARTING_LIVES;
+	playername = ""; 	//Set when entering highscore
+}
+Game::~Game(){
+	///Nothing needed in destructor. Cleanup is run at end of game.
+}
+
+
+
+
+int Game::get_grid_position(int mX, int mY)
+{
+	return mY * (GRIDWIDTH / TILESIZE) + mX;
+}
+
+void Game::snap_XY_to_grid(int &X, int &Y)
+{
+	X = (X - (X % TILESIZE));
+	Y = (Y - (Y % TILESIZE));
+
+}
+
+bool Game::read_highscores_from_file()
+{
+	if (!highscores.empty())
+		highscores.clear();
+
+	std::ifstream file_in;
+	file_in.open("highscore");
+	if (!file_in)
+		return false;
+
+	int score;
+	std::string name;
+
+	file_in >> score;
+	file_in.get();
+	while (getline(file_in, name))
+	{
+		highscores.push_back(new std::pair<int, std::string>(score, name));
+		file_in >> score;
+		file_in.get();
+	}
+
+	file_in.close();
+	return true;
+}
+
+int Game::get_highscore_pos()
+{
+	if(highscores.empty()) return 0;
+
+	for (unsigned int i = 0; i < 10 && i < highscores.size(); i++)
+	{
+		if (score > highscores[i]->first)
+		{
+			return i;
+		}
+	}
+
+	if(highscores.size() < 10)
+		return highscores.size();
+
+	else
+		return -1;
+}
+
+void Game::insert_new_highscore(int new_score, int position, std::string name)
+{
+
+
+	iter_highscore = highscores.begin();
+
+	for (int i = 0; i < position; i++)
+		iter_highscore++;
+
+	highscores.insert(iter_highscore, new std::pair<int, std::string>(new_score, name));
+}
+
+void Game::write_highscore_to_file()
+{
+	std::ofstream fout;
+	fout.open("highscore");
+
+	int score_count = 0;
+	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)
+	{
+		if (score_count == 10)
+			break;
+
+		fout << (*iter_highscore)->first << " " <<(*iter_highscore)->second << std::endl;
+
+		score_count++;
+	}
+}
+
+void Game::update_highscore_sprites()
+{
+	// Delete earlier sprites
+	if(!highscore_name_sprites.empty())
+		for(iter_highscore_name = highscore_name_sprites.begin(); iter_highscore_name != highscore_name_sprites.end(); iter_highscore_name++)
+		{
+			delete (*iter_highscore_name);
+		}
+
+	if(!highscore_score_sprites.empty())
+		for(iter_highscore_score = highscore_score_sprites.begin(); iter_highscore_score != highscore_score_sprites.end(); iter_highscore_score++)
+		{
+			delete (*iter_highscore_score);
+		}
+
+
+	highscore_name_sprites.clear();
+	highscore_score_sprites.clear();
+
+	//Error check!
+	if(!read_highscores_from_file()) {
+		error_loading_highscore->show();
+		return;
+	}
+	error_loading_highscore->hide();
+
+	std::string tmp_name = "";
+	std::string tmp_score = "";
+
+	int list_num = 1;
+	iter_highscore = highscores.begin();
+	iter_highscore_name = highscore_name_sprites.begin();
+	iter_highscore_score = highscore_score_sprites.begin();
+	while(iter_highscore != highscores.end())
+	{
+		{
+			std::ostringstream oss_name;
+			oss_name << conv_int_to_str(list_num) << ". " << (*iter_highscore)->second;
+			tmp_name = oss_name.str();
+
+			std::ostringstream oss_score;
+			oss_score << (*iter_highscore)->first;
+			tmp_score = oss_score.str();
+		}
+		if(list_num == 1) {
+			highscore_name_sprites.push_back(new Text(tmp_name, 186, 255, 246, 0, 0, standard_font_48));
+			highscore_score_sprites.push_back(new Text(tmp_score, 186, 255, 246, 0, 0, standard_font_48));
+		}
+		else
+		{
+			highscore_name_sprites.push_back(new Text(tmp_name, 167, 203, 237, 0, 0, standard_font_20));
+			highscore_score_sprites.push_back(new Text(tmp_score, 167, 203, 237, 0, 0, standard_font_20));
+		}
+
+
+
+		list_num++;
+		iter_highscore++;
+		iter_highscore_name++;
+		iter_highscore_score++;
+	}
+}
+
+void Game::show_intro(SDL_Event* event)
+{
+	unsigned int starttime = SDL_GetTicks();
+	while (game_state == DEVSCREEN)
+	{
+		render();
+		while (SDL_PollEvent(event))
+		{
+			if (event->type == SDL_QUIT)
+			{
+				game_running = false;
+				game_state = EXIT;
+				break;
+			}
+			else if (event->type == SDL_KEYDOWN)
+			{
+				if (event->key.keysym.sym == SDLK_ESCAPE)
+					game_state = INTROSCREEN;
+				if (event->key.keysym.sym == SDLK_SPACE)
+					game_state = INTROSCREEN;
+				if (event->key.keysym.sym == SDLK_F12)
+					toggle_fullscreen();
+			}
+		}
+
+		//Automaticly switch to Introscreen
+		if (SDL_GetTicks() > (starttime + 6000) && game_state == DEVSCREEN)
+			game_state = INTROSCREEN;
+	}
+
+	while (game_state == INTROSCREEN)
+	{
+		render();
+		while (SDL_PollEvent(event))
+		{
+			if (event->type == SDL_QUIT)
+			{
+				game_running = false;
+				game_state = EXIT;
+				break;
+			}
+			else if (event->type == SDL_KEYDOWN)
+				game_state = MAINMENU;
+		}
+	}
+}
+
+void Game::update_fps() {
+	if(fps_timer > SDL_GetTicks() ) {
+		current_fps++;
+	} else {
+		std::string tmp = "FPS: ";
+		fps_text->update_text(tmp.append(conv_int_to_str(current_fps)));
+		current_fps = 0;
+		fps_timer = SDL_GetTicks()+1000;
+	}
+}
+
+int Game::on_execute()
+{
+	/**
+	 * This is the function that runs the game.
+	 * It contains the initializing phase, the game loop and finally the cleanup process.
+	 */
+	if (init() == false)
+		return -1;
+
+	SDL_Event event;
+
+	/* Introscreen */
+	show_intro(&event);
+
+	/* Game */
+	fps_timer = SDL_GetTicks() + 1000;
+
+	while (game_running)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			handle_event(&event);
+		}
+
+		if (game_state == GAMEPLAY_RUNNING)
+			update_state();
+
+		update_fps();
+		render();
+	}
+	/* End Game */
+
+	cleanup();
+	return 0;
+}
+

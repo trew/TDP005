@@ -1,0 +1,10 @@
+Debug/
+dll/
+.settings/
+.cproject
+.project
+TDP005.rar
+*.swp
+highscore
+
+*.o
