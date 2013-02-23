@@ -72,17 +72,20 @@ void Game::upgrade_tower(int tower_type)
 {
 	if (tile_selection != NULL)
 	{
-		if (money < tile_selection->get_tower()->get_cost_upgrade())
+		Tower* tower = tile_selection->get_tower();
+		if (tower == NULL) return;
+
+		if (money < tower->get_cost_upgrade())
 			return;
 
-		int cost = tile_selection->get_tower()->get_cost_upgrade();
-		if (!tile_selection->get_tower()->upgrade(tower_type))
+		int cost = tower->get_cost_upgrade();
+		if (!tower->upgrade(tower_type))
 			return;
 		money -= cost;
-		tile_selection->get_tower()->add_to_sell_value(cost);
+		tower->add_to_sell_value(cost);
 		update_money();
 		SFX_upgrade->play();
-		set_selection_info(tile_selection->get_tower());
+		set_selection_info(tower);
 		if (tower_type > 0)
 			hide_option_box();
 		else
