@@ -90,8 +90,7 @@ void Game::select(Tile* tile)
 
 	tower = tile_selection->get_tower();
 
-	if (!building_flag)
-		selection_sprite->show();
+	selection_sprite->show();
 	selection_sprite->set_x_pos(tile_selection->get_x_pixel_pos() - 2);
 	selection_sprite->set_y_pos(tile_selection->get_y_pixel_pos() - 2);
 	if (tower != NULL)
@@ -108,6 +107,7 @@ void Game::select_from_buildmenu(Tower* tower) {
 	}
 
 	buildmenu_selection = tower;
+	selection_sprite->show();
 	selection_sprite->set_x_pos(buildmenu_selection->get_x_pos() - 2);
 	selection_sprite->set_y_pos(buildmenu_selection->get_y_pos() - 2);
 	tower->set_selected();
