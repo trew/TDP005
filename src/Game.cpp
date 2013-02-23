@@ -30,8 +30,12 @@ Game::Game()
 	game_state = DEVSCREEN;			//In which state we start the game.
 	game_started = false;			//If false, display "Press enter to start"
 	tile_selection = NULL;
+	last_selected_tile = NULL;
+	update_enemy_path = false;
+	old_game_state = 0;
 	timer = 0;
 	old_timer = 0;
+	fps_timer = 0;
 	current_fps = 0;
 
 	/* Flags */
@@ -46,6 +50,22 @@ Game::Game()
 	score = 0;
 	lives = STARTING_LIVES;
 	playername = ""; 	//Set when entering highscore
+
+	// initialize pointers to null
+	SFX_build = SFX_cant_build = SFX_game_over = SFX_life_lost = SFX_new_highscore = SFX_sell = SFX_upgrade = music = NULL;
+	menu_build = menu_background = split_money_score = menu_money_score = menu_upgrade = menu_lives = menu_info = NULL;
+	option_box_BGx1 = option_box_BGx2 = option_box_BGx3 = option_box_BGx4 = option_box_BGx5 = option_box_BGx6 = NULL;
+	selection_sprite = free_spot = not_free_spot = NULL;
+	map_exit = map_wall = map_grid = map_entrance = map = NULL;
+	grid = NULL;
+	fps_text = timer_text = NULL;
+	intro_screen = highscore_screen = ingame_menu_screen = main_menu_screen = dev_screen = introduction_screen = gameover_screen = NULL;
+	press_enter_to_start = NULL;
+	error_loading_highscore = NULL;
+	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
+	buildmenu_selection = NULL;
+	screen = NULL;
+	esc_back = NULL;
 }
 
 Game::~Game(){
