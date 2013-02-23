@@ -23,7 +23,7 @@ void Level::reset() {
 	wave_start_delay = 0;
 }
 
-void Level::compose_new_wave() {
+void Level::compose_new_wave(Grid* grid) {
 	int amount_of_enemies = 15;
 	int enemy_type = 0;
 	int enemy_type_range;
@@ -35,11 +35,11 @@ void Level::compose_new_wave() {
 		pos = -(prev_pos + (rand() % 25) +15);
 		enemy_type = ENEMY + (rand() % enemy_type_range)+1;
 		Enemy* new_enemy;
-		new_enemy = new Enemy(enemy_type, pos, 7*TILESIZE,30, 30, current_level);
+		new_enemy = new Enemy(grid, enemy_type, pos, 7*TILESIZE,30, 30, current_level);
 		if(current_level % 5 == 0) {
 			enemy_type = ENEMY_BOSS;
 			delete new_enemy; new_enemy = NULL;
-			new_enemy = new Enemy(enemy_type, pos, 7*TILESIZE,30, 30, current_boss_level);
+			new_enemy = new Enemy(grid, enemy_type, pos, 7*TILESIZE,30, 30, current_boss_level);
 			amount_of_enemies = 0;
 			current_boss_level++;
 		}
@@ -50,10 +50,10 @@ void Level::compose_new_wave() {
 	}
 }
 
-Sprite_List Level::get_new_wave() {
+EnemyList Level::get_new_wave(Grid* grid) {
 	enemies_in_wave.clear();
 	current_level++;
-	compose_new_wave();
+	compose_new_wave(grid);
 	last_enemy_sent = false;
 	return enemies_in_wave;
 }

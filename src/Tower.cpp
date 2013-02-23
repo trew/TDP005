@@ -14,6 +14,7 @@
 #include <iostream>
 #include "Projectile.h"
 #include "Tower_Specifics.h"
+#include "Game.h"
 
 /*
  * Constructors / Deconstructors
@@ -21,13 +22,15 @@
 #include <list>
 using namespace std;
 
-Tower::Tower(int new_type, int x, int y)
+Tower::Tower(int new_type, Tile* tile): tile(tile)
 {
 	infosprites.clear(); //Make sure it's empty
 	base_surf = NULL;
 	cannon_surf = NULL;
-	x_pos = x;
-	y_pos = y;
+	if (tile != NULL) {
+		x_pos = tile->get_x_pixel_pos();
+		y_pos = tile->get_y_pixel_pos();
+	}
 	type = new_type;
 	height = 40;
 	width = 40;
@@ -431,7 +434,7 @@ bool Tower::target_in_sight()
 		return false;
 }
 
-void Tower::find_new_target(Sprite_List &object_list)
+void Tower::find_new_target(EnemyList &object_list)
 {
 	/**
 	 * Finds a new target for the tower if it has no current target
@@ -440,9 +443,9 @@ void Tower::find_new_target(Sprite_List &object_list)
 
 	if (current_target == NULL || get_distance_to(current_target) > range)
 	{
-		Sprite *closest_object = NULL;
+		Enemy* closest_object = NULL;
 		int closest_distance = 99999;
-		Sprite_List::iterator iter_object;
+		EnemyList::iterator iter_object;
 		for (iter_object = object_list.begin(); iter_object != object_list.end(); iter_object++)
 		{
 			if (get_distance_to(*iter_object) < closest_distance)
@@ -485,30 +488,20 @@ void Tower::shoot(Sprite_List &object_list)
 	 * The type of projectile being shot depends on the type of the tower.
 	 */
 
-	switch (type)
-	{
-	// Base
-	case TOWER_BASE:
+	if (type == TOWER_BASE) {
 		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
-		break;
-
-	case TOWER_BASIC_LEVEL_1 ... TOWER_BASIC_LEVEL_3:
+	}
+	else if (type >= TOWER_BASIC_LEVEL_1 && type <= TOWER_BASIC_LEVEL_3) {
 		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
-		break;
-
-	case TOWER_SPEED_LEVEL_1 ... TOWER_SPEED_LEVEL_3:
+	}
+	else if (type >= TOWER_SPEED_LEVEL_1 && type <= TOWER_SPEED_LEVEL_3) {
 		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-speed.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
-		break;
-
-	case TOWER_RANGE_LEVEL_1 ... TOWER_RANGE_LEVEL_3:
+	}
+	else if (type >= TOWER_RANGE_LEVEL_1 && type <= TOWER_RANGE_LEVEL_3) {
 		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-range.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
-		break;
-
-	case TOWER_BOMB_LEVEL_1 ... TOWER_BOMB_LEVEL_3:
+	}
+	else if (type >= TOWER_BOMB_LEVEL_1 && type <= TOWER_BOMB_LEVEL_3) {
 		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-bomb.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 30, 4000));
-		break;
-	default:
-		break;
 	}
 }
 
@@ -533,11 +526,11 @@ void Tower::null_current_target()
 	current_target = NULL;
 }
 
-void Tower::update_boost(Sprite_List &tower_list)
+void Tower::update_boost(TowerList &tower_list)
 {
 	///Does a check to see if the current tower is in the range of a boost-tower and should get boosted.
 
-	Sprite_List::iterator iter_object = tower_list.begin();
+	TowerList::iterator iter_object = tower_list.begin();
 
 	int old_boost_percent = boost_percentage;
 
@@ -568,11 +561,11 @@ void Tower::update_boost(Sprite_List &tower_list)
 	}
 }
 
-void Tower::update(Sprite_List &enemy_list)
+void Tower::update(EnemyList &enemy_list)
 {
 	///Updates the state of the current tower which includes rotating, reloading and finding new targets.
 
-	Sprite_List::iterator iter_object = enemy_list.begin();
+	EnemyList::iterator iter_object = enemy_list.begin();
 
 	//
 	if (!enemy_list.empty() && (*iter_object)->get_type() >= ENEMY && (*iter_object)->get_type() < PROJECTILE)
@@ -933,25 +926,33 @@ int Tower::get_cost_upgrade()
 
 std::string Tower::get_type_str()
 {
-	switch (type)
-	{
-	case TOWER_WALL:
+	if (type == TOWER_WALL) {
 		return "Wall";
-	case TOWER_BASE:
-		return "Base Tower";
-	case TOWER_BASIC_LEVEL_1 ... TOWER_BASIC_LEVEL_3:
-		return "Basic Tower";
-	case TOWER_SPEED_LEVEL_1 ... TOWER_SPEED_LEVEL_3:
-		return "Speed Tower";
-	case TOWER_RANGE_LEVEL_1 ... TOWER_RANGE_LEVEL_3:
-		return "Range Tower";
-	case TOWER_BOMB_LEVEL_1 ... TOWER_BOMB_LEVEL_3:
-		return "Bomb Tower";
-	case TOWER_BOOST_LEVEL_1 ... TOWER_BOOST_LEVEL_3:
-		return "Booster Tower";
-	default:
-		return "";
 	}
+	else if (type == TOWER_BASE) {
+		return "Base Tower";
+	}
+	else if (type >= TOWER_BASIC_LEVEL_1 && type <= TOWER_BASIC_LEVEL_3) {
+		return "Basic Tower";
+	}
+	else if (type >= TOWER_SPEED_LEVEL_1 && type <= TOWER_SPEED_LEVEL_3) {
+		return "Speed Tower";
+	}
+	else if (type >= TOWER_RANGE_LEVEL_1 && type <= TOWER_RANGE_LEVEL_3) {
+		return "Range Tower";
+	}
+	else if (type >= TOWER_BOMB_LEVEL_1 && type <= TOWER_BOMB_LEVEL_3) {
+		return "Booster Tower";
+	}
+	return "";
+}
+
+void Tower::set_tile(Tile* _tile) {
+	tile = _tile;
+}
+
+Tile* Tower::get_tile() {
+	return tile;
 }
 
 std::string Tower::conv_int_to_string(int i)

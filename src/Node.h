@@ -10,9 +10,10 @@
 
 #include <vector>
 
-class Edge;
-typedef std::vector<Edge*> edge_graph;
-
+class Node;
+typedef std::vector<Node*> NodeVector;
+typedef std::pair<Node*, Node*> NodePair;
+typedef std::pair<int, int> GridPosition;
 
 /** \brief Node class
  *
@@ -21,12 +22,8 @@ typedef std::vector<Edge*> edge_graph;
 
 class Node {
 public:
-	Node(int);	///Constructor
+	Node();
 	virtual ~Node();	///Destructor
-
-	void add_edge(Edge*);	///Add new edge
-
-	int get_ID();			///Returns ID of node
 
 	void set_allowed(bool new_val);		///Set node allowed
 	bool is_allowed();					///Is node allowed to walk on?
@@ -37,12 +34,13 @@ public:
 	int get_cost_from_start();			///Returns cost from start
 	void set_cost_from_start(int new_cost);	///Set new cost from start
 
-    edge_graph my_edges;				///List of connecting edges
+    NodeVector get_neighbors();
+    void add_neighbor(Node*);
 private:
-	Node* parent;
-	int ID;
+	Node* parent; ///< Used for the Dijkstra algorithm
 	int cost_from_start;
-
     bool allowed;
+
+	NodeVector neighbors;
 };
 #endif /* NODE_H_ */

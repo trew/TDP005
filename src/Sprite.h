@@ -16,7 +16,14 @@
 #include <string>
 
 class Sprite;
+class Tower;
+class Enemy;
+class Projectile;
 typedef std::list<Sprite*> Sprite_List;
+typedef std::list<Tower*> TowerList;
+typedef std::list<Enemy*> EnemyList;
+typedef std::list<Projectile*> ProjectileList;
+typedef std::pair<int, int> GridPosition;
 
 /** \brief Sprites are the graphic objects of the game
  *
@@ -25,13 +32,15 @@ typedef std::list<Sprite*> Sprite_List;
  *
  */
 
-
+class Game;
 class Sprite {
 public:
 	/* Constructor & destructor */
 	Sprite();			///<Default Constructor
-	Sprite(std::string File, int x, int y, int w, int h);	///<Constructor using file and position
+	Sprite(Game* game, std::string File, int x, int y, int w, int h);	///<Constructor using file and position
 	virtual ~Sprite();	///<Destructor
+
+	Game* get_game();
 
 	/* Sprite specific functions */
 	SDL_Surface* load_image(std::string file);	///<<Load image from file
@@ -87,8 +96,7 @@ public:
 	virtual bool is_killed();///<Pure virtual
 	virtual bool has_reached_goal();///<Pure virtual
 	virtual void update_path();///<Pure virtual
-	virtual bool can_update_path();///<Pure virtual
-	std::pair<int, int> get_current_destination(); ///<Pure virtual
+	virtual bool try_update_path();///<Pure virtual
 	virtual int get_reward_money();	///<Pure virtual
 	virtual int get_reward_score();	///<Pure virtual
 
@@ -103,7 +111,6 @@ public:
 
 
 protected:
-	std::pair<int, int> current_destination;	///<Current destination of enemy
 	SDL_Surface* sprite_surf;					///<Surface containing the image
 	int type;									///<Current type
 	int x_pos;									///<X position
@@ -115,6 +122,8 @@ protected:
 	std::vector<Sprite*> infosprites;			///<List of all Textsprites
 	Sprite_List visible_infosprites;			///<List containing those textsprites that are currently visible
 
+private:
+	Game* game;
 };
 
 #endif /* SPRITE_H_ */

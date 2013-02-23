@@ -104,11 +104,11 @@ void Game::draw_selection()
 {
 	selection_sprite->draw(screen);
 
-	if(selection.empty())
+	if(selection_text.empty())
 		return;
 
 	//Draw selection and/or display info about current selection
-	for (iter_sel = selection.begin(); iter_sel != selection.end(); iter_sel++)
+	for (iter_sel = selection_text.begin(); iter_sel != selection_text.end(); iter_sel++)
 	{
 		(*iter_sel)->draw(screen);
 	}
@@ -129,7 +129,7 @@ void Game::draw_boost_connections()
 	{
 		if ((*iter_tower)->get_type() == TOWER_BOOST_LEVEL_1 || (*iter_tower)->get_type() == TOWER_BOOST_LEVEL_2 || (*iter_tower)->get_type() == TOWER_BOOST_LEVEL_3)
 
-			for (Sprite_List::iterator iter_tower_2 = tower_list.begin(); iter_tower_2 != tower_list.end(); iter_tower_2++)
+			for (TowerList::iterator iter_tower_2 = tower_list.begin(); iter_tower_2 != tower_list.end(); iter_tower_2++)
 			{
 				if ((*iter_tower_2)->get_type() >= TOWER_BASE && (*iter_tower_2)->get_type() < TOWER_BOOST_LEVEL_1)
 				{
@@ -173,7 +173,7 @@ void Game::draw_menu_towers()
 void Game::draw_build_item()
 {
 	// Draw selected builditem and buildability-color.
-	if (current_selection != NULL && current_selection->get_type() < ENEMY && building_flag == true)
+	if (buildmenu_selection != NULL && building_flag == true)
 	{
 		int m_x, m_y;
 		SDL_GetMouseState(&m_x, &m_y);
@@ -181,6 +181,7 @@ void Game::draw_build_item()
 		int pos_y = m_y;
 		int snap_x = m_x;
 		int snap_y = m_y;
+		Tile* hovered_tile = grid->get_tile_from_mouse(m_x, m_y);
 		snap_XY_to_grid(snap_x, snap_y);
 		if (!snap_to_grid)
 		{
@@ -194,31 +195,31 @@ void Game::draw_build_item()
 
 		if (m_x < GRIDWIDTH)
 		{
-			if (grid_control[get_grid_position(snap_x, snap_y)] == NULL)
+			if (hovered_tile->get_tower() == NULL)
 			{
 				//There is no tower, draw green square
-				current_selection->draw(screen, pos_x, pos_y);
-				current_selection->display_range(screen, pos_x, pos_y);
-				if (money >= current_selection->get_cost_buy())
+				buildmenu_selection->draw(screen, pos_x, pos_y);
+				buildmenu_selection->display_range(screen, pos_x, pos_y);
+				if (money >= buildmenu_selection->get_cost_buy())
 					free_spot->draw(screen, pos_x, pos_y);
 				else
 					not_free_spot->draw(screen, pos_x, pos_y);
 			}
-			else if (grid_control[get_grid_position(snap_x, snap_y)] != NULL)
+			else if (hovered_tile->get_tower() != NULL)
 			{
 				//There is tower here, draw red square
 				//Don't draw tower if there is tower of same type
-				if (current_selection->get_type() != grid_control[get_grid_position(snap_x, snap_y)]->get_type())
+				if (buildmenu_selection->get_type() != hovered_tile->get_tower()->get_type())
 				{
-					current_selection->draw(screen, pos_x, pos_y);
+					buildmenu_selection->draw(screen, pos_x, pos_y);
 				}
-				current_selection->display_range(screen, pos_x, pos_y);
+				buildmenu_selection->display_range(screen, pos_x, pos_y);
 				not_free_spot->draw(screen, pos_x, pos_y);
 			}
 		}
 		else
 		{
-			current_selection->draw(screen, m_x - 20, m_y - 20);
+			buildmenu_selection->draw(screen, m_x - 20, m_y - 20);
 		}
 	}
 }

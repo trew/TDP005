@@ -5,6 +5,7 @@
  *      Author: samuel
  */
 #include "Game.h"
+
 bool Game::init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -27,7 +28,7 @@ bool Game::init()
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 		return false;
 
-	SDL_WM_SetCaption("Tower Defence Pro 1.0 (Build 1.00.0000.000) © 2010 A15 Entertainment", NULL);
+	SDL_WM_SetCaption("Tower Defence Pro 1.1 (Build 1.10.0000.000) © 2010 A15 Entertainment", NULL);
 	SDL_EnableKeyRepeat(400, 70);
 	SDL_EnableUNICODE(SDL_ENABLE);
 
@@ -50,28 +51,35 @@ bool Game::init()
 	press_enter_to_start = new Text("Deploy towers, then press enter to start", 70, 550, standard_font_32);
 	esc_back = new Text("Esc (back)", 520, 555, standard_font_32);
 
+	grid = new Grid;
+	grid->create_grid(15, 15);
+	grid->set_portal_tile(grid->get_tile(GridPosition(7, 14)));
+//	grid->add_tile(GridPosition(7, -1));
+	grid->set_start_tile(grid->get_tile(GridPosition(7, 0)));
+//	grid->get_start_tile()->add_neighbor(grid->get_tile(GridPosition(7, 0)));
+//	grid->get_tile(GridPosition(7, 0))->add_neighbor(grid->get_start_tile());
 
-	map = new Sprite(				"./gfx/map/map.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
-	map_grid = new Sprite(			"./gfx/map/map-grid.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
-	map_wall = new Sprite(			"./gfx/map/map-wall.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
-	map_entrance = new Sprite(		"./gfx/map/map-entrance.png", 0, 280, TILESIZE, TILESIZE);
-	map_exit = new Sprite(			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
+	map = new Sprite(this, 				"./gfx/map/map.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
+	map_grid = new Sprite(this, 			"./gfx/map/map-grid.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
+	map_wall = new Sprite(this, 			"./gfx/map/map-wall.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
+	map_entrance = new Sprite(this, 		"./gfx/map/map-entrance.png", 0, 280, TILESIZE, TILESIZE);
+	map_exit = new Sprite(this, 			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
 
-	dev_screen = new Sprite(		"./gfx/intro/devscreen.png", 0, 0, WWIDTH, WHEIGHT);
-	intro_screen = new Sprite(		"./gfx/intro/introscreen.png", 0, 0, WWIDTH, WHEIGHT);
-	introduction_screen = new Sprite("./gfx/intro/introductscreen.png", 0, 0, WWIDTH, WHEIGHT);
-	main_menu_screen = new Sprite(	"./gfx/menu/mainmenu.png", 0, 0, WWIDTH, WHEIGHT);
-	highscore_screen = new Sprite(	"./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
-	ingame_menu_screen = new Sprite("./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
-	gameover_screen = new Sprite(	"./gfx/menu/gameover.png", 0, 0, WWIDTH, WHEIGHT);
+	dev_screen = new Sprite(this, 		"./gfx/intro/devscreen.png", 0, 0, WWIDTH, WHEIGHT);
+	intro_screen = new Sprite(this, 		"./gfx/intro/introscreen.png", 0, 0, WWIDTH, WHEIGHT);
+	introduction_screen = new Sprite(this, "./gfx/intro/introductscreen.png", 0, 0, WWIDTH, WHEIGHT);
+	main_menu_screen = new Sprite(this, 	"./gfx/menu/mainmenu.png", 0, 0, WWIDTH, WHEIGHT);
+	highscore_screen = new Sprite(this, 	"./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
+	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
+	gameover_screen = new Sprite(this, 	"./gfx/menu/gameover.png", 0, 0, WWIDTH, WHEIGHT);
 
-	menu_background = new Sprite(	"./gfx/menu/menu-bg.png", 580, 0, WWIDTH - MENUWIDTH, WHEIGHT);
-	menu_money_score = new Sprite(	"./gfx/menu/menu-money-score-200x90.png", GRIDWIDTH, 50, 200, 90);
-	menu_build = new Sprite(		"./gfx/menu/menu-build-200x90.png", GRIDWIDTH, 140, 200, 90);
-	menu_upgrade = new Sprite(		"./gfx/menu/menu-upgrade-sell-200x90.png", GRIDWIDTH, 250, 200, 90);
-	menu_info = new Sprite(			"./gfx/menu/menu-information-200x240.png", GRIDWIDTH, 360, 200, 240);
-	menu_lives = new Sprite(		"./gfx/menu/heart_big-25x25.png", 624, 104, 18, 18);
-	selection_sprite = new Sprite(	"./gfx/misc/marker44x44.png", -5, -5, 44, 44);
+	menu_background = new Sprite(this, 	"./gfx/menu/menu-bg.png", 580, 0, WWIDTH - MENUWIDTH, WHEIGHT);
+	menu_money_score = new Sprite(this, 	"./gfx/menu/menu-money-score-200x90.png", GRIDWIDTH, 50, 200, 90);
+	menu_build = new Sprite(this, 		"./gfx/menu/menu-build-200x90.png", GRIDWIDTH, 140, 200, 90);
+	menu_upgrade = new Sprite(this, 		"./gfx/menu/menu-upgrade-sell-200x90.png", GRIDWIDTH, 250, 200, 90);
+	menu_info = new Sprite(this, 			"./gfx/menu/menu-information-200x240.png", GRIDWIDTH, 360, 200, 240);
+	menu_lives = new Sprite(this, 		"./gfx/menu/heart_big-25x25.png", 624, 104, 18, 18);
+	selection_sprite = new Sprite(this, 	"./gfx/misc/marker44x44.png", -5, -5, 44, 44);
 	selection_sprite->hide();
 
 	score_text = new Text(get_score_str(), 0, menu_money_score->get_y_pos() + 30, standard_font_16);
@@ -86,32 +94,32 @@ bool Game::init()
 	fps_text = new Text("", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
 
 	//Optionbox buttons and background
-	option_box_BGx1 = new Sprite("./gfx/menu/popup-menu-1x-40x43.png", 0, 0, 40, 43);
-	option_box_BGx2 = new Sprite("./gfx/menu/popup-menu-2x-67x43.png", 0, 0, 67, 43);
-	option_box_BGx3 = new Sprite("./gfx/menu/popup-menu-3x-94x43.png", 0, 0, 94, 43);
-	option_box_BGx4 = new Sprite("./gfx/menu/popup-menu-4x-122x43.png", 0, 0, 122, 43);
-	option_box_BGx5 = new Sprite("./gfx/menu/popup-menu-5x-149x43.png", 0, 0, 149, 43);
-	option_box_BGx6 = new Sprite("./gfx/menu/popup-menu-6x-177x43.png", 0, 0, 177, 43);
+	option_box_BGx1 = new Sprite(this, "./gfx/menu/popup-menu-1x-40x43.png", 0, 0, 40, 43);
+	option_box_BGx2 = new Sprite(this, "./gfx/menu/popup-menu-2x-67x43.png", 0, 0, 67, 43);
+	option_box_BGx3 = new Sprite(this, "./gfx/menu/popup-menu-3x-94x43.png", 0, 0, 94, 43);
+	option_box_BGx4 = new Sprite(this, "./gfx/menu/popup-menu-4x-122x43.png", 0, 0, 122, 43);
+	option_box_BGx5 = new Sprite(this, "./gfx/menu/popup-menu-5x-149x43.png", 0, 0, 149, 43);
+	option_box_BGx6 = new Sprite(this, "./gfx/menu/popup-menu-6x-177x43.png", 0, 0, 177, 43);
 
-	optionbox_buttonstorage[BUTTON_BASE] = (new Sprite("./gfx/button/menu-button-base-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_BASE] = (new Sprite(this, "./gfx/button/menu-button-base-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_BASE]->set_type(BUTTON_BASE);
-	optionbox_buttonstorage[BUTTON_BASIC] = (new Sprite("./gfx/button/menu-button-basic-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_BASIC] = (new Sprite(this, "./gfx/button/menu-button-basic-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_BASIC]->set_type(BUTTON_BASIC);
-	optionbox_buttonstorage[BUTTON_BOMB] = (new Sprite("./gfx/button/menu-button-bomb-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_BOMB] = (new Sprite(this, "./gfx/button/menu-button-bomb-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_BOMB]->set_type(BUTTON_BOMB);
-	optionbox_buttonstorage[BUTTON_BOOST] = (new Sprite("./gfx/button/menu-button-boost-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_BOOST] = (new Sprite(this, "./gfx/button/menu-button-boost-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_BOOST]->set_type(BUTTON_BOOST);
-	optionbox_buttonstorage[BUTTON_RANGE] = (new Sprite("./gfx/button/menu-button-range-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_RANGE] = (new Sprite(this, "./gfx/button/menu-button-range-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_RANGE]->set_type(BUTTON_RANGE);
-	optionbox_buttonstorage[BUTTON_SELL] = (new Sprite("./gfx/button/menu-button-sell-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_SELL] = (new Sprite(this, "./gfx/button/menu-button-sell-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_SELL]->set_type(BUTTON_SELL);
-	optionbox_buttonstorage[BUTTON_SPEED] = (new Sprite("./gfx/button/menu-button-speed-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_SPEED] = (new Sprite(this, "./gfx/button/menu-button-speed-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_SPEED]->set_type(BUTTON_SPEED);
-	optionbox_buttonstorage[BUTTON_UPGRADE] = (new Sprite("./gfx/button/menu-button-upgrade-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_UPGRADE] = (new Sprite(this, "./gfx/button/menu-button-upgrade-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_UPGRADE]->set_type(BUTTON_UPGRADE);
-	optionbox_buttonstorage[BUTTON_NOUPGRADE] = (new Sprite("./gfx/button/menu-button-noupgrade-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_NOUPGRADE] = (new Sprite(this, "./gfx/button/menu-button-noupgrade-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_NOUPGRADE]->set_type(BUTTON_NOUPGRADE);
-	optionbox_buttonstorage[BUTTON_WALL] = (new Sprite("./gfx/button/menu-button-wall-30x30.png", 0, 0, 30, 30));
+	optionbox_buttonstorage[BUTTON_WALL] = (new Sprite(this, "./gfx/button/menu-button-wall-30x30.png", 0, 0, 30, 30));
 	optionbox_buttonstorage[BUTTON_WALL]->set_type(BUTTON_WALL);
 
 	//Load sounds
@@ -126,9 +134,15 @@ bool Game::init()
 	SFX_game_over = 	new Sound("./snd/game_over.wav", false, 0);
 
 	//Available towers in menu
-	build_list.push_back(new Tower(TOWER_BASE, 630, 175));
-	build_list.push_back(new Tower(TOWER_BOOST_LEVEL_1, 680, 175));
-	build_list.push_back(new Tower(TOWER_WALL, 730, 175));
+	build_list.push_back(new Tower(TOWER_BASE, NULL));
+	build_list.back()->set_x_pos(630);
+	build_list.back()->set_y_pos(175);
+	build_list.push_back(new Tower(TOWER_BOOST_LEVEL_1, NULL));
+	build_list.back()->set_x_pos(680);
+	build_list.back()->set_y_pos(175);
+	build_list.push_back(new Tower(TOWER_WALL, NULL));
+	build_list.back()->set_x_pos(730);
+	build_list.back()->set_y_pos(175);
 
 	//Ingame buttons
 	ingame_buttons.push_back(new Button(BUTTON_MENU, 		600,   0, 112, 51, false, "./gfx/button/ingame-menuf10-112x51.png"));
@@ -148,25 +162,14 @@ bool Game::init()
 	mainmenu_buttons.push_back(new Button(BUTTON_VIEW_HELP, 343, 370, 115, 50, false, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png"));
 	mainmenu_buttons.push_back(new Button(BUTTON_EXITGAME,  295, 440, 210, 53, false, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png"));
 
-	//Set GridControl to NULL
-	for (int x = 0; x < GRIDWIDTH; x += 40)
-	{
-		for (int y = 0; y < GRIDHEIGHT; y += 40)
-		{
-			grid_control[get_grid_position(x, y)] = NULL;
-		}
-	}
-
-	path_control->create_graph(grid_control, 15, 15);
-
 	//Green and red rects
-	free_spot = new Sprite("./gfx/misc/spot-free-4.png", 0, 0, 40, 40);
-	not_free_spot = new Sprite("./gfx/misc/spot-taken-4.png", 0, 0, 40, 40);
+	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);
+	not_free_spot = new Sprite(this, "./gfx/misc/spot-taken-4.png", 0, 0, 40, 40);
 
 	if (music_enabled)
 	{
 		Mix_VolumeMusic(MUSIC_VOLUME);
-		music->play();
+		//music->play();
 	}
 
 	return true;

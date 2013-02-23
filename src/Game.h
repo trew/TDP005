@@ -34,13 +34,14 @@
 #include "Sound.h"
 
 //Pathfinding and Difficulty Control
+#include "Grid.h"
 #include "Dijkstra.h"
 #include "Level.h"
 
-
 class Level;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
-
+typedef std::pair<int, int> GridPosition;
+typedef std::map<GridPosition, Sprite*> GridMap;
 
 /** \brief The Game class.
  *
@@ -52,9 +53,6 @@ public:
 	Game(); ///Constructor
 	virtual ~Game(); ///Destructor
 	int on_execute();	///Defined in Game.cpp
-	static Dijkstra* path_control;				///Pathfinding control using Dijkstra
-	static std::map<int, Sprite*> grid_control;	///Controls where objects are placed on grid
-
 	static TTF_Font* standard_font_48;	///Global font
 	static TTF_Font* standard_font_46;	///Global font
 	static TTF_Font* standard_font_42;	///Global font
@@ -64,6 +62,7 @@ public:
 	static TTF_Font* standard_font_16;	///Global font
 	static TTF_Font* standard_font_12;	///Global font
 
+	Grid* get_grid();
 private:
 
 /** *** Game Variables *** */
@@ -92,11 +91,13 @@ private:
 	int lives;
 	int score;
 	int money;
+	Grid* grid;
 
 private:
 	Level* level_control;		//Controls difficulty and enemy waves
 	SDL_Surface* screen;		//Main screen, everything visible is blitted to this screen
-	Sprite* current_selection;	//Pointer to a tower in tower_list, don't delete on cleanup.
+	Tile* tile_selection;	//Pointer to a tower, don't delete on cleanup.
+	Tower* buildmenu_selection; //The selected tower in the build menu
 
 	/** Sprites */
 	Sprite* dev_screen;
@@ -163,7 +164,7 @@ private:
 private:
 /** *** Game Functions *** */
 /** Definition in Game.cpp */
-	int get_grid_position(int mX, int mY);		///Convert X and Y coordinates to appropriate place in Gridcontrol
+	GridPosition get_grid_pixel_position(GridPosition pos);		///Convert X and Y coordinates to appropriate place in Gridcontrol
 	void snap_XY_to_grid(int &X, int &Y);		///Snap X and Y to top left corner of a grid spot.
 
 	bool read_highscores_from_file();
@@ -184,12 +185,12 @@ private:
 
 /** Definition in Game_HandleEvent.cpp */
 	bool is_arrow_key(SDL_Event* event);
-	void create_new_tower(int tower_type, int pos_x, int pos_y);
+	void create_new_tower(int tower_type, GridPosition);
 	void upgrade_tower(int tower_type);
 	void send_new_wave();
 
-	bool optbox_do_selection(Sprite* curr_opt_sel, int pos_x, int pos_y); ///Passes on to optbox_do_selection(int, int, int)
-	bool optbox_do_selection(int type, int pos_x, int pos_y);
+	bool optbox_do_selection(Sprite* curr_opt_sel, GridPosition position); ///Passes on to optbox_do_selection(int, int, int)
+	bool optbox_do_selection(int type, GridPosition position);
 	void arrowkey_bflag_not_set(SDL_Event* event);
 	void buildingflag_not_set(SDL_Event* event);
 	void buildingflag_set(SDL_Event* event);
@@ -210,11 +211,12 @@ private:
 	void handle_event(SDL_Event* event);
 
 /** Definition in Game_HandleSelection.cpp */
-	bool sell(Sprite* Object);
+	bool sell(Tower* Object);
 	void cancel_selection();
 	void clear_selectioninfo();
-	void set_selection_info(Sprite* SelectionPtr);
-	void select(Sprite* SelectSprite);
+	void set_selection_info(Tower*);
+	void select(Tile*);
+	void select_from_buildmenu(Tower*);
 
 /** Definition in Game_OptionBox.cpp */
 	void compose_box_pos(int &optbox_pos_x, int &optbox_pos_y, Sprite* option_box);
@@ -279,14 +281,14 @@ private:
 	Sprite_List optionbox;
 	Sprite_List::iterator iter_op_box;
 
-	Sprite_List tower_list;
-	Sprite_List::iterator iter_tower;
+	TowerList tower_list;
+	TowerList::iterator iter_tower;
 
-	Sprite_List build_list;
-	Sprite_List::iterator iter_build_obj;
+	TowerList build_list;
+	TowerList::iterator iter_build_obj;
 
-	Sprite_List enemy_list;
-	Sprite_List::iterator iter_enemy;
+	EnemyList enemy_list;
+	EnemyList::iterator iter_enemy;
 
 	Sprite_List projectile_list;
 	Sprite_List::iterator iter_projectile;
@@ -300,7 +302,7 @@ private:
 	Sprite_List ingame_buttons;
 	Sprite_List::iterator iter_ingame_button;
 
-	Sprite_List selection;			///Informationtext about current selection.
+	Sprite_List selection_text;			///Informationtext about current selection.
 	Sprite_List::iterator iter_sel;
 
 	HighscoreList highscores;

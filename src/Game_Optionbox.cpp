@@ -13,15 +13,15 @@ void Game::compose_box_pos(int &optbox_pos_x, int &optbox_pos_y, Sprite *optionb
 {
 	int box_offset_x = 25;
 	int box_offset_y = -25;
-	if (current_selection == NULL)
+	if (tile_selection == NULL)
 	{
 		optbox_pos_x = selection_sprite->get_x_pos() + box_offset_x;
 		optbox_pos_y = selection_sprite->get_y_pos() + box_offset_y;
 	}
 	else
 	{
-		optbox_pos_x = current_selection->get_x_pos() + box_offset_x;
-		optbox_pos_y = current_selection->get_y_pos() + box_offset_y;
+		optbox_pos_x = tile_selection->get_x_pixel_pos() + box_offset_x;
+		optbox_pos_y = tile_selection->get_y_pixel_pos() + box_offset_y;
 	}
 
 	if ((optbox_pos_x + optionbox->get_width()) > GRIDWIDTH)
@@ -62,7 +62,7 @@ void Game::update_option_box()
 	int optbox_pos_x;
 	int optbox_pos_y;
 
-	if (current_selection == NULL)
+	if (tile_selection == NULL || tile_selection->get_tower() == NULL)
 	{
 		optionbox.push_back(option_box_BGx3);
 		if (selection_sprite->is_visible())
@@ -88,9 +88,9 @@ void Game::update_option_box()
 		}
 	}
 
-	else if (current_selection != NULL)
+	else if (tile_selection != NULL && tile_selection->get_tower() != NULL)
 	{
-		if (current_selection->get_type() == TOWER_BASE)
+		if (tile_selection->get_tower()->get_type() == TOWER_BASE)
 		{
 			optionbox.push_back(option_box_BGx5);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx5);
@@ -125,7 +125,7 @@ void Game::update_option_box()
 		}
 
 		// If a wall is selected
-		if (current_selection->get_type() == TOWER_WALL)
+		if (tile_selection->get_tower()->get_type() == TOWER_WALL)
 		{
 			optionbox.push_back(option_box_BGx1);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx1);
@@ -140,11 +140,11 @@ void Game::update_option_box()
 		}
 
 		// If a tower is selected
-		else if (current_selection->get_type() >= TOWER_BASIC_LEVEL_1 && current_selection->get_type() < ENEMY)
+		else if (tile_selection->get_tower()->get_type() >= TOWER_BASIC_LEVEL_1 && tile_selection->get_tower()->get_type() < ENEMY)
 		{
 
 			// If tower is level 3, it cant be upgraded more.
-			if (current_selection->get_level() == 3)
+			if (tile_selection->get_tower()->get_level() == 3)
 			{
 				optionbox.push_back(option_box_BGx2);
 				compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx2);

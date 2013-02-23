@@ -7,28 +7,19 @@
 
 #include "Node.h"
 
-const int int_max = 1000000;
+const int max_cost = 1000000;
 
-Node::Node(int new_ID):
-		parent(0), ID(new_ID),cost_from_start(int_max), allowed(true)
-{
-	///Constructor
+Node::Node() :
+		parent(NULL), cost_from_start(max_cost), allowed(true) {
 }
 
-Node::~Node()
-{
+Node::~Node() {
 	///Destructor
 }
 
-void Node::add_edge(Edge* new_edge)
-{
-	///Adds new edge to list of the current nodes edges.
-	my_edges.push_back(new_edge);
-}
-
-void Node::set_allowed(bool new_val) {
+void Node::set_allowed(bool _allowed) {
 	///Set node to be or not to be allowed
-	allowed = new_val;
+	allowed = _allowed;
 }
 
 bool Node::is_allowed() {
@@ -41,25 +32,35 @@ Node* Node::get_parent() {
 	return parent;
 }
 
-void Node::set_parent(Node* parent_in) {
+void Node::set_parent(Node* _parent) {
 	///Set new parent
-	parent = parent_in;
+	parent = _parent;
 }
 
-int Node::get_ID() {
-	///Returns current ID
-	return ID;
-}
 int Node::get_cost_from_start() {
 	///Returns cost from start
 	return cost_from_start;
 }
 
-
-void Node::set_cost_from_start(int new_cost)
-{
+void Node::set_cost_from_start(int cost) {
 	///Set new cost from start
-	cost_from_start = new_cost;
+	cost_from_start = cost;
 }
 
+NodeVector Node::get_neighbors() {
+	return neighbors;
+}
 
+void Node::add_neighbor(Node* neighbor) {
+	/**
+	 * Adds the neighbor to the list of neighbors if it has not
+	 * been added before.
+	 */
+	if (neighbor != NULL) {
+		for (NodeVector::iterator it = neighbors.begin(); it != neighbors.end(); it++) {
+			if ((*it) == neighbor)
+				return;
+		}
+		neighbors.push_back(neighbor);
+	}
+}

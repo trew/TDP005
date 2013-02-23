@@ -23,7 +23,7 @@ Sprite::Sprite()
 	visible = true;
 }
 
-Sprite::Sprite(std::string File, int x, int y, int w, int h)
+Sprite::Sprite(Game* game, std::string File, int x, int y, int w, int h): game(game)
 {
 	/**
 	 * Loads an image to the sprites surface and sets position, height and width. Visible sprite is default.
@@ -295,7 +295,7 @@ bool Sprite::has_reached_goal()
 void Sprite::update_path() {
 	///Pure virtual
 }
-bool Sprite::can_update_path() {
+bool Sprite::try_update_path() {
 	///Pure virtual
 	return true;
 }
@@ -331,11 +331,6 @@ bool Sprite::is_dead() {
 
 /*****************************************************************************************/
 /* Virtuals */
-std::pair<int, int> Sprite::get_current_destination()
-{
-	///Applies to Enemy
-	return current_destination;
-}
 void Sprite::update()
 {
 	///Pure virtual
@@ -345,3 +340,6 @@ void Sprite::update(Sprite_List &object_list)
 	///Pure virtual
 }
 
+Game* Sprite::get_game() {
+	return game;
+}

@@ -10,11 +10,12 @@
 
 #include "Sprite.h"
 #include "Sound.h"
-#include "Enemy.h"
+#include "Tile.h"
 #include "Text.h"
 #include <map>
 #include <list>
 #include <vector>
+
 /**
  * \brief The Tower class
  *
@@ -22,7 +23,7 @@
  */
 class Tower: public Sprite {
 public:
-	Tower(int new_type, int x, int y);			///<Constructor
+	Tower(int new_type, Tile* tile);			///<Constructor
 	virtual ~Tower();							///<Destructor
 
 public: // Selectors
@@ -57,17 +58,17 @@ public:
 	bool target_in_sight();							///<Checks if tower is aiming at target
 	bool target_in_range(Sprite *s);				///<Checks if target is in range
 	void update_aim();								///<Rotates the cannon so that it aims more towards the current target.
-	void find_new_target(Sprite_List &object_list);	///<Finds new target for tower if possible
+	void find_new_target(EnemyList &object_list);	///<Finds new target for tower if possible
 	void reload();									///<Handles reloadtimer
 	bool is_loaded();								///<Checks if tower is loaded
-	void shoot(std::list <Sprite*> &object_list);	///<Fires an projectile
+	void shoot(Sprite_List &object_list);			///<Fires an projectile //TODO: projectile_list
 	void apply_boost(int old_percentage, int new_percentage); ///<Applies boost to the towers stats
 
 	bool has_this_target(Sprite* target);			///<Checks if the target is the towers current target
 	void null_current_target();						///<Sets current target to NULL
 
-	void update_boost(Sprite_List &tower_list);		///<Updates the towers boost-percentage and boosts the tower with apply_boost.
-	void update(Sprite_List &enemy_list);			///<Update tower state
+	void update_boost(TowerList &tower_list);		///<Updates the towers boost-percentage and boosts the tower with apply_boost.
+	void update(EnemyList &enemy_list);			///<Update tower state
 	void shoot_if_possible(Sprite_List &object_list); ///<Shoots at the enemy if conditions are right.
 
 	void set_selected();							///<Sets tower as selected
@@ -76,6 +77,9 @@ public:
 	void update_info_sprites();						///<Updates the text-information stored in the sprites
 
 	bool upgrade(int new_type);						///<Upgrades the tower to the new type and changes its stats thereafter.
+
+	Tile* get_tile();
+	void set_tile(Tile*);
 
 private:
 	void init_info_sprites();						///<Initializes the information-sprites
@@ -92,6 +96,7 @@ private: // Properties
 	int 	cost_upgrade;		// Cost to upgrade
 	int 	boostmod;			// Boost modifier for boost towers
 	int 	sell_value;			// Value when selling
+	Tile*	tile;
 
 private: // Specific variables for calculations etc.
 	SDL_Surface* 	base_surf;
@@ -103,7 +108,6 @@ private: // Specific variables for calculations etc.
 	int				reload_counter;
 	int				smoothing;
 	int				boost_percentage;
-
 };
 
 #endif /* TOWER_H_ */

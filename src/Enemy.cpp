@@ -24,7 +24,7 @@ int get_grid_position(int pos_x, int pos_y)
 	return pos_y * (GRIDWIDTH / TILESIZE) + pos_x;
 }
 
-Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level)
+Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): grid(grid)
 {
 /*
  * Create new enemy. New enemies have different hitpoints depending on level.
@@ -33,7 +33,7 @@ Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_
 	case ENEMY_DOG:
 		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
 		move_speed = 2;
-		max_health = dog_health + (dog_health * 0.24) * (new_level-1);
+		max_health = static_cast<int>(dog_health + (dog_health * 0.24) * (new_level-1));
 		cost = dog_cost;
 		reward_score = dog_cost;
 		reward_money = enemy_money_reward;
@@ -42,7 +42,7 @@ Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_
 	case ENEMY_SNAIL:
 		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
 		move_speed = 1;
-		max_health = snail_health + (snail_health * 0.24) * (new_level-1);
+		max_health = static_cast<int>(snail_health + (snail_health * 0.24) * (new_level-1));
 		cost = snail_cost;
 		reward_score = snail_cost;
 		reward_money = enemy_money_reward;
@@ -51,7 +51,7 @@ Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_
 	case ENEMY_FISH:
 		sprite_surf = load_image("./gfx/enemy/enemy-3-30x30.png");
 		move_speed = 1;
-		max_health = fish_health + (fish_health * 0.24) * (new_level-1);
+		max_health = static_cast<int>(fish_health + (fish_health * 0.24) * (new_level-1));
 		cost = fish_cost;
 		reward_score = fish_cost;
 		reward_money = enemy_money_reward;
@@ -60,7 +60,7 @@ Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_
 	case ENEMY_PALS:
 		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
 		move_speed = 1;
-		max_health = pals_health + (pals_health * 0.24) * (new_level-1);
+		max_health = static_cast<int>(pals_health + (pals_health * 0.24) * (new_level-1));
 		cost = pals_cost;
 		reward_score = pals_cost;
 		reward_money = enemy_money_reward;
@@ -94,9 +94,10 @@ Enemy::Enemy(int new_type, int x_pos_in, int y_pos_in, int width_in, int height_
 	width = width_in;
 	height = height_in;
 
-	current_destination = std::pair<int, int> (0, y_pos);
-	new_path(Game::path_control->find_paths(Game::grid_control, get_grid_position(0, y_pos) / TILESIZE, ENEMY_DESTINATION));
-
+	current_tile = NULL;
+	current_destination = grid->get_start_tile();
+	current_path = NULL;
+	apply_new_path(grid->get_path(grid->get_start_tile(), grid->get_portal_tile()));
 }
 
 Enemy::~Enemy()
@@ -125,21 +126,27 @@ void Enemy::draw(SDL_Surface* dest_surf)
 	SDL_BlitSurface(sprite_surf, &src_rect, dest_surf, &dest_rect);
 }
 
-bool Enemy::can_update_path()
+bool Enemy::is_on_tile(Tile* tile) {
+	return (tile == current_tile || tile == current_destination);
+}
+
+bool Enemy::try_update_path(Grid* grid)
 {
 	/**
 	 * Returns true if a path to goal can be found, otherwise returns false.
 	 */
-	//Return true if enemy has reached goal.
-	std::list<int> path_list = Game::path_control->find_paths(Game::grid_control, get_grid_position(current_destination.first,current_destination.second) / TILESIZE, ENEMY_DESTINATION);
 
-	if (path_list.size() == 0)
+	//Return true if enemy has reached goal.
+	Path* path_list = grid->get_path(current_destination, grid->get_portal_tile());
+	if (path_list->size() == 0)
 	{
-		if (get_grid_position(current_destination.first, current_destination.second) / TILESIZE == ENEMY_DESTINATION)
+		Tile* dest = grid->get_portal_tile();
+		if (current_destination == dest) {
 			//Enable update if enemy is at its destination
-			path_list.push_back(ENEMY_DESTINATION * TILESIZE);
+			path_list->push_back(dest);
 			new_path_int = path_list;
 			return true;
+		}
 		return false;
 	}
 	else
@@ -152,7 +159,7 @@ bool Enemy::can_update_path()
 void Enemy::update_path()
 {
 	/// Update current pathlist with new path
-	new_path(new_path_int);
+	apply_new_path(new_path_int);
 }
 
 std::pair<int, int> Enemy::conv_int_to_XY(int in)
@@ -164,21 +171,18 @@ std::pair<int, int> Enemy::conv_int_to_XY(int in)
 
 }
 
-void Enemy::new_path(std::list<int> int_path)
+void Enemy::apply_new_path(Path* int_path)
 {
 	/**
 	 * Replace current path with new path.
 	 * Converts and int-list to pairs of X,Y-coordinates.
 	 */
 
-	// Clear any earlier path
-	my_path.clear();
-
-	// Convert the incoming list of vectors from their int-format to pair<int X, int Y>
-	for (std::list<int>::iterator iter_int_path = int_path.begin(); iter_int_path != int_path.end(); iter_int_path++)
-	{
-		my_path.push_front(conv_int_to_XY(*iter_int_path));
+	if (current_path != NULL) {
+		delete current_path;
+		current_path = NULL;
 	}
+	current_path = int_path;
 }
 
 int Enemy::move_dir()
@@ -186,16 +190,17 @@ int Enemy::move_dir()
 	/**
 	 * Determines movement direction depending on where enemy is in relationship to current destination.
 	 */
-	if (y_pos < current_destination.second)
-		return DOWN;
-	if (x_pos < current_destination.first)
-		return RIGHT;
-	if (y_pos > current_destination.second)
-		return UP;
-	if (x_pos > current_destination.first)
-		return LEFT;
+	if (current_tile == NULL) return RIGHT;
 
-	return DONE;
+	if (current_tile->get_position().first < current_destination->get_position().first)
+		return DOWN;
+	if (current_tile->get_position().second < current_destination->get_position().second)
+		return RIGHT;
+	if (current_tile->get_position().first > current_destination->get_position().first)
+		return UP;
+	if (current_tile->get_position().second > current_destination->get_position().second)
+		return LEFT;
+	return RIGHT;
 }
 
 void Enemy::move()
@@ -225,39 +230,60 @@ void Enemy::move()
 		x_vel = 0;
 		y_vel = move_speed;
 		break;
-
-	case DONE:
-		if (!my_path.empty())
-		{
-			current_destination = my_path.front();
-			my_path.pop_front();
-			break;
-		} else {
-			reached_goal = true;
-		}
-		return;
 	default:
 		break;
 	}
 
 	// If enemy movespeed is so fast that it would walk over
-	// the set destination-vertex, move to the vertex-position instead
-	if (dir == DOWN && y_pos + y_vel > current_destination.second)
-		y_pos = current_destination.second;
-	else if (dir == UP && y_pos + y_vel < current_destination.second)
-		y_pos = current_destination.second;
-	else if (dir == UP || dir == DOWN)
+	// the set destination-vertex, then we reached the destination, and will
+	// start approaching a new tile
+	bool switch_tile = false;
+	int x_mov_diff = 0;
+	int y_mov_diff = 0;
 
+	if (dir == DOWN && y_pos + y_vel > current_destination->get_y_pixel_pos()) {
+		y_mov_diff = y_pos + y_vel - current_destination->get_y_pixel_pos();
+		switch_tile = true;
+		y_pos = current_destination->get_y_pixel_pos();
+	}
+	else if (dir == UP && y_pos + y_vel < current_destination->get_y_pixel_pos()) {
+		y_mov_diff = y_pos + y_vel - current_destination->get_y_pixel_pos();
+		switch_tile = true;
+		y_pos = current_destination->get_y_pixel_pos();
+	}
+	else if (dir == UP || dir == DOWN) {
 		y_pos += y_vel;
-	else if (dir == RIGHT && x_pos + x_vel > current_destination.first)
-		x_pos = current_destination.first;
-	else if (dir == LEFT && x_pos + x_vel < current_destination.first)
-		x_pos = current_destination.first;
-	else if (dir == LEFT || dir == RIGHT)
+	}
+	else if (dir == RIGHT && x_pos + x_vel > current_destination->get_x_pixel_pos()) {
+		x_mov_diff = x_pos + x_vel - current_destination->get_x_pixel_pos();
+		switch_tile = true;
+		x_pos = current_destination->get_x_pixel_pos();
+	}
+	else if (dir == LEFT && x_pos + x_vel < current_destination->get_x_pixel_pos()) {
+		x_mov_diff = x_pos + x_vel - current_destination->get_x_pixel_pos();
+		switch_tile = true;
+		x_pos = current_destination->get_x_pixel_pos();
+	}
+	else if (dir == LEFT || dir == RIGHT) {
 		x_pos += x_vel;
+	}
+
+	if (!switch_tile) return;
+
+	if (!current_path->empty())
+	{
+		current_tile = current_destination;
+		current_destination = current_path->back();
+		current_path->pop_back();
+		x_pos += x_mov_diff;
+		y_pos += y_mov_diff;
+	} else {
+		reached_goal = true;
+	}
+
 }
 
-void Enemy::update(Sprite_List &enemy_list)
+void Enemy::update(EnemyList &enemy_list)
 {
 	/// Checks if enemy is dead and execute movement.
 	if (health < 0)

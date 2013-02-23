@@ -14,49 +14,55 @@ bool Game::is_arrow_key(SDL_Event* event)
 			== SDLK_DOWN));
 }
 
-void Game::create_new_tower(int tower_type, int pos_x, int pos_y)
+void Game::create_new_tower(int tower_type, GridPosition position)
 {
-	if (pos_x == 0 && pos_y == 7 * TILESIZE)
+	Tile* tile = grid->get_tile(position);
+	if (!grid->is_placeable_tile(tile))
 		return;
 
-	Tower* new_tower = new Tower(tower_type, pos_x, pos_y);
+	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++) {
+		if ((*iter_enemy)->is_on_tile(tile)) {
+			return;
+		}
+	}
+
+	Tower* new_tower = new Tower(tower_type, tile);
 	if (money < new_tower->get_cost_buy())
 	{
 		delete new_tower;
 		return;
 	}
-	grid_control[get_grid_position(pos_x, pos_y)] = dev_screen;
-	if (path_control->find_paths(grid_control, 105, ENEMY_DESTINATION).empty())
-	{
-		grid_control[get_grid_position(pos_x, pos_y)] = NULL;
+
+	new_tower->set_tile(tile);
+	tile->set_tower(new_tower);
+	grid->clear_paths();
+
+	if (grid->get_path(grid->get_start_tile(), grid->get_portal_tile())->size() == 0) {
+		tile->set_tower(NULL);
+		delete new_tower;
 		return;
 	}
 
-
+	// loop through all enemies and update their path
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{
-		if ((((*iter_enemy)->get_current_destination().first == pos_x) && ((*iter_enemy)->get_current_destination().second == pos_y))
-				|| ((!(*iter_enemy)->can_update_path())))
-		{
-			if ( (*iter_enemy)->get_current_destination() != std::pair<int, int>(15 * TILESIZE, 7 * TILESIZE) ) //Enemy has reached goal, enable tower placement
-			{
-				grid_control[get_grid_position(pos_x, pos_y)] = NULL;
-				return;
-			}
+		if ( !(*iter_enemy)->try_update_path(grid)) {
+			// couldn't update path, don't place tower
+			tile->set_tower(NULL);
+			delete new_tower;
+			return;
 		}
 	}
-
 	//New tower CAN be placed.
 	SFX_build->play();
 	update_enemy_path = true;
 	money -= new_tower->get_cost_buy();
 	update_money();
 	tower_list.push_back(new_tower);
-	grid_control[get_grid_position(pos_x, pos_y)] = tower_list.back();
 	if (!building_flag)
 	{
-		current_selection = grid_control[get_grid_position(pos_x, pos_y)];
-		select(current_selection);
+		tile_selection = tile;
+		select(tile_selection);
 		hide_option_box();
 	}
 
@@ -64,19 +70,19 @@ void Game::create_new_tower(int tower_type, int pos_x, int pos_y)
 
 void Game::upgrade_tower(int tower_type)
 {
-	if (current_selection != NULL)
+	if (tile_selection != NULL)
 	{
-		if (money < current_selection->get_cost_upgrade())
+		if (money < tile_selection->get_tower()->get_cost_upgrade())
 			return;
 
-		int cost = current_selection->get_cost_upgrade();
-		if (!current_selection->upgrade(tower_type))
+		int cost = tile_selection->get_tower()->get_cost_upgrade();
+		if (!tile_selection->get_tower()->upgrade(tower_type))
 			return;
 		money -= cost;
-		current_selection->add_to_sell_value(cost);
+		tile_selection->get_tower()->add_to_sell_value(cost);
 		update_money();
 		SFX_upgrade->play();
-		set_selection_info(current_selection);
+		set_selection_info(tile_selection->get_tower());
 		if (tower_type > 0)
 			hide_option_box();
 		else
@@ -86,25 +92,28 @@ void Game::upgrade_tower(int tower_type)
 
 void Game::send_new_wave()
 {
-	Sprite_List tmp = level_control->get_new_wave();
+	EnemyList tmp = level_control->get_new_wave(grid);
 	enemy_list.insert(enemy_list.end(), tmp.begin(), tmp.end());
 	tmp.clear();
 	update_level();
 }
 
-bool Game::optbox_do_selection(Sprite* curr_op_sel, int pos_x, int pos_y)
+bool Game::optbox_do_selection(Sprite* curr_op_sel, GridPosition position)
 {
-	return optbox_do_selection(curr_op_sel->get_type(), pos_x, pos_y);
+	return optbox_do_selection(curr_op_sel->get_type(), position);
 }
 
-bool Game::optbox_do_selection(int type, int pos_x, int pos_y)
+bool Game::optbox_do_selection(int type, GridPosition position)
 {
+	/**
+	 * Selects an option on the optionbox
+	 */
 	switch (type)
 	{
 	case BUTTON_BASE:
-		if (grid_control[get_grid_position(pos_x, pos_y)] == NULL)
+		if (grid->get_tile(position)->get_tower() == NULL)
 		{
-			create_new_tower(TOWER_BASE, pos_x, pos_y);
+			create_new_tower(TOWER_BASE, position);
 		}
 		else
 		{
@@ -113,7 +122,7 @@ bool Game::optbox_do_selection(int type, int pos_x, int pos_y)
 		return true;
 
 	case BUTTON_BOOST:
-		create_new_tower(TOWER_BOOST_LEVEL_1, pos_x, pos_y);
+		create_new_tower(TOWER_BOOST_LEVEL_1, position);
 		return true;
 
 	case BUTTON_BASIC:
@@ -130,7 +139,7 @@ bool Game::optbox_do_selection(int type, int pos_x, int pos_y)
 
 		return true;
 	case BUTTON_SELL:
-		sell(current_selection);
+		sell(tile_selection->get_tower());
 
 		return true;
 	case BUTTON_SPEED:
@@ -142,7 +151,7 @@ bool Game::optbox_do_selection(int type, int pos_x, int pos_y)
 
 		return true;
 	case BUTTON_WALL:
-		create_new_tower(TOWER_WALL, pos_x, pos_y);
+		create_new_tower(TOWER_WALL, position);
 		return true;
 	default:
 		break;
@@ -150,188 +159,38 @@ bool Game::optbox_do_selection(int type, int pos_x, int pos_y)
 	return false;
 }
 
+
 void Game::arrowkey_bflag_not_set(SDL_Event* event)
 {
-	int mark_x = selection_sprite->get_x_pos();
-	int mark_y = selection_sprite->get_y_pos();
-
-	if (current_selection != NULL)
-	{
-		mark_x = current_selection->get_x_pos();
-		mark_y = current_selection->get_y_pos();
-
-		switch (event->key.keysym.sym)
-		{
-		case SDLK_LEFT:
-
-			if (grid_control[get_grid_position(mark_x - TILESIZE, mark_y)] != NULL)
-			{
-				cancel_selection();
-				select(grid_control[get_grid_position(mark_x - TILESIZE, mark_y)]);
-			}
-			else
-			{
-				if (mark_x - TILESIZE > -5)
-				{
-					cancel_selection();
-					selection_sprite->show();
-					selection_sprite->set_x_pos(mark_x - TILESIZE - 2);
-					selection_sprite->set_y_pos(mark_y - 2);
-				}
-			}
-			break;
-		case SDLK_RIGHT:
-
-			if (grid_control[get_grid_position(mark_x + TILESIZE, mark_y)] != NULL)
-			{
-				cancel_selection();
-				select(grid_control[get_grid_position(mark_x + TILESIZE, mark_y)]);
-			}
-			else
-			{
-				if (mark_x + TILESIZE <= GRIDWIDTH - TILESIZE)
-				{
-					cancel_selection();
-					selection_sprite->show();
-					selection_sprite->set_x_pos(mark_x + TILESIZE - 2);
-					selection_sprite->set_y_pos(mark_y - 2);
-				}
-			}
-			break;
-		case SDLK_UP:
-
-			if (grid_control[get_grid_position(mark_x, mark_y - TILESIZE)] != NULL)
-			{
-				cancel_selection();
-				select(grid_control[get_grid_position(mark_x, mark_y - TILESIZE)]);
-			}
-			else
-			{
-				if (mark_y - TILESIZE > -5)
-				{
-					cancel_selection();
-					selection_sprite->show();
-					selection_sprite->set_x_pos(mark_x - 2);
-					selection_sprite->set_y_pos(mark_y - TILESIZE - 2);
-				}
-			}
-			break;
-		case SDLK_DOWN:
-
-			if (grid_control[get_grid_position(mark_x, mark_y + TILESIZE)] != NULL)
-			{
-				cancel_selection();
-				select(grid_control[get_grid_position(mark_x, mark_y + TILESIZE)]);
-			}
-			else
-			{
-				if (mark_y + TILESIZE < GRIDHEIGHT)
-				{
-					cancel_selection();
-					selection_sprite->show();
-					selection_sprite->set_x_pos(mark_x - 2);
-					selection_sprite->set_y_pos(mark_y + TILESIZE - 2);
-				}
-			}
-			break;
-		default:
-			break;
-		}
+	int mark_row = 0;
+	int mark_col = 0;
+	if (tile_selection != NULL) {
+		mark_row = tile_selection->get_position().first;
+		mark_col = tile_selection->get_position().second;
 	}
-	else if (current_selection == NULL)
+
+	Tile* next_tile = NULL;
+	switch (event->key.keysym.sym)
 	{
-		if (mark_x > -5 && mark_x < GRIDWIDTH) //Fixed bug: selection_sprite stuck on right side of grid when deselecting with ESC. You could move it around very buggy then.
-		{
-			switch (event->key.keysym.sym)
-			{
-			case SDLK_LEFT:
-
-				if (mark_x - TILESIZE > -3)
-				{
-					if (grid_control[get_grid_position(mark_x + 2 - TILESIZE, mark_y + 2)] != NULL)
-					{
-						//Select
-						hide_option_box();
-						select(grid_control[get_grid_position(mark_x + 2 - TILESIZE, mark_y + 2)]);
-					}
-					else
-					{
-						cancel_selection();
-						selection_sprite->show();
-						selection_sprite->set_x_pos(mark_x - TILESIZE);
-						selection_sprite->set_y_pos(mark_y);
-					}
-				}
-				break;
-			case SDLK_RIGHT:
-
-				if (mark_x + TILESIZE < GRIDWIDTH - TILESIZE)
-				{
-					if (grid_control[get_grid_position(mark_x + 2 + TILESIZE, mark_y + 2)] != NULL)
-					{
-						//Select
-						hide_option_box();
-						select(grid_control[get_grid_position(mark_x + 2 + TILESIZE, mark_y + 2)]);
-					}
-					else
-					{
-						cancel_selection();
-						selection_sprite->show();
-						selection_sprite->set_x_pos(mark_x + TILESIZE);
-						selection_sprite->set_y_pos(mark_y);
-					}
-				}
-				break;
-			case SDLK_UP:
-
-				if (mark_y - TILESIZE > -3)
-				{
-					if (grid_control[get_grid_position(mark_x + 2, mark_y + 2 - TILESIZE)] != NULL)
-					{
-						//Select
-						hide_option_box();
-						select(grid_control[get_grid_position(mark_x + 2, mark_y + 2 - TILESIZE)]);
-					}
-					else
-					{
-						cancel_selection();
-						selection_sprite->show();
-						selection_sprite->set_x_pos(mark_x);
-						selection_sprite->set_y_pos(mark_y - TILESIZE);
-					}
-				}
-				break;
-			case SDLK_DOWN:
-
-				if (mark_y + TILESIZE < GRIDHEIGHT - TILESIZE)
-				{
-					if (grid_control[get_grid_position(mark_x + 2, mark_y + 2 + TILESIZE)] != NULL)
-					{
-						//Select
-						hide_option_box();
-						select(grid_control[get_grid_position(mark_x + 2, mark_y + 2 + TILESIZE)]);
-					}
-					else
-					{
-						cancel_selection();
-						selection_sprite->show();
-						selection_sprite->set_x_pos(mark_x);
-						selection_sprite->set_y_pos(mark_y + TILESIZE);
-					}
-				}
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			update_option_box();
-			selection_sprite->show();
-			selection_sprite->set_x_pos(-2);
-			selection_sprite->set_y_pos(-2);
-		}
+	case SDLK_LEFT:
+		next_tile = grid->get_tile(mark_row, mark_col - 1);
+		break;
+	case SDLK_RIGHT:
+		next_tile = grid->get_tile(mark_row, mark_col + 1);
+		break;
+	case SDLK_UP:
+		next_tile = grid->get_tile(mark_row - 1, mark_col);
+		break;
+	case SDLK_DOWN:
+		next_tile = grid->get_tile(mark_row + 1, mark_col);
+		break;
+	default:
+		return;
 	}
+
+	if (next_tile != NULL)
+		select(next_tile);
+
 }
 
 void Game::buildingflag_not_set(SDL_Event* event)
@@ -345,7 +204,7 @@ void Game::buildingflag_not_set(SDL_Event* event)
 			game_started = true;
 			send_new_wave();
 			for(iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++) {
-				(*iter_enemy)->can_update_path();
+				(*iter_enemy)->try_update_path(grid);
 			}
 		}
 	}
@@ -363,40 +222,44 @@ void Game::buildingflag_not_set(SDL_Event* event)
 	{
 		int posX = selection_sprite->get_x_pos() + 2;
 		int posY = selection_sprite->get_y_pos() + 2;
+		GridPosition pos = GridPosition(0,0);
+		Tile* tile = grid->get_tile_from_mouse(posX, posY);
+		if (tile != NULL)
+			pos = tile->get_position();
 
 		if (event->key.keysym.sym == SDLK_1 && position == 1)
 		{
-			if (optbox_do_selection((*iter_op_box), posX, posY))
+			if (optbox_do_selection((*iter_op_box), pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_2 && position == 2)
 		{
-			if (optbox_do_selection((*iter_op_box), posX, posY))
+			if (optbox_do_selection((*iter_op_box), pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_3 && position == 3)
 		{
-			if (optbox_do_selection((*iter_op_box), posX, posY))
+			if (optbox_do_selection((*iter_op_box), pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_4 && position == 4)
 		{
-			if (optbox_do_selection((*iter_op_box), posX, posY))
+			if (optbox_do_selection((*iter_op_box), pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_5 && position == 5)
 		{
-			if (optbox_do_selection((*iter_op_box), posX, posY))
+			if (optbox_do_selection((*iter_op_box), pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_u)
 		{
-			if (optbox_do_selection(BUTTON_UPGRADE, posX, posY))
+			if (optbox_do_selection(BUTTON_UPGRADE, pos))
 				break;
 		}
 		else if (event->key.keysym.sym == SDLK_s)
 		{
-			if (optbox_do_selection(BUTTON_SELL, posX, posY))
+			if (optbox_do_selection(BUTTON_SELL, pos))
 				break;
 		}
 		position++;
@@ -420,10 +283,10 @@ void Game::buildingflag_set(SDL_Event* event)
 			iter_build_obj--;
 			if (iter_build_obj == build_list.begin())
 				break;
-			if ((*iter_build_obj) == current_selection)
+			if ((*iter_build_obj) == buildmenu_selection)
 			{
 				iter_build_obj--;
-				select((*iter_build_obj));
+				select_from_buildmenu((*iter_build_obj));
 				break;
 			}
 		}
@@ -433,12 +296,12 @@ void Game::buildingflag_set(SDL_Event* event)
 		iter_build_obj = build_list.begin();
 		while (build_list.size() > 1)
 		{
-			if ((*iter_build_obj) == current_selection)
+			if ((*iter_build_obj) == buildmenu_selection)
 			{
 				iter_build_obj++;
 				if (iter_build_obj == build_list.end())
 					break;
-				select((*iter_build_obj));
+				select_from_buildmenu((*iter_build_obj));
 				break;
 			}
 			iter_build_obj++;
@@ -467,7 +330,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 					if ((m_x > (*iter_op_box)->get_x_pos()) && (m_x < (*iter_op_box)->get_x_pos() + (*iter_op_box)->get_width()) && (m_y
 							> (*iter_op_box)->get_y_pos()) && (m_y < (*iter_op_box)->get_y_pos() + (*iter_op_box)->get_height()))
 					{
-						done = optbox_do_selection((*iter_op_box), pos_x, pos_y);
+						done = optbox_do_selection((*iter_op_box), grid->get_tile_from_mouse(pos_x, pos_y)->get_position());
 					} //if mouseoverlap
 
 					if (done)
@@ -482,9 +345,8 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 
 				pos_x = m_x;
 				pos_y = m_y;
-				snap_XY_to_grid(pos_x, pos_y);
-
-				if (grid_control[get_grid_position(pos_x, pos_y)] == NULL)
+				Tile* tile = grid->get_tile_from_mouse(pos_x, pos_y);
+				if (tile->get_tower() == NULL)
 				{
 					cancel_selection();
 					hide_option_box();
@@ -499,7 +361,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 					option_box_visible = false;
 					selection_sprite->set_x_pos(pos_x - 2);
 					selection_sprite->set_y_pos(pos_y - 2);
-					select(grid_control[get_grid_position(pos_x, pos_y)]);
+					select(tile);
 				}
 				/*****/
 
@@ -513,32 +375,20 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 
 			int pos_x = m_x;
 			int pos_y = m_y;
-			snap_XY_to_grid(pos_x, pos_y);
+			Tile* tile = grid->get_tile_from_mouse(pos_x, pos_y);
 
-			if (grid_control[get_grid_position(pos_x, pos_y)] == NULL)
+			if (building_flag && buildmenu_selection != NULL && tile->get_tower() == NULL )
 			{
 				//Create new tower
-				if (current_selection != NULL && building_flag == true)
-				{
-					create_new_tower(current_selection->get_type(), pos_x, pos_y);
-				}
-				else
-				{
-					cancel_selection();
-					option_box_visible = false;
-					selection_sprite->show();
-					selection_sprite->set_x_pos(pos_x - 2);
-					selection_sprite->set_y_pos(pos_y - 2);
-				}
-
+				create_new_tower(buildmenu_selection->get_type(), tile->get_position());
 			}
 			else if (building_flag == false)
 			{
-				//Select Tower on this position
+				//Select this tile
 				selection_sprite->show();
-				selection_sprite->set_x_pos(pos_x - 2);
-				selection_sprite->set_y_pos(pos_y - 2);
-				select(grid_control[get_grid_position(pos_x, pos_y)]);
+				selection_sprite->set_x_pos(tile->get_x_pixel_pos() - 2);
+				selection_sprite->set_y_pos(tile->get_y_pixel_pos() - 2);
+				select(tile);
 			}
 			else
 			{
@@ -579,7 +429,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 					game_state = INGAMEMENU;
 				}
 
-				if (current_selection != NULL && current_selection->get_type() < ENEMY && ((*iter_ingame_button)->get_type() > BUTTONS) && !building_flag
+				if (tile_selection != NULL && ((*iter_ingame_button)->get_type() > BUTTONS) && !building_flag
 						&& !optionbox_visible())
 				{
 
@@ -591,7 +441,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 						break;
 
 					case BUTTON_SELL:
-						sell(current_selection);
+						sell(tile_selection->get_tower());
 						break;
 					}
 				}
@@ -603,7 +453,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 			if ((m_x > (*iter_build_obj)->get_x_pos()) && (m_x < (*iter_build_obj)->get_x_pos() + 40) && (m_y > (*iter_build_obj)->get_y_pos()) && (m_y
 					< (*iter_build_obj)->get_y_pos() + 40))
 			{
-				select((*iter_build_obj));
+				select_from_buildmenu((*iter_build_obj));
 				building_flag = true;
 			}
 		}
@@ -671,7 +521,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 	}
 	else if (event->type == SDL_MOUSEMOTION)
 	{
-		if (current_selection == NULL)
+		if (tile_selection == NULL && buildmenu_selection == NULL)
 		{
 			int m_x, m_y;
 			SDL_GetMouseState(&m_x, &m_y);

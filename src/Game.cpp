@@ -4,8 +4,6 @@
 #include <sstream>
 #include <iostream>
 
-Dijkstra* Game::path_control;
-std::map<int, Sprite*> Game::grid_control;
 TTF_Font* Game::standard_font_48;
 TTF_Font* Game::standard_font_46;
 TTF_Font* Game::standard_font_42;
@@ -26,13 +24,12 @@ TTF_Font* Game::standard_font_12;
 Game::Game()
 {
 	level_control = new Level;
-	path_control = new Dijkstra;
 	FPS_MAX = 100;						//Defines max FPS. Slow computers may experience lower FPS though.
 	fullscreen = false;
 	game_running = true;
 	game_state = DEVSCREEN;			//In which state we start the game.
 	game_started = false;			//If false, display "Press enter to start"
-	current_selection = NULL;
+	tile_selection = NULL;
 	timer = 0;
 	old_timer = 0;
 	current_fps = 0;
@@ -50,20 +47,21 @@ Game::Game()
 	lives = STARTING_LIVES;
 	playername = ""; 	//Set when entering highscore
 }
+
 Game::~Game(){
 	///Nothing needed in destructor. Cleanup is run at end of game.
 }
 
-
-
-
-int Game::get_grid_position(int mX, int mY)
-{
-	return mY * (GRIDWIDTH / TILESIZE) + mX;
+Grid* Game::get_grid() {
+	return grid;
 }
 
 void Game::snap_XY_to_grid(int &X, int &Y)
 {
+	/**
+	 * Takes positions in pixels as arguments and snaps them to the
+	 * top left corner of the grid position
+	 */
 	X = (X - (X % TILESIZE));
 	Y = (Y - (Y % TILESIZE));
 

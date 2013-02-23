@@ -12,9 +12,10 @@
 #include <queue>
 #include <list>
 #include <map>
-#include "Sprite.h"
+#include "Grid.h"
 #include "Node.h"
-#include "Edge.h"
+
+typedef std::list<Node*> NodePath;
 
 /** \brief Used by dijkstra
  *
@@ -34,24 +35,24 @@ public:
  */
 
 class Dijkstra {
-	friend class Edge;
 public:
-	Dijkstra();		///Constructor
+	Dijkstra(Grid*);		///Constructor
 	virtual ~Dijkstra();	///Destructor
-	Node* get_node(int node_ID);	///Returns a node
 
-	void create_graph(std::map<int, Sprite*> grid, int height, int width);	/// Creates a graph system
-	void update_graph(std::map<int, Sprite*> grid);							/// Disables nodes depending on grid
+	NodePath* get_path(Node* start, Node* dest);	///Get path from start node to destination node.
 
-	std::list<int> find_paths(std::map<int, Sprite*> grid, Node* start, Node* dest);
-	std::list<int> find_paths(std::map<int, Sprite*> grid, int start, int dest);	///
-	std::list<int> get_path(Node* start, Node* dest);						///Get path from start node to destination node.
-
+	void clear_saved_paths();
 private:
-	std::priority_queue<Node*, node_graph, CompareCost> prio_queue;
+	NodePath* calculate_path(Node* start, Node* dest);
+	void save_path(Node* start, Node* dest);
 
-	node_graph graph;
-	static edge_graph edges;
+	NodePath* create_path_copy(NodePath* path);
+
+	std::map<NodePair, NodePath*> saved_paths;
+
+	std::priority_queue<Node*, NodeVector, CompareCost> prio_queue;
+
+	Grid* grid;
 };
 
 

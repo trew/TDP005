@@ -7,4 +7,5 @@ TDP005.rar
 *.swp
 highscore
 
+*.stackdump
 *.o

@@ -29,7 +29,7 @@ void Game::reset_game()
 
 	}
 	*/
-	selection.clear();
+	selection_text.clear();
 
 	tower_list.clear();
 
@@ -39,21 +39,13 @@ void Game::reset_game()
 	}
 	projectile_list.clear();
 
-	for (int x = 0; x < GRIDWIDTH; x += 40)
-	{
-		for (int y = 0; y < GRIDHEIGHT; y += 40)
-		{
-			grid_control[get_grid_position(x, y)] = NULL;
-		}
-	}
-
 	selection_sprite->set_x_pos(-5);
 	selection_sprite->set_y_pos(-5);
 	selection_sprite->hide();
 
 	level_control->reset();
 
-	current_selection = NULL;
+	tile_selection = NULL;
 	building_flag = false;
 	option_box_visible = false;
 	money = STARTING_MONEY;
@@ -72,7 +64,7 @@ void Game::reset_game()
 void Game::cleanup()
 {
 	delete level_control;
-	delete path_control;
+	delete grid;
 
 	delete map;
 	delete map_grid;
