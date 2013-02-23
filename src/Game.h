@@ -97,6 +97,7 @@ private:
 	Level* level_control;		//Controls difficulty and enemy waves
 	SDL_Surface* screen;		//Main screen, everything visible is blitted to this screen
 	Tile* tile_selection;	//Pointer to a tower, don't delete on cleanup.
+	Tile* last_selected_tile;
 	Tower* buildmenu_selection; //The selected tower in the build menu
 
 	/** Sprites */

@@ -84,6 +84,7 @@ void Game::select(Tile* tile)
 		buildmenu_selection = NULL;
 	}
 	tile_selection = tile;
+	last_selected_tile = tile_selection;
 	if (tower != NULL)
 		tower->clear_selected();
 

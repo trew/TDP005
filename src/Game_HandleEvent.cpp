@@ -164,7 +164,12 @@ void Game::arrowkey_bflag_not_set(SDL_Event* event)
 {
 	int mark_row = 0;
 	int mark_col = 0;
-	if (tile_selection != NULL) {
+	if (tile_selection == NULL) {
+		if (last_selected_tile != NULL) {
+			mark_row = last_selected_tile->get_position().first;
+			mark_col = last_selected_tile->get_position().second;
+		}
+	} else if (tile_selection != NULL) {
 		mark_row = tile_selection->get_position().first;
 		mark_col = tile_selection->get_position().second;
 	}
