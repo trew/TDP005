@@ -592,7 +592,7 @@ void Tower::shoot_if_possible(Sprite_List &object_list)
 	*/
 	if (current_target != NULL && current_target->get_type() >= ENEMY && current_target->get_type() < PROJECTILE)
 	{
-		if (target_in_range(current_target) && target_in_sight() && (current_target->get_x_pos() < GRIDWIDTH && current_target->get_y_pos() < GRIDHEIGHT) && (current_target->get_x_pos() >= 0 && current_target->get_y_pos() >= 0) && is_loaded())
+		if (target_in_range(current_target) && target_in_sight() && current_target->get_x_pos() >= 0 && is_loaded())
 		{
 			shoot(object_list);
 		}
