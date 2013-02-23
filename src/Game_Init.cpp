@@ -54,10 +54,7 @@ bool Game::init()
 	grid = new Grid;
 	grid->create_grid(15, 15);
 	grid->set_portal_tile(grid->get_tile(GridPosition(7, 14)));
-//	grid->add_tile(GridPosition(7, -1));
 	grid->set_start_tile(grid->get_tile(GridPosition(7, 0)));
-//	grid->get_start_tile()->add_neighbor(grid->get_tile(GridPosition(7, 0)));
-//	grid->get_tile(GridPosition(7, 0))->add_neighbor(grid->get_start_tile());
 
 	map = new Sprite(this, 				"./gfx/map/map.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
 	map_grid = new Sprite(this, 			"./gfx/map/map-grid.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
@@ -169,7 +166,7 @@ bool Game::init()
 	if (music_enabled)
 	{
 		Mix_VolumeMusic(MUSIC_VOLUME);
-		//music->play();
+		music->play();
 	}
 
 	return true;
