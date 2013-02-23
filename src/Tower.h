@@ -86,10 +86,12 @@ private:
 
 private: // Properties
 	double 	range;				// Tower Range
+	double 	base_range;
 	double 	rotation_speed;	    // Cannon Rotationspeed
 	int 	spread;				// Angle-deviation-acceptance for when to fire at enemy
 	int		reloading_time;		// The tower's rate of fire
 	int 	damage;				// Attackdamage
+	int 	base_damage;
 	int		projectile_speed;	// Speed of the projectile being shot
 	int 	level;				// Current level
 	int		cost_buy;			// Cost to build

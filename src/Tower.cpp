@@ -58,7 +58,7 @@ Tower::Tower(int new_type, Tile* tile): tile(tile)
 		// Tower Properties
 		type = TOWER_WALL;
 		level = 0;
-		range = 0;
+		base_range = range = 0;
 		rotation_speed = 0.0;
 		spread = 0;
 		reloading_time = 0;
@@ -75,11 +75,11 @@ Tower::Tower(int new_type, Tile* tile): tile(tile)
 		// Tower Properties
 		type = TOWER_BOOST_LEVEL_1;
 		level = 1;
-		range = tower_boost_1_range;
+		base_range = range = tower_boost_1_range;
 		rotation_speed = 0.0;
 		spread = 0;
 		reloading_time = 0;
-		damage = 0;
+		base_damage = damage = 0;
 		projectile_speed = 0;
 		cost_buy = 20;
 		cost_upgrade = tower_boost_1_upgradecost;
@@ -93,11 +93,11 @@ Tower::Tower(int new_type, Tile* tile): tile(tile)
 		// Tower Properties
 		type = TOWER_BASE;
 		level = 1;
-		range = tower_base_range;
+		base_range = range = tower_base_range;
 		rotation_speed = 5.0;
 		spread = 35;
 		reloading_time = 20;
-		damage = tower_base_damage;
+		base_damage = damage = tower_base_damage;
 		projectile_speed = 6;
 		cost_buy = 5;
 		cost_upgrade = tower_base_upgradecost;
@@ -510,8 +510,8 @@ void Tower::apply_boost(int old_percentage, int new_percentage)
 	//range = (range / (old_percentage / 100.0)) * (new_percentage / 100.0);
 	//damage = (damage / (old_percentage / 100.0)) * (new_percentage / 100.0);
 
-	range = (range * ((new_percentage) / 100.0));
-	damage = (damage * (new_percentage / 100.0));
+	range = (base_range * (new_percentage / 100.0));
+	damage = (base_damage * (new_percentage / 100.0));
 }
 
 bool Tower::has_this_target(Sprite* target)
@@ -619,8 +619,8 @@ bool Tower::upgrade(int new_type)
 	if (new_type == TOWER_BASIC_LEVEL_1 && type == TOWER_BASE)
 	{ // Basic tower lvl1
 		type = TOWER_BASIC_LEVEL_1;
-		range = tower_basic_1_range;
-		damage = tower_basic_1_damage;
+		base_range = range = tower_basic_1_range;
+		base_damage = damage = tower_basic_1_damage;
 		reloading_time = tower_basic_1_reloadingtime;
 		rotation_speed = tower_basic_1_rotationspeed;
 		projectile_speed = tower_basic_1_projectilespeed;
@@ -640,8 +640,8 @@ bool Tower::upgrade(int new_type)
 	else if (new_type == TOWER_SPEED_LEVEL_1 && type == TOWER_BASE)
 	{ // Speed tower lvl1
 		type = TOWER_SPEED_LEVEL_1;
-		range = tower_speed_1_range;
-		damage = tower_speed_1_damage;
+		base_range = range = tower_speed_1_range;
+		base_damage = damage = tower_speed_1_damage;
 		reloading_time = tower_speed_1_reloadingtime;
 		rotation_speed = tower_speed_1_rotationspeed;
 		projectile_speed = tower_speed_1_projectilespeed;
@@ -661,8 +661,8 @@ bool Tower::upgrade(int new_type)
 	else if (new_type == TOWER_RANGE_LEVEL_1 && type == TOWER_BASE)
 	{ // Range tower lvl1
 		type = TOWER_RANGE_LEVEL_1;
-		range = tower_range_1_range;
-		damage = tower_range_1_damage;
+		base_range = range = tower_range_1_range;
+		base_damage = damage = tower_range_1_damage;
 		reloading_time = tower_range_1_reloadingtime;
 		rotation_speed = tower_range_1_rotationspeed;
 		projectile_speed = tower_range_1_projectilespeed;
@@ -682,8 +682,8 @@ bool Tower::upgrade(int new_type)
 	else if (new_type == TOWER_BOMB_LEVEL_1 && type == TOWER_BASE)
 	{ // Bomb tower lvl1
 		type = TOWER_BOMB_LEVEL_1;
-		range = tower_bomb_1_range;
-		damage = tower_bomb_1_damage;
+		base_range = range = tower_bomb_1_range;
+		base_damage = damage = tower_bomb_1_damage;
 		reloading_time = tower_bomb_1_reloadingtime;
 		rotation_speed = tower_bomb_1_rotationspeed;
 		projectile_speed = tower_bomb_1_projectilespeed;
@@ -707,8 +707,8 @@ bool Tower::upgrade(int new_type)
 		//BASIC
 		case TOWER_BASIC_LEVEL_1:
 			type = TOWER_BASIC_LEVEL_2;
-			range = tower_basic_2_range;
-			damage = tower_basic_2_damage;
+			base_range = range = tower_basic_2_range;
+			base_damage = damage = tower_basic_2_damage;
 			reloading_time = tower_basic_2_reloadingtime;
 			rotation_speed = tower_basic_2_rotationspeed;
 			projectile_speed = tower_basic_2_projectilespeed;
@@ -724,8 +724,8 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_BASIC_LEVEL_2:
 			type = TOWER_BASIC_LEVEL_3;
-			range = tower_basic_3_range;
-			damage = tower_basic_3_damage;
+			base_range = range = tower_basic_3_range;
+			base_damage = damage = tower_basic_3_damage;
 			reloading_time = tower_basic_3_reloadingtime;
 			rotation_speed = tower_basic_3_rotationspeed;
 			projectile_speed = tower_basic_3_projectilespeed;
@@ -745,8 +745,8 @@ bool Tower::upgrade(int new_type)
 			//SPEED
 		case TOWER_SPEED_LEVEL_1:
 			type = TOWER_SPEED_LEVEL_2;
-			range = tower_speed_2_range;
-			damage = tower_speed_2_damage;
+			base_range = range = tower_speed_2_range;
+			base_damage = damage = tower_speed_2_damage;
 			reloading_time = tower_speed_2_reloadingtime;
 			rotation_speed = tower_speed_2_rotationspeed;
 			projectile_speed = tower_speed_2_projectilespeed;
@@ -762,8 +762,8 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_SPEED_LEVEL_2:
 			type = TOWER_SPEED_LEVEL_3;
-			range = tower_speed_3_range;
-			damage = tower_speed_3_damage;
+			base_range = range = tower_speed_3_range;
+			base_damage = damage = tower_speed_3_damage;
 			reloading_time = tower_speed_3_reloadingtime;
 			rotation_speed = tower_speed_3_rotationspeed;
 			projectile_speed = tower_speed_3_projectilespeed;
@@ -783,8 +783,8 @@ bool Tower::upgrade(int new_type)
 			//RANGE
 		case TOWER_RANGE_LEVEL_1:
 			type = TOWER_RANGE_LEVEL_2;
-			range = tower_range_2_range;
-			damage = tower_range_2_damage;
+			base_range = range = tower_range_2_range;
+			base_damage = damage = tower_range_2_damage;
 			reloading_time = tower_range_2_reloadingtime;
 			rotation_speed = tower_range_2_rotationspeed;
 			projectile_speed = tower_range_2_projectilespeed;
@@ -800,8 +800,8 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_RANGE_LEVEL_2:
 			type = TOWER_RANGE_LEVEL_3;
-			range = tower_range_3_range;
-			damage = tower_range_3_damage;
+			base_range = range = tower_range_3_range;
+			base_damage = damage = tower_range_3_damage;
 			reloading_time = tower_range_3_reloadingtime;
 			rotation_speed = tower_range_3_rotationspeed;
 			projectile_speed = tower_range_3_projectilespeed;
@@ -821,8 +821,8 @@ bool Tower::upgrade(int new_type)
 			//BOMB
 		case TOWER_BOMB_LEVEL_1:
 			type = TOWER_BOMB_LEVEL_2;
-			range = tower_bomb_2_range;
-			damage = tower_bomb_2_damage;
+			base_range = range = tower_bomb_2_range;
+			base_damage = damage = tower_bomb_2_damage;
 			reloading_time = tower_bomb_2_reloadingtime;
 			rotation_speed = tower_bomb_2_rotationspeed;
 			projectile_speed = tower_bomb_2_projectilespeed;
@@ -838,8 +838,8 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_BOMB_LEVEL_2:
 			type = TOWER_BOMB_LEVEL_3;
-			range = tower_bomb_3_range;
-			damage = tower_bomb_3_damage;
+			base_range = range = tower_bomb_3_range;
+			base_damage = damage = tower_bomb_3_damage;
 			reloading_time = tower_bomb_3_reloadingtime;
 			rotation_speed = tower_bomb_3_rotationspeed;
 			projectile_speed = tower_bomb_3_projectilespeed;
@@ -858,7 +858,7 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_BOOST_LEVEL_1:
 			type = TOWER_BOOST_LEVEL_2;
-			range = tower_boost_2_range;
+			base_range = range = tower_boost_2_range;
 			boostmod = tower_boost_2_modifier;
 			level = 2;
 			cost_upgrade = tower_boost_2_upgradecost;
@@ -872,7 +872,7 @@ bool Tower::upgrade(int new_type)
 
 		case TOWER_BOOST_LEVEL_2:
 			type = TOWER_BOOST_LEVEL_3;
-			range = tower_boost_3_range;
+			base_range = range = tower_boost_3_range;
 			boostmod = tower_boost_3_modifier;
 			level = 3;
 			cost_upgrade = 0;
