@@ -211,7 +211,7 @@ private:
 	void handle_event(SDL_Event* event);
 
 /** Definition in Game_HandleSelection.cpp */
-	bool sell(Tower* Object);
+	bool sell(Tile*);
 	void cancel_selection();
 	void clear_selectioninfo();
 	void set_selection_info(Tower*);

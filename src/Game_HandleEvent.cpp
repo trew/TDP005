@@ -139,7 +139,7 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 
 		return true;
 	case BUTTON_SELL:
-		sell(tile_selection->get_tower());
+		sell(tile_selection);
 
 		return true;
 	case BUTTON_SPEED:
@@ -203,6 +203,7 @@ void Game::buildingflag_not_set(SDL_Event* event)
 			game_state = GAMEPLAY_RUNNING;
 			game_started = true;
 			send_new_wave();
+			grid->clear_paths();
 			for(iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++) {
 				(*iter_enemy)->try_update_path(grid);
 			}
@@ -441,7 +442,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 						break;
 
 					case BUTTON_SELL:
-						sell(tile_selection->get_tower());
+						sell(tile_selection);
 						break;
 					}
 				}

@@ -7,8 +7,12 @@
 
 #include "Game.h"
 
-bool Game::sell(Tower* tower)
+bool Game::sell(Tile* tile)
 {
+	if (tile == NULL)
+		return false;
+	Tower* tower = tile->get_tower();
+
 	//Tries to sell empty spot
 	if (tower == NULL)
 		return false;
@@ -27,6 +31,7 @@ bool Game::sell(Tower* tower)
 		delete tower;
 		tower = NULL;
 
+		grid->clear_paths();
 		for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 		{
 			(*iter_enemy)->try_update_path(grid);
