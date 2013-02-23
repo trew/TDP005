@@ -268,7 +268,6 @@ void Game::render_gameplay()
 
 	draw_boost_connections();
 	draw_towers();
-	draw_build_item();
 
 	menu_background->draw(screen);
 	menu_money_score->draw(screen);
@@ -285,6 +284,7 @@ void Game::render_gameplay()
 	draw_menu_towers();
 	draw_ingame_buttons();
 	draw_optionbox();
+	draw_build_item();
 
 	if(!game_started) press_enter_to_start->draw(screen);
 
