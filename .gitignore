@@ -10,3 +10,5 @@ highscore
 
 *.stackdump
 *.o
+*.dll
+*.exe
