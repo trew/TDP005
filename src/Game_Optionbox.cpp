@@ -15,8 +15,8 @@ void Game::compose_box_pos(int &optbox_pos_x, int &optbox_pos_y, Sprite *optionb
 	int box_offset_y = -25;
 	if (tile_selection == NULL)
 	{
-		optbox_pos_x = selection_sprite->get_x_pos() + box_offset_x;
-		optbox_pos_y = selection_sprite->get_y_pos() + box_offset_y;
+		optbox_pos_x = (int)selection_sprite->get_x_pos() + box_offset_x;
+		optbox_pos_y = (int)selection_sprite->get_y_pos() + box_offset_y;
 	}
 	else
 	{

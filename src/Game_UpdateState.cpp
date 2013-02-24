@@ -63,7 +63,7 @@ void Game::update_timer() {
 	timer_text->set_x_pos( 590 - timer_text->get_width() );
 }
 
-void Game::get_rewards(Sprite* enemy) {
+void Game::get_rewards(Enemy* enemy) {
 	score += enemy->get_reward_score();
 	money += enemy->get_reward_money();
 	update_score();
@@ -78,7 +78,7 @@ void Game::update_state()
 		if(update_enemy_path) {
 			(*iter_enemy)->update_path();
 		}
-		(*iter_enemy)->update(enemy_list);
+		(*iter_enemy)->update();
 		if ((*iter_enemy)->is_killed())						//Enemy was killed
 		{
 			get_rewards((*iter_enemy));
@@ -135,12 +135,12 @@ void Game::update_state()
 		(*iter_tower)->shoot_if_possible(projectile_list);
 	}
 
-	Sprite_List new_projectiles;
+	ProjectileList new_projectiles;
 	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
 	{
 		(*iter_projectile)->update();
 
-		int p_x, p_y; // Projectile X and Y position
+		float p_x, p_y; // Projectile X and Y position
 		p_x = (*iter_projectile)->get_x_pos();
 		p_y = (*iter_projectile)->get_y_pos();
 
@@ -153,7 +153,7 @@ void Game::update_state()
 			continue;
 		}
 
-		int e_x, e_y; // Enemy X and Y position
+		float e_x, e_y; // Enemy X and Y position
 		int e_w, e_h; // Enemy Width and Height
 
 		// Check if projectile has collided with an enemy
@@ -167,7 +167,7 @@ void Game::update_state()
 			e_w = (*iter_enemy)->get_width();
 
 			///Collision detection
-			if (((p_x > e_x) && (p_x < (e_x + e_w))) && ((p_y > e_y) && (p_y < (e_y + e_h))))
+			if ((*iter_enemy)->intersects((*iter_projectile)))
 			{
 				(*iter_enemy)->take_damage((*iter_projectile)->get_damage());
 
@@ -175,7 +175,7 @@ void Game::update_state()
 				if( (*iter_projectile)->get_type() == PROJECTILE_BOMB ) {
 					for(int i = 0; i<90; i+=15) {
 
-						int new_projectile_dmg = (*iter_projectile)->get_damage() / 2.7;
+						int new_projectile_dmg = (int)((*iter_projectile)->get_damage() / 2.7f);
 						new_projectiles.push_back(new Projectile("./gfx/tower/ammo/ammo-bomb.png", e_x             , e_y -1         , 225 +i, 1, new_projectile_dmg, 0, 600));
 						new_projectiles.push_back(new Projectile("./gfx/tower/ammo/ammo-speed.png",e_x + e_w/4     , e_y -1         , 247 +i, 2, new_projectile_dmg, 0, 420));
 						new_projectiles.push_back(new Projectile("./gfx/tower/ammo/ammo-bomb.png", e_x + e_w/2     , e_y -1         , 270 +i, 1, new_projectile_dmg, 0, 630));

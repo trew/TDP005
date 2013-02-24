@@ -229,8 +229,8 @@ void Game::buildingflag_not_set(SDL_Event* event)
 	int position = 0;
 	for (iter_op_box = optionbox.begin(); iter_op_box != optionbox.end(); iter_op_box++)
 	{
-		int posX = selection_sprite->get_x_pos() + 2;
-		int posY = selection_sprite->get_y_pos() + 2;
+		int posX = (int)selection_sprite->get_x_pos() + 2;
+		int posY = (int)selection_sprite->get_y_pos() + 2;
 		GridPosition pos = GridPosition(0,0);
 		Tile* tile = grid->get_tile_from_mouse(posX, posY);
 		if (tile != NULL)
@@ -320,56 +320,44 @@ void Game::buildingflag_set(SDL_Event* event)
 
 }
 
-void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
+void Game::left_mousebutton(int m_x, int m_y)
 {
 	if (m_x <= GRIDWIDTH && m_y <= GRIDHEIGHT)
 	{ //Mouse within Grid
+		Tile* tile = grid->get_tile_from_mouse(m_x, m_y);
 		if (optionbox_visible())
 		{
 			bool done = false;
-			int pos_x = selection_sprite->get_x_pos() + 2;
-			int pos_y = selection_sprite->get_y_pos() + 2;
 			iter_op_box = optionbox.begin();
-			if ((m_x > (*iter_op_box)->get_x_pos()) && (m_x < (*iter_op_box)->get_x_pos() + (*iter_op_box)->get_width()) && (m_y > (*iter_op_box)->get_y_pos())
-					&& (m_y < (*iter_op_box)->get_y_pos() + (*iter_op_box)->get_height()))
+
+			// if mouse is inside OptionBox
+			if ((*iter_op_box)->overlaps(m_x, m_y))
 			{
 				for (iter_op_box = optionbox.begin()++; iter_op_box != optionbox.end(); iter_op_box++)
 				{
-
-					if ((m_x > (*iter_op_box)->get_x_pos()) && (m_x < (*iter_op_box)->get_x_pos() + (*iter_op_box)->get_width()) && (m_y
-							> (*iter_op_box)->get_y_pos()) && (m_y < (*iter_op_box)->get_y_pos() + (*iter_op_box)->get_height()))
+					if ((*iter_op_box)->overlaps(m_x, m_y))
 					{
-						done = optbox_do_selection((*iter_op_box), grid->get_tile_from_mouse(pos_x, pos_y)->get_position());
-					} //if mouseoverlap
+						if (tile != NULL)
+							done = optbox_do_selection((*iter_op_box), tile->get_position());
+					}
 
 					if (done)
 						break;
-				} //for loop
-			} // if Mouse inside OptionBox
+				}
+			}
 
-			else //if mouse IS outside the box
+			else //if mouse is outside the box
 			{
-				/*****/
-				//Snap mouseX and mouseY to Grid
-
-				pos_x = m_x;
-				pos_y = m_y;
-				Tile* tile = grid->get_tile_from_mouse(pos_x, pos_y);
-				if (tile->get_tower() == NULL)
+				if (tile != NULL && tile->get_tower() == NULL)
 				{
 					cancel_selection();
 					hide_option_box();
-					selection_sprite->show();
-					selection_sprite->set_x_pos(pos_x - 2);
-					selection_sprite->set_y_pos(pos_y - 2);
 				}
 				else
 				{
 					//Select Tower on this position
 					cancel_selection();
 					option_box_visible = false;
-					selection_sprite->set_x_pos(pos_x - 2);
-					selection_sprite->set_y_pos(pos_y - 2);
 					select(tile);
 				}
 				/*****/
@@ -380,12 +368,6 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 		else //if (!ShowOptionBox)
 
 		{
-			//Snap mouseX and mouseY to Grid
-
-			int pos_x = m_x;
-			int pos_y = m_y;
-			Tile* tile = grid->get_tile_from_mouse(pos_x, pos_y);
-
 			if (building_flag && buildmenu_selection != NULL && tile->get_tower() == NULL )
 			{
 				//Create new tower
@@ -393,10 +375,6 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 			}
 			else if (building_flag == false)
 			{
-				//Select this tile
-				selection_sprite->show();
-				selection_sprite->set_x_pos(tile->get_x_pixel_pos() - 2);
-				selection_sprite->set_y_pos(tile->get_y_pixel_pos() - 2);
 				select(tile);
 			}
 			else
@@ -507,7 +485,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 
 		if (event->button.button == SDL_BUTTON_LEFT)
 		{
-			left_mousebutton(m_x, m_y, event);
+			left_mousebutton(m_x, m_y);
 		} //Mousebutton left
 
 		else if (event->button.button == SDL_BUTTON_RIGHT)

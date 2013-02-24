@@ -56,8 +56,8 @@ void Button::draw(SDL_Surface* dest_surf)
 
 	SDL_Rect dest_rect;
 
-	dest_rect.x = x_pos;
-	dest_rect.y = y_pos;
+	dest_rect.x = (Sint16)x_pos;
+	dest_rect.y = (Sint16)y_pos;
 
 	if(can_toggle) {
 		if(is_toggled)
@@ -70,8 +70,8 @@ void Button::draw(SDL_Surface* dest_surf)
 		//If mouse is over button
 		if (m_x > x_pos && m_y > y_pos && m_x < x_pos + width && m_y < y_pos + height && second_surf != NULL)
 		{
-			dest_rect.x = x_pos - ((second_surf->w - sprite_surf->w)/2.0);
-			dest_rect.y = y_pos - ((second_surf->h - sprite_surf->h)/2.0);
+			dest_rect.x = (Sint16)(x_pos - ((second_surf->w - sprite_surf->w) / 2.0));
+			dest_rect.y = (Sint16)(y_pos - ((second_surf->h - sprite_surf->h) / 2.0));
 			SDL_BlitSurface(second_surf, NULL, dest_surf, &dest_rect);
 		}
 
@@ -95,8 +95,8 @@ void Button::draw(SDL_Surface* dest_surf, int x, int y)
 	//If mouse is over button
 	if (m_x > x_pos && m_y > y_pos && m_x < x_pos + width && m_y < y_pos + height && second_surf != NULL)
 	{
-		dest_rect.x = x - ((second_surf->w - sprite_surf->w)/2.0);
-		dest_rect.y = y - ((second_surf->h - sprite_surf->h)/2.0);
+		dest_rect.x = (Sint16)(x - ((second_surf->w - sprite_surf->w)/2.0));
+		dest_rect.y = (Sint16)(y - ((second_surf->h - sprite_surf->h)/2.0));
 		SDL_BlitSurface(second_surf, NULL, dest_surf, &dest_rect);
 	}
 

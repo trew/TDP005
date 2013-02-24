@@ -9,7 +9,7 @@
 #include "Tower.h"
 #include "Define.h"
 
-Tile::Tile(int row, int col): tower(NULL), position(GridPosition(row, col)) {
+Tile::Tile(int row, int col): position(GridPosition(row, col)), tower(NULL) {
 }
 
 Tile::~Tile() {

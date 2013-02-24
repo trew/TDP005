@@ -79,14 +79,14 @@ bool Game::init()
 	selection_sprite = new Sprite(this, 	"./gfx/misc/marker44x44.png", -5, -5, 44, 44);
 	selection_sprite->hide();
 
-	score_text = new Text(get_score_str(), 0, menu_money_score->get_y_pos() + 30, standard_font_16);
+	score_text = new Text(get_score_str(), 0, (int)menu_money_score->get_y_pos() + 30, standard_font_16);
 	update_score();
-	split_money_score = new Text("-------------------------------------", menu_money_score->get_x_pos() + 30, menu_money_score->get_y_pos() + 45, standard_font_12);
-	money_text = new Text(get_money_str(), 0, menu_money_score->get_y_pos() + 55, standard_font_16);
+	split_money_score = new Text("-------------------------------------", (int)menu_money_score->get_x_pos() + 30, (int)menu_money_score->get_y_pos() + 45, standard_font_12);
+	money_text = new Text(get_money_str(), 0, (int)menu_money_score->get_y_pos() + 55, standard_font_16);
 	update_money();
-	lives_text = new Text(get_lives_str(), 0, menu_money_score->get_y_pos() + 55, standard_font_16);
+	lives_text = new Text(get_lives_str(), 0, (int)menu_money_score->get_y_pos() + 55, standard_font_16);
 	update_lives();
-	level_text = new Text("Wave: 1", menu_money_score->get_x_pos() + 25, menu_money_score->get_y_pos() + 30, standard_font_16);
+	level_text = new Text("Wave: 1", (int)menu_money_score->get_x_pos() + 25, (int)menu_money_score->get_y_pos() + 30, standard_font_16);
 	timer_text = new Text("",255,255,255, 0, 5, standard_font_12);
 	fps_text = new Text("", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
 

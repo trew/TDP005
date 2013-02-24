@@ -8,7 +8,7 @@
 #include "Text.h"
 #include <iostream>
 
-Text::Text()
+Text::Text(): font(NULL)
 {
 }
 

@@ -42,7 +42,7 @@ Tower::Tower(int new_type, Tile* tile): tile(tile)
 	target_angle = 0;
 	rotation_modifier = 0.0;
 	reload_counter = 0;
-	boost_percentage = 100;
+	boost_modifier = 100;
 
 	// Toggle smoothing for rotozoom
 	smoothing = 1;
@@ -179,7 +179,7 @@ void Tower::init_info_sprites()
 
 	row_count++;
 	tmp = "Boost mod: ";
-	infosprites.push_back(new Text(tmp.append(conv_int_to_string(boostmod)), X, 0, Game::standard_font_16));
+	infosprites.push_back(new Text(tmp.append(conv_float_to_string(boostmod)), X, 0, Game::standard_font_16));
 	if (boostmod > 0)
 	{
 		visible_row++;
@@ -280,7 +280,7 @@ void Tower::update_info_sprites()
 
 	row_count++;
 	tmp = "Boost mod: ";
-	infosprites[row_count]->update_text(tmp.append(conv_int_to_string(boostmod)));
+	infosprites[row_count]->update_text(tmp.append(conv_float_to_string(boostmod)));
 	if (boostmod > 0)
 	{
 		visible_row++;
@@ -309,12 +309,12 @@ void Tower::update_info_sprites()
 	}
 }
 
-void Tower::display_range(SDL_Surface* dest_surf, int x_pos, int y_pos)
+void Tower::display_range(SDL_Surface* dest_surf, float x_pos, float y_pos)
 {
 	///Draws a filled circle on the map, showing the range of the tower.
 
-	filledCircleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, (Sint16)range, 0x0000FF11);
-	circleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, (Sint16)range, 0x5555FF44);
+	filledCircleColor(dest_surf, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)range, 0x0000FF11);
+	circleColor(dest_surf, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)range, 0x5555FF44);
 }
 
 void Tower::draw(SDL_Surface* dest_surf)
@@ -322,8 +322,8 @@ void Tower::draw(SDL_Surface* dest_surf)
 	if (!visible)
 		return;
 	SDL_Rect dest_rect;
-	dest_rect.x = x_pos;
-	dest_rect.y = y_pos;
+	dest_rect.x = (Sint16)x_pos;
+	dest_rect.y = (Sint16)y_pos;
 
 	if (selected && range > 0 && x_pos < GRIDWIDTH)
 	{ // If selected, print tower range on the map
@@ -368,8 +368,8 @@ void Tower::draw(SDL_Surface* dest_surf, int x, int y)
 		cannon_surf_rotated = rotozoomSurface(cannon_surf, current_angle, 1, 1);
 
 		SDL_Rect compensation_rect;
-		compensation_rect.x = x - (cannon_surf_rotated->w / 2.0) + 20;
-		compensation_rect.y = y - (cannon_surf_rotated->h / 2.0) + 20;
+		compensation_rect.x = x - (int)((double)cannon_surf_rotated->w / 2.0) + 20;
+		compensation_rect.y = y - (int)((double)cannon_surf_rotated->h / 2.0) + 20;
 
 		SDL_BlitSurface(cannon_surf_rotated, NULL, dest_surf, &compensation_rect);
 		SDL_FreeSurface(cannon_surf_rotated);
@@ -383,19 +383,19 @@ bool Tower::target_in_range(Sprite *target)
 
 void Tower::update_angle_to_target()
 {
-	double target_x_pos = current_target->get_x_pos();
-	double target_y_pos = current_target->get_y_pos();
+	float target_x_pos = current_target->get_x_pos();
+	float target_y_pos = current_target->get_y_pos();
 
-	double distance_to_target = get_distance_to(current_target);
+	float distance_to_target = get_distance_to(current_target);
 	// modify aim by considering distance to target and target movespeed
 	if (current_target->get_direction() == RIGHT) target_x_pos += current_target->get_speed() * distance_to_target / projectile_speed;
 	else if (current_target->get_direction() == LEFT) target_x_pos -= current_target->get_speed() * distance_to_target / projectile_speed;
 	else if (current_target->get_direction() == DOWN) target_y_pos += current_target->get_speed() * distance_to_target / projectile_speed;
 	else if (current_target->get_direction() == UP) target_y_pos -= current_target->get_speed() * distance_to_target / projectile_speed;
 
-	int delta_x = x_pos - (int)target_x_pos;
-	int delta_y = y_pos - (int)target_y_pos;
-	double rad = 180 / 3.14159;
+	float delta_x = x_pos - target_x_pos;
+	float delta_y = y_pos - target_y_pos;
+	double rad = 180.0f / 3.14159f;
 	target_angle = atan2(delta_x, delta_y) * rad;
 
 	format_angle(target_angle);
@@ -438,7 +438,7 @@ void Tower::rotate(double value)
 
 bool Tower::target_in_sight()
 {
-	if (current_angle < target_angle + spread / 2 && current_angle > target_angle - spread / 2)
+	if (current_angle < target_angle + spread / 2.0f && current_angle > target_angle - spread / 2.0)
 		return true;
 	else
 		return false;
@@ -454,7 +454,7 @@ void Tower::find_new_target(EnemyList &object_list)
 	if (current_target == NULL || get_distance_to(current_target) > range)
 	{
 		Enemy* closest_object = NULL;
-		int closest_distance = 99999;
+		float closest_distance = 99999.0f;
 		EnemyList::iterator iter_object;
 		for (iter_object = object_list.begin(); iter_object != object_list.end(); iter_object++)
 		{
@@ -491,7 +491,7 @@ bool Tower::is_loaded()
 		return false;
 }
 
-void Tower::shoot(Sprite_List &object_list)
+void Tower::shoot(ProjectileList &projectile_list)
 {
 	/**
 	 * Shoots an projectile in the towers current cannon-direction.
@@ -499,29 +499,26 @@ void Tower::shoot(Sprite_List &object_list)
 	 */
 
 	if (type == TOWER_BASE) {
-		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
+		projectile_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
 	}
 	else if (type >= TOWER_BASIC_LEVEL_1 && type <= TOWER_BASIC_LEVEL_3) {
-		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
+		projectile_list.push_back(new Projectile("./gfx/tower/ammo/ammo-basic.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
 	}
 	else if (type >= TOWER_SPEED_LEVEL_1 && type <= TOWER_SPEED_LEVEL_3) {
-		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-speed.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
+		projectile_list.push_back(new Projectile("./gfx/tower/ammo/ammo-speed.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
 	}
 	else if (type >= TOWER_RANGE_LEVEL_1 && type <= TOWER_RANGE_LEVEL_3) {
-		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-range.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
+		projectile_list.push_back(new Projectile("./gfx/tower/ammo/ammo-range.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 0, 3000));
 	}
 	else if (type >= TOWER_BOMB_LEVEL_1 && type <= TOWER_BOMB_LEVEL_3) {
-		object_list.push_back(new Projectile("./gfx/tower/ammo/ammo-bomb.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 30, 4000));
+		projectile_list.push_back(new Projectile("./gfx/tower/ammo/ammo-bomb.png", x_pos + 15, y_pos + 15, -(target_angle + 90), projectile_speed, damage, 30, 4000));
 	}
 }
 
-void Tower::apply_boost(int old_percentage, int new_percentage)
+void Tower::apply_boost(float mod)
 {
-	//range = (range / (old_percentage / 100.0)) * (new_percentage / 100.0);
-	//damage = (damage / (old_percentage / 100.0)) * (new_percentage / 100.0);
-
-	range = (base_range * (new_percentage / 100.0));
-	damage = (base_damage * (new_percentage / 100.0));
+	range = (base_range * mod);
+	damage = (int)((float)base_damage * mod);
 }
 
 bool Tower::has_this_target(Sprite* target)
@@ -542,14 +539,14 @@ void Tower::update_boost(TowerList &tower_list)
 
 	TowerList::iterator iter_object = tower_list.begin();
 
-	int old_boost_percent = boost_percentage;
+	float old_boost_percent = boost_modifier;
 
 	if (!tower_list.empty() && (*iter_object)->get_type() < ENEMY && (*iter_object)->get_type() > TOWER_WALL)
 	{
 		// If *this tower is a boost tower, ignore.
 		if (!(type >= TOWER_BOOST_LEVEL_1 && type <= TOWER_BOOST_LEVEL_3))
 		{
-			boost_percentage = 100;
+			boost_modifier = 1.0f;
 			for (iter_object = tower_list.begin(); iter_object != tower_list.end(); iter_object++)
 			{
 				// If the tower is a boost tower
@@ -558,14 +555,14 @@ void Tower::update_boost(TowerList &tower_list)
 					// And if the current tower is in the range of the boost tower
 					if (get_distance_to((*iter_object)) <= (*iter_object)->get_range())
 					{
-						boost_percentage += ((*iter_object)->get_boostmod());
+						boost_modifier += ((*iter_object)->get_boostmod());
 					}
 				}
 			}
 		}
-		if (boost_percentage != old_boost_percent)
+		if (boost_modifier != old_boost_percent)
 		{
-			apply_boost(old_boost_percent, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 		}
 	}
@@ -576,8 +573,6 @@ void Tower::update(EnemyList &enemy_list)
 	///Updates the state of the current tower which includes rotating, reloading and finding new targets.
 
 	EnemyList::iterator iter_object = enemy_list.begin();
-
-	//
 	if (!enemy_list.empty() && (*iter_object)->get_type() >= ENEMY && (*iter_object)->get_type() < PROJECTILE)
 	{
 		rotation_modifier = 0.0;
@@ -594,7 +589,7 @@ void Tower::update(EnemyList &enemy_list)
 	}
 }
 
-void Tower::shoot_if_possible(Sprite_List &object_list)
+void Tower::shoot_if_possible(ProjectileList &projectile_list)
 {
 	/**
 	* Checks if the current target is an enemy, is within the map-grid, is in range,
@@ -604,7 +599,7 @@ void Tower::shoot_if_possible(Sprite_List &object_list)
 	{
 		if (target_in_range(current_target) && target_in_sight() && current_target->get_x_pos() >= 0 && is_loaded())
 		{
-			shoot(object_list);
+			shoot(projectile_list);
 		}
 	}
 }
@@ -641,7 +636,7 @@ bool Tower::upgrade(int new_type)
 		SDL_FreeSurface(base_surf);
 		cannon_surf = load_image("./gfx/tower/cannon-basic.png");
 		base_surf = load_image("./gfx/tower/tower-basic-lvl1.png");
-		apply_boost(100, boost_percentage);
+		apply_boost(boost_modifier);
 		update_info_sprites();
 
 		return true;
@@ -662,7 +657,7 @@ bool Tower::upgrade(int new_type)
 		SDL_FreeSurface(base_surf);
 		cannon_surf = load_image("./gfx/tower/cannon-speed.png");
 		base_surf = load_image("./gfx/tower/tower-speed-lvl1.png");
-		apply_boost(100, boost_percentage);
+		apply_boost(boost_modifier);
 		update_info_sprites();
 
 		return true;
@@ -683,7 +678,7 @@ bool Tower::upgrade(int new_type)
 		SDL_FreeSurface(base_surf);
 		cannon_surf = load_image("./gfx/tower/cannon-range.png");
 		base_surf = load_image("./gfx/tower/tower-range-lvl1.png");
-		apply_boost(100, boost_percentage);
+		apply_boost(boost_modifier);
 		update_info_sprites();
 
 		return true;
@@ -704,7 +699,7 @@ bool Tower::upgrade(int new_type)
 		SDL_FreeSurface(base_surf);
 		cannon_surf = load_image("./gfx/tower/cannon-bomb.png");
 		base_surf = load_image("./gfx/tower/tower-bomb-lvl1.png");
-		apply_boost(100, boost_percentage);
+		apply_boost(boost_modifier);
 		update_info_sprites();
 
 		return true;
@@ -727,7 +722,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-basic-lvl2.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -744,7 +739,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-basic-lvl3.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -765,7 +760,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-speed-lvl2.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -782,7 +777,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-speed-lvl3.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -803,7 +798,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-range-lvl2.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -820,7 +815,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-range-lvl3.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -841,7 +836,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-bomb-lvl2.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -858,7 +853,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-bomb-lvl3.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -875,7 +870,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-boost-lvl2.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -889,7 +884,7 @@ bool Tower::upgrade(int new_type)
 
 			SDL_FreeSurface(base_surf);
 			base_surf = load_image("./gfx/tower/tower-boost-lvl3.png");
-			apply_boost(100, boost_percentage);
+			apply_boost(boost_modifier);
 			update_info_sprites();
 
 			return true;
@@ -910,7 +905,7 @@ int Tower::get_damage()
 	return damage;
 }
 
-int Tower::get_boostmod()
+float Tower::get_boostmod()
 {
 	return boostmod;
 }
@@ -920,7 +915,7 @@ int Tower::get_level()
 	return level;
 }
 
-int Tower::get_range()
+float Tower::get_range()
 {
 	return range;
 }
@@ -965,7 +960,7 @@ Tile* Tower::get_tile() {
 	return tile;
 }
 
-std::string Tower::conv_int_to_string(int i)
+std::string Tower::conv_float_to_string(float i)
 {
 	std::stringstream s_stream;
 	s_stream << i;
@@ -976,27 +971,27 @@ std::string Tower::conv_int_to_string(int i)
 
 std::string Tower::get_range_str()
 {
-	return conv_int_to_string(range);
+	return conv_float_to_string(range);
 }
 
 std::string Tower::get_damage_str()
 {
-	return conv_int_to_string(damage);
+	return conv_float_to_string(damage);
 }
 
 std::string Tower::get_level_str()
 {
-	return conv_int_to_string(level);
+	return conv_float_to_string(level);
 }
 
 std::string Tower::get_cost_buy_str()
 {
-	return conv_int_to_string(cost_buy);
+	return conv_float_to_string(cost_buy);
 }
 
 std::string Tower::get_cost_upgrade_str()
 {
-	return conv_int_to_string(cost_upgrade);
+	return conv_float_to_string(cost_upgrade);
 }
 
 double Tower::get_angle()

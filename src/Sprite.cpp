@@ -21,6 +21,8 @@ Sprite::Sprite()
 	width = 0;
 	selected = false;
 	visible = true;
+	type = 0;
+	game = NULL;
 }
 
 Sprite::Sprite(Game* game, std::string File, int x, int y, int w, int h): game(game)
@@ -69,17 +71,41 @@ SDL_Surface* Sprite::load_image(std::string file)
 
 }
 
-double Sprite::get_distance_to(Sprite *target)
+float Sprite::get_distance_to(Sprite *target)
 {
 	/*
 	 * Calculates the distance between two sprites center positions
 	 */
-	double delta_x = (double)(x_pos + (width / 2) - (target->get_x_pos() + target->get_width() / 2));
-	double delta_y = (double)(y_pos + (height / 2) - (target->get_y_pos() + target->get_height() / 2));
-	double distance = sqrt(pow(delta_x, 2.0) + pow(delta_y, 2.0));
-	return distance;
+	float delta_x = x_pos + (width / 2.0f) - (target->get_x_pos() + target->get_width() / 2.0f);
+	float delta_y = y_pos + (height / 2.0f) - (target->get_y_pos() + target->get_height() / 2.0f);
+	double distance = sqrt( pow(delta_x, 2.0) + pow(delta_y, 2.0) );
+	return (float)distance;
 }
 
+bool Sprite::intersects(Sprite* him) {
+	/**
+	 * Perform simple bounding box detection.
+	 * Returns true if the other sprite intersects with us
+	 */
+	if (y_pos + height < him->y_pos) return false;
+	if (y_pos > him->y_pos + him->height) return false;
+
+	if (x_pos + width < him->x_pos) return false;
+	if (x_pos > him->x_pos + him->width) return false;
+
+	return true;
+}
+
+bool Sprite::overlaps(int x, int y) {
+	/**
+	 * Returns true if the pixel can be found within this sprite
+	 */
+	if (x < x_pos) return false;
+	if (x > x_pos + width) return false;
+	if (y < y_pos) return false;
+	if (y > y_pos + height) return false;
+	return true;
+}
 /* Setters and getters for Sprite */
 
 bool Sprite::is_visible()
@@ -112,24 +138,24 @@ void Sprite::set_type(int new_type)
 	type = new_type;
 }
 
-void Sprite::set_x_pos(int x)
+void Sprite::set_x_pos(float x)
 {
 	///Set x position
 	x_pos = x;
 }
-void Sprite::set_y_pos(int y)
+void Sprite::set_y_pos(float y)
 {
 	///Set y position
 	y_pos = y;
 }
 
-int Sprite::get_x_pos()
+float Sprite::get_x_pos()
 {
 	///Returns x position
 	return x_pos;
 }
 
-int Sprite::get_y_pos()
+float Sprite::get_y_pos()
 {
 	///Returns y position
 	return y_pos;
@@ -158,7 +184,7 @@ void Sprite::draw(SDL_Surface* dest_surf)
 	/*
 	 * Virtual function that draws the sprites surface to the screen using its own X and Y coordinates.
 	 */
-	draw(dest_surf, x_pos, y_pos);
+	draw(dest_surf, (int)x_pos, (int)y_pos);
 }
 
 void Sprite::draw(SDL_Surface* dest_surf, int X, int Y)
@@ -176,166 +202,14 @@ void Sprite::draw(SDL_Surface* dest_surf, int X, int Y)
 
 
 /*****************************************************************************************/
-/*
- * Tower specific virtuals
- */
-void Sprite::update_boost(Sprite_List &tower_list)
-{
-	///Pure virtual
-}
-
-void Sprite::shoot_if_possible(Sprite_List &tower_list)
-{
-	///Pure virtual
-}
-
-int Sprite::get_level()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_damage()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_boostmod()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_range()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_cost_buy()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_cost_upgrade()
-{
-	///Pure virtual
-	return 0;
-}
-int Sprite::get_sell_value() {
-	///Pure virtual
-	return 0;
-}
-void Sprite::add_to_sell_value(int cost) {
-	///Pure virtual
-}
-std::string Sprite::get_type_str()
-{
-	///Pure virtual
-	return "";
-}
-std::string Sprite::get_range_str()
-{
-	///Pure virtual
-	return "";
-}
-std::string Sprite::get_damage_str()
-{
-	///Pure virtual
-	return "";
-}
-std::string Sprite::get_level_str()
-{
-	///Pure virtual
-	return "";
-}
-
-bool Sprite::has_this_target(Sprite* target) {
-	///Pure virtual
-	return true;
-}
-void Sprite::null_current_target() {
-	///Pure virtual
-}
-Sprite_List Sprite::get_infosprites()
-{
-	///Applies to Tower currently, might apply to Enemy
-	return visible_infosprites;
-}
-bool Sprite::upgrade(int input)
-{
-	///Pure virtual
-	return true;
-}
-void Sprite::clear_selected()
-{
-	///Pure virtual
-}
-void Sprite::set_selected()
-{
-	///Pure virtual
-}
-void Sprite::display_range(SDL_Surface* destSurf, int x_pos, int y_pos)
-{
-	///Pure virtual
-}
-
-
-/*****************************************************************************************/
-/*
- * Enemy virtuals
- */
-bool Sprite::is_killed()
-{
-	///Pure virtual
-	return false;
-}
-bool Sprite::has_reached_goal()
-{
-	///Pure virtual
-	return false;
-}
-void Sprite::update_path() {
-	///Pure virtual
-}
-bool Sprite::try_update_path() {
-	///Pure virtual
-	return true;
-}
-void Sprite::take_damage(int)
-{
-	///Pure virtual
-}
-int Sprite::get_reward_money()
-{
-	///Pure virtual.
-	return 0;
-}
-
-int Sprite::get_reward_score()
-{
-	///Pure virtual.
-	return 0;
-}
-
-/*****************************************************************************************/
 /* Text specifics */
 void Sprite::update_text(std::string){
 	///Pure virtual
 }
 
 /*****************************************************************************************/
-/* Projectile specific */
-bool Sprite::is_dead() {
-	///Pure virtual
-	return false;
-}
-
-
-/*****************************************************************************************/
 /* Virtuals */
 void Sprite::update()
-{
-	///Pure virtual
-}
-void Sprite::update(Sprite_List &object_list)
 {
 	///Pure virtual
 }

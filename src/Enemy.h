@@ -31,7 +31,7 @@ public:
 	void draw(SDL_Surface* dest_surf);					///< Draw image
 	void draw_health_bar(SDL_Surface* dest_surf);
 
-	void update(EnemyList &enemy_list);				///< Update state of enemy
+	void update();										///< Update state of enemy
 	void take_damage(int dmg);							///< Recieve damage
 	bool is_killed() { return killed; }					///< Is enemy killed by player?
 	bool has_reached_goal() { return reached_goal; }	///< Has enemy reached its goal?
@@ -56,12 +56,11 @@ private:
 	Tile* current_tile;
 	Tile* current_destination;
 
-	GridPosition conv_int_to_XY(int in);	///< Convert an int to appropriate <X,Y>-pair.
 	Direction move_dir();		///< Move direction
 	void move();		///< Execute movement
 
-	int x_vel, y_vel;
-	int move_speed;
+	float x_vel, y_vel;
+	float move_speed;
 	int health;
 	int max_health;
 	bool reached_goal;

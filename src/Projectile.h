@@ -20,21 +20,17 @@ class Projectile: public Sprite
 {
 public:
 	///Creates a projectile using a lot of different parameters.
-	Projectile(std::string file, int x_pos_in, int y_pos_in, double direction_in , double movespeed_in, int damage_in, double splash_area_in, int life_time);
+	Projectile(std::string file, float x_pos_in, float y_pos_in, double direction_in , double movespeed_in, int damage_in, double splash_area_in, int life_time);
 	virtual ~Projectile();	///< Destructor
 
 	void draw(SDL_Surface* dest_surf);		///< Draw projectile to screen
 	void update();			///< Update projectile
 
-	int get_x_pos();		///< Returns x position
-	int get_y_pos();		///< Returns y position
 	int get_damage();		///< Get damage from projectile
 	double get_splash_area();	///< Should be used to give damage to enemies in an area. NOT DONE!
 	bool is_dead();				///< Is projectile dead? (out of screen, hit an enemy?)
 
 private:
-	double real_x_pos;
-	double real_y_pos;
 	double movespeed;
 	double direction;
 	int damage;

@@ -28,13 +28,13 @@ public:
 
 public: // Selectors
 	int get_sell_value() { return sell_value; } ///<Returns sell-value
-	int get_range(); 							///<Returns range
+	float get_range(); 							///<Returns range
 	int get_level(); 							///<Returns level
 	int get_damage(); 							///<Returns damage
-	int get_boostmod(); 						///<Returns boostmod
+	float get_boostmod(); 						///<Returns boostmod
 	int get_cost_buy(); 						///<Returns cost (when buying)
 	int get_cost_upgrade(); 					///<Returns upgrade-cost
-	std::string conv_int_to_string(int i); 		///<Converts int to string
+	std::string conv_float_to_string(float i); 		///<Converts float to string
 	std::string get_type_str(); 				///<Returns type as string
 	std::string get_range_str();				///<Returns range as string
 	std::string get_level_str();				///<Returns level as string
@@ -47,7 +47,7 @@ public: // Selectors
 	void add_to_sell_value(int cost) { sell_value += cost; }///<Adds value to sell-value
 
 public:
-	void display_range(SDL_Surface* dest_surf, int x_pos, int y_pos); ///<Displays range as filled circle
+	void display_range(SDL_Surface* dest_surf, float x_pos, float y_pos); ///<Displays range as filled circle
 	void draw(SDL_Surface* dest_surf); 				///<Draws the tower onto the destination surface
 	void draw(SDL_Surface* dest_surf, int x, int y);///<Draws the tower onto the destination surface at (X,Y)
 
@@ -58,18 +58,18 @@ public:
 	bool target_in_sight();							///<Checks if tower is aiming at target
 	bool target_in_range(Sprite *s);				///<Checks if target is in range
 	void update_aim();								///<Rotates the cannon so that it aims more towards the current target.
-	void find_new_target(EnemyList &object_list);	///<Finds new target for tower if possible
+	void find_new_target(EnemyList &enemy_list);	///<Finds new target for tower if possible
 	void reload();									///<Handles reloadtimer
 	bool is_loaded();								///<Checks if tower is loaded
-	void shoot(Sprite_List &object_list);			///<Fires an projectile //TODO: projectile_list
-	void apply_boost(int old_percentage, int new_percentage); ///<Applies boost to the towers stats
+	void shoot(ProjectileList& list);			///<Fires an projectile //TODO: projectile_list
+	void apply_boost(float mod); ///<Applies boost to the towers stats
 
 	bool has_this_target(Sprite* target);			///<Checks if the target is the towers current target
 	void null_current_target();						///<Sets current target to NULL
 
 	void update_boost(TowerList &tower_list);		///<Updates the towers boost-percentage and boosts the tower with apply_boost.
 	void update(EnemyList &enemy_list);			///<Update tower state
-	void shoot_if_possible(Sprite_List &object_list); ///<Shoots at the enemy if conditions are right.
+	void shoot_if_possible(ProjectileList &projectile_list); ///<Shoots at the enemy if conditions are right.
 
 	void set_selected();							///<Sets tower as selected
 	void clear_selected();							///<Deselects tower if it is selected
@@ -85,18 +85,18 @@ private:
 	void init_info_sprites();						///<Initializes the information-sprites
 
 private: // Properties
-	double 	range;				// Tower Range
-	double 	base_range;
-	double 	rotation_speed;	    // Cannon Rotationspeed
+	float 	range;				// Tower Range
+	float 	base_range;
+	float 	rotation_speed;	    // Cannon Rotationspeed
 	int 	spread;				// Angle-deviation-acceptance for when to fire at enemy
-	int		reloading_time;		// The tower's rate of fire
+	float	reloading_time;		// The tower's rate of fire
 	int 	damage;				// Attackdamage
 	int 	base_damage;
-	int		projectile_speed;	// Speed of the projectile being shot
+	float	projectile_speed;	// Speed of the projectile being shot
 	int 	level;				// Current level
 	int		cost_buy;			// Cost to build
 	int 	cost_upgrade;		// Cost to upgrade
-	int 	boostmod;			// Boost modifier for boost towers
+	float 	boostmod;			// Boost modifier for boost towers
 	int 	sell_value;			// Value when selling
 	Tile*	tile;
 
@@ -109,7 +109,7 @@ private: // Specific variables for calculations etc.
 	double			rotation_modifier;
 	int				reload_counter;
 	int				smoothing;
-	int				boost_percentage;
+	float			boost_modifier;
 };
 
 #endif /* TOWER_H_ */

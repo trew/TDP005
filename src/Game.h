@@ -73,7 +73,7 @@ private:
 	bool game_started;
 	int FPS_MAX;
 	int current_fps;
-	unsigned int fps_timer;
+	Uint32 fps_timer;
 	bool fullscreen;
 
 	bool snap_to_grid;
@@ -195,7 +195,7 @@ private:
 	void arrowkey_bflag_not_set(SDL_Event* event);
 	void buildingflag_not_set(SDL_Event* event);
 	void buildingflag_set(SDL_Event* event);
-	void left_mousebutton(int m_x, int m_y, SDL_Event* event);
+	void left_mousebutton(int m_x, int m_y);
 
 	/** Handle event depending on gamestate */
 	void state_gameplay_running(SDL_Event* event);
@@ -267,7 +267,7 @@ private:
 	void update_level();
 	void update_timer();
 
-	void get_rewards(Sprite* enemy);
+	void get_rewards(Enemy* enemy);
 	void update_state();
 
 private:
@@ -291,8 +291,8 @@ private:
 	EnemyList enemy_list;
 	EnemyList::iterator iter_enemy;
 
-	Sprite_List projectile_list;
-	Sprite_List::iterator iter_projectile;
+	ProjectileList projectile_list;
+	ProjectileList::iterator iter_projectile;
 
 	Sprite_List ingame_menu_buttons;
 	Sprite_List::iterator iter_ingame_menu_button;

@@ -142,8 +142,12 @@ void Game::draw_boost_connections()
 						int line_strength = (*iter_tower)->get_type();
 						line_strength = 20 + line_strength % 13 * 20;
 
-						lineRGBA(screen, (*iter_tower)->get_x_pos() + TILESIZE / 2, (*iter_tower)->get_y_pos() + TILESIZE / 2, (*iter_tower_2)->get_x_pos() + TILESIZE / 2,
-								(*iter_tower_2)->get_y_pos() + TILESIZE / 2, 0xFF, 0xFF, 0, line_strength);
+						Sint16 x1, x2, y1, y2;
+						x1 = (Sint16)((*iter_tower)->get_x_pos() + TILESIZE / 2.0f);
+						y1 = (Sint16)((*iter_tower)->get_y_pos() + TILESIZE / 2.0f);
+						x2 = (Sint16)((*iter_tower_2)->get_x_pos() + TILESIZE / 2.0f);
+						y2 = (Sint16)((*iter_tower_2)->get_y_pos() + TILESIZE / 2.0f);
+						lineRGBA(screen, x1, y1, x2, y2, 0xFF, 0xFF, 0, line_strength);
 					}
 				}
 			}

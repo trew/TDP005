@@ -8,126 +8,115 @@
 #ifndef TOWER_SPECIFICS_H_
 #define TOWER_SPECIFICS_H_
 
-int round_double(double x)
-{
-	///Returns a rounded double
-
-	double a;
-	if (modf(x, &a) >= 0.5)
-		return (x >= 0) ? (int) ceil(x) : (int) floor(x);
-	else
-		return (x < 0) ? ceil(x) : floor(x);
-}
-
-int format_range(double range)
+float format_range(float range)
 {
 	///Formats the range
 
-	if (range == 0)
-		return range;
-	return round_double((range * TILESIZE) + 20);
+	if (range == 0.0)
+		return 0.0f;
+	return (range * (float)TILESIZE) + 20.0f;
 }
 
 int tower_base_damage = 10;
-int tower_base_range = format_range(1.0);
+float tower_base_range = format_range(1.0f);
 int tower_base_upgradecost = 20;
 
 // BASIC TOWER SETTINGS //////////////////
 // Range
-int tower_basic_1_range = format_range(1.3);
-int tower_basic_2_range = format_range(2.0);
-int tower_basic_3_range = format_range(2.3);
+float tower_basic_1_range = format_range(1.3f);
+float tower_basic_2_range = format_range(2.0f);
+float tower_basic_3_range = format_range(2.3f);
 // Damage
 int tower_basic_1_damage = 20;
 int tower_basic_2_damage = 30;
 int tower_basic_3_damage = 70;
 // ReloadingTime
-int tower_basic_1_reloadingtime = 20;
-int tower_basic_2_reloadingtime = 18;
-int tower_basic_3_reloadingtime = 14;
+float tower_basic_1_reloadingtime = 20;
+float tower_basic_2_reloadingtime = 18;
+float tower_basic_3_reloadingtime = 14;
 // RotationSpeed
-double tower_basic_1_rotationspeed = 7.0;
-double tower_basic_2_rotationspeed = 8.0;
-double tower_basic_3_rotationspeed = 10.0;
+float tower_basic_1_rotationspeed = 7.0f;
+float tower_basic_2_rotationspeed = 8.0f;
+float tower_basic_3_rotationspeed = 10.0f;
 // ProjectileSpeed
-double tower_basic_1_projectilespeed = 12.0;
-double tower_basic_2_projectilespeed = 15.0;
-double tower_basic_3_projectilespeed = 20.0;
+float tower_basic_1_projectilespeed = 12.0f;
+float tower_basic_2_projectilespeed = 15.0f;
+float tower_basic_3_projectilespeed = 20.0f;
 // Upgrade cost
 int tower_basic_1_upgradecost = 40;
 int tower_basic_2_upgradecost = 200;
 
 // SPEED TOWER SETTINGS //////////////////
 // Range
-int tower_speed_1_range = format_range(1.2);
-int tower_speed_2_range = format_range(1.7);
-int tower_speed_3_range = format_range(2);
+float tower_speed_1_range = format_range(1.2f);
+float tower_speed_2_range = format_range(1.7f);
+float tower_speed_3_range = format_range(2.0f);
 // Damage
 int tower_speed_1_damage = 16;
 int tower_speed_2_damage = 18;
 int tower_speed_3_damage = 30;
 // ReloadingTime
-int tower_speed_1_reloadingtime = 14;
-int tower_speed_2_reloadingtime = 10;
-int tower_speed_3_reloadingtime = 5;
+float tower_speed_1_reloadingtime = 14.0f;
+float tower_speed_2_reloadingtime = 10.0f;
+float tower_speed_3_reloadingtime = 5.0f;
 // RotationSpeed
-double tower_speed_1_rotationspeed = 8.0;
-double tower_speed_2_rotationspeed = 10.0;
-double tower_speed_3_rotationspeed = 12.0;
+float tower_speed_1_rotationspeed = 8.0f;
+float tower_speed_2_rotationspeed = 10.0f;
+float tower_speed_3_rotationspeed = 12.0f;
 // ProjectileSpeed
-double tower_speed_1_projectilespeed = 10.0;
-double tower_speed_2_projectilespeed = 12.0;
-double tower_speed_3_projectilespeed = 14.0;
+float tower_speed_1_projectilespeed = 10.0f;
+float tower_speed_2_projectilespeed = 12.0f;
+float tower_speed_3_projectilespeed = 14.0f;
 // Upgrade cost
 int tower_speed_1_upgradecost = 40;
 int tower_speed_2_upgradecost = 200;
 
 // RANGE TOWER SETTINGS //////////////////
 // Range
-int tower_range_1_range = format_range(2.2);
-int tower_range_2_range = format_range(2.8);
-int tower_range_3_range = format_range(3.7);
+float tower_range_1_range = format_range(2.2f);
+float tower_range_2_range = format_range(2.8f);
+float tower_range_3_range = format_range(3.7f);
 // Damage
 int tower_range_1_damage = 35;
 int tower_range_2_damage = 45;
 int tower_range_3_damage = 130;
 // ReloadingTime
-int tower_range_1_reloadingtime = 40;
-int tower_range_2_reloadingtime = 37;
-int tower_range_3_reloadingtime = 35;
+float tower_range_1_reloadingtime = 40.0f;
+float tower_range_2_reloadingtime = 37.0f;
+float tower_range_3_reloadingtime = 35.0f;
 // RotationSpeed
-double tower_range_1_rotationspeed = 5.0;
-double tower_range_2_rotationspeed = 5.5;
-double tower_range_3_rotationspeed = 6.0;
+float tower_range_1_rotationspeed = 5.0f;
+float tower_range_2_rotationspeed = 5.5f;
+float tower_range_3_rotationspeed = 6.0f;
 // ProjectileSpeed
-double tower_range_1_projectilespeed = 15.0;
-double tower_range_2_projectilespeed = 17.0;
-double tower_range_3_projectilespeed = 19.0;
+float tower_range_1_projectilespeed = 15.0f;
+float tower_range_2_projectilespeed = 17.0f;
+float tower_range_3_projectilespeed = 19.0f;
 // Upgrade cost
 int tower_range_1_upgradecost = 40;
 int tower_range_2_upgradecost = 200;
 
 // BOMB TOWER SETTINGS ///////////////////
 // Range
-int tower_bomb_1_range = format_range(1.2);
-int tower_bomb_2_range = format_range(1.8);
-int tower_bomb_3_range = format_range(2.2);
+float tower_bomb_1_range = format_range(1.2f);
+float tower_bomb_2_range = format_range(1.8f);
+float tower_bomb_3_range = format_range(2.2f);
 // Damage
 int tower_bomb_1_damage = 15;
 int tower_bomb_2_damage = 20;
 int tower_bomb_3_damage = 35;
 // ReloadingTime
-int tower_bomb_1_reloadingtime = 100;
-int tower_bomb_2_reloadingtime = 90;
-int tower_bomb_3_reloadingtime = 80;
+float tower_bomb_1_reloadingtime = 100.0f;
+float tower_bomb_2_reloadingtime = 90.0f;
+float tower_bomb_3_reloadingtime = 80.0f;
 // RotationSpeed
-double tower_bomb_1_rotationspeed = 6.0;
-double tower_bomb_2_rotationspeed = 7.0;
-double tower_bomb_3_rotationspeed = 8.0;
+float tower_bomb_1_rotationspeed = 6.0f;
+float tower_bomb_2_rotationspeed = 7.0f;
+float tower_bomb_3_rotationspeed = 8.0f;
 // ProjectileSpeed
-double tower_bomb_1_projectilespeed = 4.0;
-double tower_bomb_2_projectilespeed = 5.0;
-double tower_bomb_3_projectilespeed = 6.0;
+float tower_bomb_1_projectilespeed = 4.0f;
+float tower_bomb_2_projectilespeed = 5.0f;
+float tower_bomb_3_projectilespeed = 6.0f;
 // Upgrade cost
 int tower_bomb_1_upgradecost = 40;
 int tower_bomb_2_upgradecost = 200;
@@ -139,13 +128,13 @@ int tower_bomb_3_upgradecost = 0;
 // Tower::Tower(int new_type, int x, int y)
 //-----------------------------------------
 // Range
-int tower_boost_1_range = format_range(1.2);
-int tower_boost_2_range = format_range(1.5);
-int tower_boost_3_range = format_range(2);
+float tower_boost_1_range = format_range(1.2f);
+float tower_boost_2_range = format_range(1.5f);
+float tower_boost_3_range = format_range(2.0f);
 // Boost-modifier (saved in parameter "damage")
-int tower_boost_1_modifier = 20;
-int tower_boost_2_modifier = 25;
-int tower_boost_3_modifier = 35;
+float tower_boost_1_modifier = 1.2f;
+float tower_boost_2_modifier = 1.25f;
+float tower_boost_3_modifier = 1.35f;
 // Upgrade cost
 int tower_boost_1_upgradecost = 40;
 int tower_boost_2_upgradecost = 200;

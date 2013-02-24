@@ -109,8 +109,8 @@ void Enemy::draw(SDL_Surface* dest_surf)
 	if (!visible)
 		return;
 	SDL_Rect dest_rect;
-	dest_rect.x = x_pos+5;
-	dest_rect.y = y_pos+5;
+	dest_rect.x = (Sint16)x_pos + 5;
+	dest_rect.y = (Sint16)y_pos + 5;
 
 	SDL_Rect src_rect = {0, 0, height, width};
 
@@ -119,8 +119,8 @@ void Enemy::draw(SDL_Surface* dest_surf)
 
 void Enemy::draw_health_bar(SDL_Surface* dest_surf) {
 	int margin = 10;
-	int x = x_pos + margin;
-	int y = y_pos + TILESIZE - 5;
+	int x = (int)x_pos + margin;
+	int y = (int)y_pos + TILESIZE - 5;
 	int width = TILESIZE - 2*margin;
 	int height = 2;
 
@@ -171,15 +171,6 @@ void Enemy::update_path()
 {
 	/// Update current pathlist with new path
 	apply_new_path(new_path_int);
-}
-
-std::pair<int, int> Enemy::conv_int_to_XY(int in)
-{
-	///Converts Gridspecific integer to X,Y-coordinate.
-	const int x = in % GRIDWIDTH;
-	const int y = 40 * (in / GRIDHEIGHT);
-	return std::pair<int, int>(x, y);
-
 }
 
 void Enemy::apply_new_path(Path* int_path)
@@ -250,8 +241,8 @@ void Enemy::move()
 	// the set destination-vertex, then we reached the destination, and will
 	// start approaching a new tile
 	bool switch_tile = false;
-	int x_mov_diff = 0;
-	int y_mov_diff = 0;
+	float x_mov_diff = 0;
+	float y_mov_diff = 0;
 
 	if (dir == DOWN && y_pos + y_vel > current_destination->get_y_pixel_pos()) {
 		y_mov_diff = y_pos + y_vel - current_destination->get_y_pixel_pos();
@@ -295,7 +286,7 @@ void Enemy::move()
 
 }
 
-void Enemy::update(EnemyList &enemy_list)
+void Enemy::update()
 {
 	/// Checks if enemy is dead and execute movement.
 	if (health < 0)
