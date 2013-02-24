@@ -313,8 +313,8 @@ void Tower::display_range(SDL_Surface* dest_surf, int x_pos, int y_pos)
 {
 	///Draws a filled circle on the map, showing the range of the tower.
 
-	filledCircleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, range, 0x0000FF11);
-	circleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, range, 0x5555FF44);
+	filledCircleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, (Sint16)range, 0x0000FF11);
+	circleColor(dest_surf, x_pos + TILESIZE / 2, y_pos + TILESIZE / 2, (Sint16)range, 0x5555FF44);
 }
 
 void Tower::draw(SDL_Surface* dest_surf)
@@ -341,8 +341,8 @@ void Tower::draw(SDL_Surface* dest_surf)
 		cannon_surf_rotated = rotozoomSurface(cannon_surf, current_angle, 1, 1);
 
 		SDL_Rect compensation_rect;
-		compensation_rect.x = x_pos - (cannon_surf_rotated->w / 2.0) + 20;
-		compensation_rect.y = y_pos - (cannon_surf_rotated->h / 2.0) + 20;
+		compensation_rect.x = (Sint16)(x_pos - ((double)(cannon_surf_rotated->w) / 2.0) + 20);
+		compensation_rect.y = (Sint16)(y_pos - ((double)(cannon_surf_rotated->h) / 2.0) + 20);
 
 		SDL_BlitSurface(cannon_surf_rotated, NULL, dest_surf, &compensation_rect);
 		SDL_FreeSurface(cannon_surf_rotated);

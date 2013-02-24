@@ -29,6 +29,7 @@ public:
 	virtual ~Enemy();			///< Destructor
 
 	void draw(SDL_Surface* dest_surf);					///< Draw image
+	void draw_health_bar(SDL_Surface* dest_surf);
 
 	void update(EnemyList &enemy_list);				///< Update state of enemy
 	void take_damage(int dmg);							///< Recieve damage

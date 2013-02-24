@@ -121,6 +121,10 @@ void Game::draw_enemies()
 	{
 		(*iter_enemy)->draw(screen);
 	}
+	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
+	{
+		(*iter_enemy)->draw_health_bar(screen);
+	}
 }
 void Game::draw_boost_connections()
 {

@@ -9,6 +9,7 @@
 #include "Define.h"
 #include "Enemy_Specifics.h"
 #include <iostream>
+#include <SDL/SDL_gfxPrimitives.h>
 
 int get_grid_position(int pos_x, int pos_y)
 {
@@ -111,13 +112,29 @@ void Enemy::draw(SDL_Surface* dest_surf)
 	dest_rect.x = x_pos+5;
 	dest_rect.y = y_pos+5;
 
-	SDL_Rect src_rect;
-	src_rect.x = 0;
-	src_rect.y = height * int(10 - ((health/double(max_health) *10)));
-	src_rect.h = height;
-	src_rect.w = width;
+	SDL_Rect src_rect = {0, 0, height, width};
 
 	SDL_BlitSurface(sprite_surf, &src_rect, dest_surf, &dest_rect);
+}
+
+void Enemy::draw_health_bar(SDL_Surface* dest_surf) {
+	int margin = 10;
+	int x = x_pos + margin;
+	int y = y_pos + TILESIZE - 5;
+	int width = TILESIZE - 2*margin;
+	int height = 2;
+
+	double mod = health / (double)max_health;
+	int healthbar_width = (int)(((double)(width - 2)) * mod);
+
+	Uint32 border_color = 0x000000FF; // black
+	Uint32 health_color = 0x00FF00FF; // green
+	if (mod < 0.2) health_color = 0xFF0000FF; // red
+	else if (mod < 0.5) health_color = 0xFF7700FF; // orange
+	else if (mod < 0.8) health_color = 0xFFFF00FF; // yellow
+
+	rectangleColor(dest_surf, x, y, x + width, y + height, border_color);
+	lineColor(dest_surf, x + 1, y + 1, x + 1 + healthbar_width, y + 1, health_color);
 }
 
 bool Enemy::is_on_tile(Tile* tile) {
