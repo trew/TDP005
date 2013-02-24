@@ -103,7 +103,7 @@ private: // Properties
 private: // Specific variables for calculations etc.
 	SDL_Surface* 	base_surf;
 	SDL_Surface* 	cannon_surf;
-	Sprite*			current_target;
+	Enemy*			current_target;
 	double			current_angle;
 	double			target_angle;
 	double			rotation_modifier;

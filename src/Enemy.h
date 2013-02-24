@@ -45,6 +45,9 @@ public:
 
 	GridPosition get_current_destination();
 	bool is_on_tile(Tile*);
+
+	double get_speed();
+	Direction get_direction();
 private:
 	Grid* grid;
 	Path* current_path;				///< List if current path
@@ -53,7 +56,7 @@ private:
 	Tile* current_destination;
 
 	GridPosition conv_int_to_XY(int in);	///< Convert an int to appropriate <X,Y>-pair.
-	int move_dir();		///< Move direction
+	Direction move_dir();		///< Move direction
 	void move();		///< Execute movement
 
 	int x_vel, y_vel;
@@ -64,6 +67,7 @@ private:
 	bool killed;
 	int level;
 	int cost;
+	Direction direction;
 
 	int reward_money;
 	int reward_score;

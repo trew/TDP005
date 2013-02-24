@@ -10,12 +10,6 @@
 #include "Enemy_Specifics.h"
 #include <iostream>
 
-const int UP    = 12;
-const int DOWN  =  6;
-const int RIGHT =  3;
-const int LEFT  =  9;
-const int DONE  =  0;
-
 int get_grid_position(int pos_x, int pos_y)
 {
 	/// Convert X,Y-coordinates to Gridspecific integer.
@@ -185,22 +179,23 @@ void Enemy::apply_new_path(Path* int_path)
 	current_path = int_path;
 }
 
-int Enemy::move_dir()
+Direction Enemy::move_dir()
 {
 	/**
 	 * Determines movement direction depending on where enemy is in relationship to current destination.
 	 */
-	if (current_tile == NULL) return RIGHT;
-
-	if (current_tile->get_position().first < current_destination->get_position().first)
-		return DOWN;
-	if (current_tile->get_position().second < current_destination->get_position().second)
-		return RIGHT;
-	if (current_tile->get_position().first > current_destination->get_position().first)
-		return UP;
-	if (current_tile->get_position().second > current_destination->get_position().second)
-		return LEFT;
-	return RIGHT;
+	Direction dir = RIGHT;
+	if (current_tile == NULL) dir = RIGHT;
+	else if (current_tile->get_position().first < current_destination->get_position().first)
+		dir = DOWN;
+	else if (current_tile->get_position().second < current_destination->get_position().second)
+		dir = RIGHT;
+	else if (current_tile->get_position().first > current_destination->get_position().first)
+		dir = UP;
+	else if (current_tile->get_position().second > current_destination->get_position().second)
+		dir = LEFT;
+	direction = dir;
+	return direction;
 }
 
 void Enemy::move()
@@ -208,7 +203,7 @@ void Enemy::move()
 	/**
 	 * Execute movement in movement direction.
 	 */
-	int dir = move_dir();
+	Direction dir = move_dir();
 	switch (dir)
 	{
 	case RIGHT:
@@ -297,3 +292,13 @@ void Enemy::take_damage(int dmg)
 	health -= dmg;
 }
 
+double Enemy::get_speed() {
+	return (double)move_speed;
+}
+
+Direction Enemy::get_direction() {
+	/**
+	 * Returns the last direction, does not calculate a new direction. see Enemy::move_dir()
+	 */
+	return direction;
+}

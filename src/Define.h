@@ -99,4 +99,12 @@ const int PROJECTILE_BOMB	=	26;
 
 const int ENEMY_DESTINATION	=	119;
 
+enum Direction {
+	NONE,
+	RIGHT,
+	LEFT,
+	UP,
+	DOWN
+};
+
 #endif /* DEFINE_H_ */

@@ -383,8 +383,18 @@ bool Tower::target_in_range(Sprite *target)
 
 void Tower::update_angle_to_target()
 {
-	int delta_x = x_pos - current_target->get_x_pos();
-	int delta_y = y_pos - current_target->get_y_pos();
+	double target_x_pos = current_target->get_x_pos();
+	double target_y_pos = current_target->get_y_pos();
+
+	double distance_to_target = get_distance_to(current_target);
+	// modify aim by considering distance to target and target movespeed
+	if (current_target->get_direction() == RIGHT) target_x_pos += current_target->get_speed() * distance_to_target / projectile_speed;
+	else if (current_target->get_direction() == LEFT) target_x_pos -= current_target->get_speed() * distance_to_target / projectile_speed;
+	else if (current_target->get_direction() == DOWN) target_y_pos += current_target->get_speed() * distance_to_target / projectile_speed;
+	else if (current_target->get_direction() == UP) target_y_pos -= current_target->get_speed() * distance_to_target / projectile_speed;
+
+	int delta_x = x_pos - (int)target_x_pos;
+	int delta_y = y_pos - (int)target_y_pos;
 	double rad = 180 / 3.14159;
 	target_angle = atan2(delta_x, delta_y) * rad;
 

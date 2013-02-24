@@ -61,7 +61,7 @@ public:
 	virtual void draw(SDL_Surface* dest_surf);	///<Blit sprite to surface
 	virtual void draw(SDL_Surface* dest_surf, int x, int y); ///<Blit sprite to surface
 	virtual int get_type();		///<Returns type
-	virtual int get_distance_to(Sprite *s); ///<Pure virtual
+	double get_distance_to(Sprite *s); ///<Pure virtual
 
 	virtual void update();			///<Pure virtual
 	virtual void update(Sprite_List &object_list);	///<Pure virtual

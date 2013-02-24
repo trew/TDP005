@@ -69,14 +69,14 @@ SDL_Surface* Sprite::load_image(std::string file)
 
 }
 
-int Sprite::get_distance_to(Sprite *target)
+double Sprite::get_distance_to(Sprite *target)
 {
 	/*
 	 * Calculates the distance between two sprites center positions
 	 */
-	int delta_x = x_pos + (width / 2) - (target->get_x_pos() + target->get_width() / 2);
-	int delta_y = y_pos + (height / 2) - (target->get_y_pos() + target->get_height() / 2);
-	int distance = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+	double delta_x = (double)(x_pos + (width / 2) - (target->get_x_pos() + target->get_width() / 2));
+	double delta_y = (double)(y_pos + (height / 2) - (target->get_y_pos() + target->get_height() / 2));
+	double distance = sqrt(pow(delta_x, 2.0) + pow(delta_y, 2.0));
 	return distance;
 }
 
