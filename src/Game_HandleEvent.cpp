@@ -434,6 +434,7 @@ void Game::left_mousebutton(int m_x, int m_y, SDL_Event* event)
 				}
 
 				if ((*iter_ingame_button)->get_type() == BUTTON_MENU) {
+					level_control->pause_timer();
 					old_game_state = game_state;
 					game_state = INGAMEMENU;
 				}
@@ -689,6 +690,7 @@ void Game::state_ingame_menu(SDL_Event* event)
 	{
 		if (event->key.keysym.sym == SDLK_ESCAPE)
 		{
+			level_control->resume_timer();
 			game_state = old_game_state;
 		}
 	}
@@ -707,6 +709,7 @@ void Game::state_ingame_menu(SDL_Event* event)
 					switch ((*iter_ingame_menu_button)->get_type())
 					{
 					case BUTTON_RESUMEGAME:
+						level_control->resume_timer();
 						game_state = old_game_state;
 						break;
 					case BUTTON_EXITTOMENU:
@@ -734,11 +737,14 @@ void Game::handle_event(SDL_Event* event)
 	{
 		if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
 		{
+			level_control->pause_timer();
 			old_game_state = game_state;
 			game_state = INGAMEMENU;
 		}
-		else if (game_state == INGAMEMENU)
+		else if (game_state == INGAMEMENU) {
+			level_control->resume_timer();
 			game_state = old_game_state;
+		}
 	}
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F11)

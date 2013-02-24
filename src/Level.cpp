@@ -89,3 +89,12 @@ int Level::time_before_next_wave() {
 int Level::get_level() {
 	return current_level;
 }
+
+void Level::pause_timer() {
+	timer_paused_at = SDL_GetTicks();
+}
+
+void Level::resume_timer() {
+	Uint32 diff = SDL_GetTicks() - timer_paused_at;
+	wave_start_delay += diff;
+}

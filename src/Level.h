@@ -35,6 +35,9 @@ public:
 	void reset();					///< Reset level to 1
 
 	int time_before_next_wave();	///< Returns time in seconds
+
+	void pause_timer();
+	void resume_timer();
 private:
 	void compose_new_wave(Grid* grid);
 
@@ -45,6 +48,7 @@ private:
 	bool last_enemy_sent;
 	Uint32 wave_delay;
 	Uint32 wave_start_delay;
+	Uint32 timer_paused_at;
 
 };
 
