@@ -20,6 +20,8 @@ void Game::reset_game()
 		delete (*iter_tower);
 	}
 
+	grid->clear_paths();
+	grid->reset();
 	/*
 	if(!selection.empty()) {
 		for (iter_sel = selection.begin(); iter_sel != selection.end(); iter_sel++)
@@ -46,6 +48,7 @@ void Game::reset_game()
 	level_control->reset();
 
 	tile_selection = NULL;
+	buildmenu_selection = NULL;
 	building_flag = false;
 	option_box_visible = false;
 	money = STARTING_MONEY;

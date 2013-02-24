@@ -141,6 +141,13 @@ void Grid::clear_paths() {
 	pathfinding->clear_saved_paths();
 }
 
+void Grid::reset() {
+	for (std::map<GridPosition, Tile*>::iterator it = tile_map.begin(); it != tile_map.end(); it++) {
+		if ((*it).second != NULL)
+			(*it).second->set_tower(NULL);
+	}
+}
+
 // private
 NodeVector Grid::get_nodes() {
 	return nodes;

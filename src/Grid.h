@@ -46,6 +46,7 @@ public:
 	void set_portal_tile(Tile*);
 
 	void clear_paths();
+	void reset();
 
 	NodeVector get_nodes();
 private:
