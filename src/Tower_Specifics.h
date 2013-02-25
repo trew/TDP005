@@ -132,9 +132,9 @@ float tower_boost_1_range = format_range(1.2f);
 float tower_boost_2_range = format_range(1.5f);
 float tower_boost_3_range = format_range(2.0f);
 // Boost-modifier (saved in parameter "damage")
-float tower_boost_1_modifier = 1.2f;
-float tower_boost_2_modifier = 1.25f;
-float tower_boost_3_modifier = 1.35f;
+float tower_boost_1_modifier = 0.2f;
+float tower_boost_2_modifier = 0.25f;
+float tower_boost_3_modifier = 0.35f;
 // Upgrade cost
 int tower_boost_1_upgradecost = 40;
 int tower_boost_2_upgradecost = 200;

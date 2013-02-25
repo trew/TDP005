@@ -42,7 +42,7 @@ Tower::Tower(int new_type, Tile* tile): tile(tile)
 	target_angle = 0;
 	rotation_modifier = 0.0;
 	reload_counter = 0;
-	boost_modifier = 100;
+	boost_modifier = 1;
 
 	// Toggle smoothing for rotozoom
 	smoothing = 1;
