@@ -11,7 +11,7 @@
 
 /* Sprite specific functions! */
 
-Sprite::Sprite()
+Sprite::Sprite(Game* game): game(game)
 {
 	///Default constructor
 	sprite_surf = NULL;
@@ -22,7 +22,6 @@ Sprite::Sprite()
 	selected = false;
 	visible = true;
 	type = 0;
-	game = NULL;
 }
 
 Sprite::Sprite(Game* game, std::string File, int x, int y, int w, int h): game(game)
@@ -48,8 +47,7 @@ Sprite::~Sprite()
 	/**
 	 * Free sprite surface and set to NULL.
 	 */
-	if (sprite_surf != NULL)
-		SDL_FreeSurface(sprite_surf);
+	SDL_FreeSurface(sprite_surf);
 	sprite_surf = NULL;
 }
 

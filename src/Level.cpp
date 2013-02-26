@@ -23,7 +23,7 @@ void Level::reset() {
 	wave_start_delay = 0;
 }
 
-void Level::compose_new_wave(Grid* grid) {
+void Level::compose_new_wave(Game* game) {
 	int amount_of_enemies = 15;
 	EnemyType enemy_type = DOG;
 	int enemy_type_range;
@@ -37,11 +37,11 @@ void Level::compose_new_wave(Grid* grid) {
 		if (i > 3) i = 3;
 		enemy_type = (EnemyType)i;
 		Enemy* new_enemy;
-		new_enemy = new Enemy(grid, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_level);
+		new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_level);
 		if(current_level % 5 == 0) {
 			enemy_type = BOSS;
 			delete new_enemy; new_enemy = NULL;
-			new_enemy = new Enemy(grid, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_boss_level);
+			new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_boss_level);
 			amount_of_enemies = 0;
 			current_boss_level++;
 		}
@@ -52,10 +52,10 @@ void Level::compose_new_wave(Grid* grid) {
 	}
 }
 
-EnemyList Level::get_new_wave(Grid* grid) {
+EnemyList Level::get_new_wave(Game* game) {
 	enemies_in_wave.clear();
 	current_level++;
-	compose_new_wave(grid);
+	compose_new_wave(game);
 	last_enemy_sent = false;
 	return enemies_in_wave;
 }

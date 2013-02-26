@@ -8,11 +8,11 @@
 #include "Text.h"
 #include <iostream>
 
-Text::Text(): font(NULL)
+Text::Text(): Sprite(NULL), font(NULL)
 {
 }
 
-Text::Text(std::string input_text, int x, int y, TTF_Font* font_in)
+Text::Text(std::string input_text, int x, int y, TTF_Font* font_in): Sprite(NULL)
 {
 	if (input_text == "")
 		input_text = " ";
@@ -30,7 +30,7 @@ Text::Text(std::string input_text, int x, int y, TTF_Font* font_in)
 	width = sprite_surf->w;
 }
 
-Text::Text(std::string input_text, int r, int g, int b, int x, int y, TTF_Font* font_in) {
+Text::Text(std::string input_text, int r, int g, int b, int x, int y, TTF_Font* font_in): Sprite(NULL) {
 	if (input_text == "")
 		input_text = " ";
 

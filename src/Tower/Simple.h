@@ -22,7 +22,7 @@ public:
 	std::string get_type_str();
 	bool upgrade(TowerType type); 	   ///< type is the towertype to be upgraded to
 
-	Projectile* spawn_projectile(float x, float y, float angle);
+	Projectile* spawn_projectile(Game* g, float x, float y, float angle);
 	void update_informationtext();
 };
 

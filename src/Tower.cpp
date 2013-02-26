@@ -29,8 +29,8 @@
 #include <list>
 using namespace std;
 
-Tower::Tower(towers::TowerType type, Tile* tile) :
-		tile(tile) {
+Tower::Tower(Game* game, towers::TowerType type, Tile* tile) :
+		Sprite(game), tile(tile) {
 	if (tile != NULL) {
 		x_pos = tile->get_x_pixel_pos();
 		y_pos = tile->get_y_pixel_pos();
@@ -240,7 +240,7 @@ void Tower::shoot(ProjectileList &projectile_list) {
 	 * Shoots an projectile in the towers current cannon-direction.
 	 * The type of projectile being shot depends on the type of the tower.
 	 */
-	Projectile* p = twr_impl->spawn_projectile(x_pos, y_pos, -(target_angle + 90));
+	Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, -(target_angle + 90));
 	if (p != NULL)
 		projectile_list.push_back(p);
 }

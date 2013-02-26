@@ -25,7 +25,7 @@ public:
 	Level();		///< Constructor
 	virtual ~Level(); ///< Destructor
 
-	EnemyList get_new_wave(Grid* grid);		///< Returns a new wave depending on current level
+	EnemyList get_new_wave(Game*);		///< Returns a new wave depending on current level
 
 	int get_level();				///< Get current level
 
@@ -39,7 +39,7 @@ public:
 	void pause_timer();
 	void resume_timer();
 private:
-	void compose_new_wave(Grid* grid);
+	void compose_new_wave(Game*);
 
 	EnemyList enemies_in_wave;
 	int current_level;

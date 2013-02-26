@@ -11,15 +11,7 @@
 #include <iostream>
 #include <SDL/SDL_gfxPrimitives.h>
 
-int get_grid_position(int pos_x, int pos_y)
-{
-	/// Convert X,Y-coordinates to Gridspecific integer.
-	pos_x = (pos_x - (pos_x % TILESIZE));
-	pos_y = (pos_y - (pos_y % TILESIZE));
-	return pos_y * (GRIDWIDTH / TILESIZE) + pos_x;
-}
-
-Enemy::Enemy(Grid* grid, EnemyType _type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): grid(grid)
+Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): Sprite(game)
 {
 /*
  * Create new enemy. New enemies have different hitpoints depending on level.
@@ -74,6 +66,7 @@ Enemy::Enemy(Grid* grid, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	}
 
+	grid = get_game()->get_grid();
 	health = max_health;
 
 	type = _type;

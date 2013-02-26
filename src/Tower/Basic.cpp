@@ -36,8 +36,8 @@ void Basic::update_informationtext() {
 Basic::~Basic() {
 }
 
-Projectile* Basic::spawn_projectile(float x, float y, float angle) {
-	return new Projectile("./gfx/tower/ammo/ammo-basic.png", x + 15, y + 15,
+Projectile* Basic::spawn_projectile(Game* g, float x, float y, float angle) {
+	return new Projectile(g, "./gfx/tower/ammo/ammo-basic.png", x + 15, y + 15,
 			angle, projectile_speed, get_damage(), 0, 3000);
 }
 

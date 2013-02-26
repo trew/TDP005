@@ -93,7 +93,7 @@ void Tower::set_cannon_surf(SDL_Surface* surf) {
 	cannon_surf = surf;
 }
 
-Projectile* Tower::spawn_projectile(float x, float y, float angle) {
+Projectile* Tower::spawn_projectile(Game* g, float x, float y, float angle) {
 	return NULL;
 }
 

@@ -36,8 +36,8 @@ void Speed::update_informationtext() {
 Speed::~Speed() {
 }
 
-Projectile* Speed::spawn_projectile(float x, float y, float angle) {
-	return new Projectile("./gfx/tower/ammo/ammo-speed.png", x + 15, y + 15,
+Projectile* Speed::spawn_projectile(Game* g, float x, float y, float angle) {
+	return new Projectile(g, "./gfx/tower/ammo/ammo-speed.png", x + 15, y + 15,
 			angle, projectile_speed, get_damage(), 0, 3000);
 }
 

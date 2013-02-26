@@ -11,8 +11,8 @@
 #include <string>
 #include <iostream>
 
-Projectile::Projectile(std::string file, float x_pos_in, float y_pos_in, double direction_in , double move_speed_in, int damage_in, double splash_area_in, int time)
-:movespeed(move_speed_in), direction(direction_in), damage(damage_in), splash_area(splash_area_in)
+Projectile::Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double move_speed_in, int damage_in, double splash_area_in, int time)
+:Sprite(game), movespeed(move_speed_in), direction(direction_in), damage(damage_in), splash_area(splash_area_in)
 {
 	dead = false;
 	if(splash_area>0) {

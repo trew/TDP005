@@ -38,7 +38,7 @@ class Game;
 class Sprite {
 public:
 	/* Constructor & destructor */
-	Sprite();			///<Default Constructor
+	Sprite(Game* game);			///<Default Constructor
 	Sprite(Game* game, std::string File, int x, int y, int w, int h);	///<Constructor using file and position
 	virtual ~Sprite();	///<Destructor
 

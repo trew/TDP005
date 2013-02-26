@@ -21,7 +21,7 @@ enum EnemyType {
 	BOSS
 };
 
-typedef std::list<GridPosition> path_list;
+typedef std::list<GridPosition> PathList;
 
 /** \brief Enemy class
  *
@@ -33,7 +33,7 @@ typedef std::list<GridPosition> path_list;
 class Enemy: public Sprite {
 public:
 
-	Enemy(Grid* grid, EnemyType type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level);	///< Constructor
+	Enemy(Game* game, EnemyType type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level);	///< Constructor
 	virtual ~Enemy();			///< Destructor
 
 	void draw(SDL_Surface* dest_surf);					///< Draw image

@@ -268,6 +268,11 @@ private:
 	void get_rewards(Enemy* enemy);
 	void update_state();
 
+public:
+	TowerList* get_towers();
+	EnemyList* get_enemies();
+	ProjectileList* get_projectiles();
+
 private:
 /** Sprite containers */
 

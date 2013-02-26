@@ -264,6 +264,18 @@ void Game::show_intro(SDL_Event* event)
 	}
 }
 
+TowerList* Game::get_towers() {
+	return &tower_list;
+}
+
+EnemyList* Game::get_enemies() {
+	return &enemy_list;
+}
+
+ProjectileList* Game::get_projectiles() {
+	return &projectile_list;
+}
+
 void Game::update_fps() {
 	if(fps_timer > SDL_GetTicks() ) {
 		current_fps++;

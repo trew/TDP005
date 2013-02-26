@@ -50,7 +50,7 @@ public:
 	virtual bool upgrade(TowerType type)=0; 	   ///< type is the towertype to be upgraded to
 
 	/* Optional Virtuals */
-	virtual Projectile* spawn_projectile(float x, float y, float angle);
+	virtual Projectile* spawn_projectile(Game* g, float x, float y, float angle);
 	virtual void update_informationtext(); ///< each sprite represents a line
 
 	/* Common Public interface */

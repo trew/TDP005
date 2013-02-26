@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-Button::Button(int type_in, int x, int y, int w, int h, bool can_toggle_in, std::string std_img_in, std::string second_img_in)
+Button::Button(int type_in, int x, int y, int w, int h, bool can_toggle_in, std::string std_img_in, std::string second_img_in): Sprite(NULL)
 {
 
 	if ((sprite_surf = load_image(std_img_in.c_str())) == NULL)

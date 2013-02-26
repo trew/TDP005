@@ -18,7 +18,7 @@ public:
 	virtual ~Bomb();
 
 	void update_informationtext();
-	Projectile* spawn_projectile(float x, float y, float angle);
+	Projectile* spawn_projectile(Game* g, float x, float y, float angle);
 	std::string get_type_str();
 	TowerType get_type();
 	bool upgrade(TowerType);

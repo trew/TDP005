@@ -26,7 +26,7 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 		}
 	}
 
-	Tower* new_tower = new Tower(tower_type, tile);
+	Tower* new_tower = new Tower(this, tower_type, tile);
 	if (money < new_tower->get_cost_buy())
 	{
 		delete new_tower;
@@ -89,7 +89,7 @@ void Game::upgrade_tower(towers::TowerType tower_type)
 
 void Game::send_new_wave()
 {
-	EnemyList tmp = level_control->get_new_wave(grid);
+	EnemyList tmp = level_control->get_new_wave(this);
 	enemy_list.insert(enemy_list.end(), tmp.begin(), tmp.end());
 	tmp.clear();
 	update_level();
@@ -108,6 +108,7 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 	switch (type)
 	{
 	case BUTTON_BASE:
+	{
 		if (grid->get_tile(position)->get_tower() == NULL)
 		{
 			create_new_tower(towers::SIMPLE, position);
@@ -117,33 +118,42 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 			upgrade_tower(towers::BASIC);
 		}
 		return true;
-
+	}
 	case BUTTON_BOOST:
-		create_new_tower(towers::BOOST, position);
+	{
+		if (grid->get_tile(position)->get_tower() == NULL)
+		{
+			create_new_tower(towers::BOOST, position);
+		}
 		return true;
-
+	}
 	case BUTTON_BASIC:
+	{
 		upgrade_tower(towers::BASIC);
-
 		return true;
-
+	}
 	case BUTTON_BOMB:
+	{
 		upgrade_tower(towers::BOMB);
-
 		return true;
+	}
 	case BUTTON_RANGE:
+	{
 		upgrade_tower(towers::RANGE);
-
 		return true;
+	}
 	case BUTTON_SELL:
+	{
 		sell(tile_selection);
-
 		return true;
+	}
 	case BUTTON_SPEED:
+	{
 		upgrade_tower(towers::SPEED);
-
 		return true;
+	}
 	case BUTTON_UPGRADE:
+	{
 		Tower* t = grid->get_tile(position)->get_tower();
 		if (t != NULL) {
 			upgrade_tower(t->get_type());
@@ -151,9 +161,13 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 		} else {
 			return false;
 		}
+		break;
+	}
 	case BUTTON_WALL:
+	{
 		create_new_tower(towers::WALL, position);
 		return true;
+	}
 	default:
 		break;
 	} //Switch

@@ -131,13 +131,13 @@ bool Game::init()
 	SFX_game_over = 	new Sound("./snd/game_over.wav", false, 0);
 
 	//Available towers in menu
-	build_list.push_back(new Tower(towers::SIMPLE, NULL));
+	build_list.push_back(new Tower(this, towers::SIMPLE, NULL));
 	build_list.back()->set_x(630);
 	build_list.back()->set_y(175);
-	build_list.push_back(new Tower(towers::BOOST, NULL));
+	build_list.push_back(new Tower(this, towers::BOOST, NULL));
 	build_list.back()->set_x(680);
 	build_list.back()->set_y(175);
-	build_list.push_back(new Tower(towers::WALL, NULL));
+	build_list.push_back(new Tower(this, towers::WALL, NULL));
 	build_list.back()->set_x(730);
 	build_list.back()->set_y(175);
 

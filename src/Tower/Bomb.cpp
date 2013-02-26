@@ -36,8 +36,8 @@ void Bomb::update_informationtext() {
 Bomb::~Bomb() {
 }
 
-Projectile* Bomb::spawn_projectile(float x, float y, float angle) {
-	return new Projectile("./gfx/tower/ammo/ammo-bomb.png", x + 15, y + 15,
+Projectile* Bomb::spawn_projectile(Game* g, float x, float y, float angle) {
+	return new Projectile(g, "./gfx/tower/ammo/ammo-bomb.png", x + 15, y + 15,
 			angle, projectile_speed, get_damage(), 30, 4000);
 }
 

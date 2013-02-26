@@ -24,7 +24,7 @@
  */
 class Tower: public Sprite {
 public:
-	Tower(towers::TowerType, Tile* tile);			///<Constructor
+	Tower(Game* game, towers::TowerType, Tile* tile);			///<Constructor
 	virtual ~Tower();							///<Destructor
 
 public: // Selectors
