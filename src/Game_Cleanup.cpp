@@ -80,6 +80,9 @@ void Game::cleanup()
 	delete menu_lives;
 	delete selection_sprite;
 
+	delete fps_timer;
+	delete delta_timer;
+
 	delete press_enter_to_start;
 	delete error_loading_highscore;
 	delete esc_back;

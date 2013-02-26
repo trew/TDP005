@@ -369,5 +369,4 @@ void Game::render()
 
 	fps_text->draw(screen);
 	SDL_Flip(screen);
-	SDL_Delay(1000 / FPS_MAX);
 }

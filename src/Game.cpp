@@ -36,8 +36,8 @@ Game::Game()
 	old_game_state = 0;
 	timer = 0;
 	old_timer = 0;
-	fps_timer = 0;
 	current_fps = 0;
+	fps_timer = delta_timer = NULL;
 
 	/* Flags */
 	grid_visible = true;
@@ -276,14 +276,17 @@ ProjectileList* Game::get_projectiles() {
 	return &projectile_list;
 }
 
-void Game::update_fps() {
-	if(fps_timer > SDL_GetTicks() ) {
+void Game::update_fps(int delta) {
+	if ( fps_timer->get_ticks() < 1000 ) {
 		current_fps++;
 	} else {
+		fps_timer->start();
 		std::string tmp = "FPS: ";
-		fps_text->update_text(tmp.append(conv_int_to_str(current_fps)));
+		tmp.append(conv_int_to_str(current_fps));
+		tmp.append(" - Delta: ");
+		tmp.append(conv_int_to_str(delta));
+		fps_text->update_text(tmp);
 		current_fps = 0;
-		fps_timer = SDL_GetTicks()+1000;
 	}
 }
 
@@ -302,22 +305,29 @@ int Game::on_execute()
 	show_intro(&event);
 
 	/* Game */
-	fps_timer = SDL_GetTicks() + 1000;
 
+	fps_timer->start();
+	int delta = 0;
 	while (game_running)
 	{
+		delta_timer->start();
 		while (SDL_PollEvent(&event))
 		{
 			handle_event(&event);
 		}
 
 		if (game_state == GAMEPLAY_RUNNING)
-			update_state();
+			update(delta);
 		else
 			update_boost();
 
-		update_fps();
+		update_fps(delta);
 		render();
+
+		delta = delta_timer->get_ticks();
+		if (delta < (1000 / FPS_MAX)) {
+			SDL_Delay( (1000 / FPS_MAX) - delta );
+		}
 	}
 	/* End Game */
 

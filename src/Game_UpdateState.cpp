@@ -78,7 +78,7 @@ void Game::get_rewards(Enemy* enemy) {
 	update_money();
 }
 
-void Game::update_state()
+void Game::update(int delta)
 {
 	update_timer();
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)

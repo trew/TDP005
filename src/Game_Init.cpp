@@ -169,5 +169,7 @@ bool Game::init()
 		music->play();
 	}
 
+	delta_timer = new Timer();
+	fps_timer = new Timer();
 	return true;
 }

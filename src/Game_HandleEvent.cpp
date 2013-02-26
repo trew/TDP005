@@ -736,8 +736,7 @@ void Game::handle_event(SDL_Event* event)
 	}
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F11)
-		if (fps_text->is_visible()) fps_text->hide();
-		else fps_text->show();
+		fps_text->is_visible() ? fps_text->hide() : fps_text->show();
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F12)
 		toggle_fullscreen();

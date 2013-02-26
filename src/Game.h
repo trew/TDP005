@@ -32,6 +32,7 @@
 #include "Enemy.h"
 
 #include "Sound.h"
+#include "Timer.h"
 
 //Pathfinding and Difficulty Control
 #include "Grid.h"
@@ -73,7 +74,8 @@ private:
 	bool game_started;
 	int FPS_MAX;
 	int current_fps;
-	Uint32 fps_timer;
+	Timer* delta_timer;
+	Timer* fps_timer;
 	bool fullscreen;
 	bool need_boost_update;	///< Indicates whether we need to update the boost connections
 
@@ -174,7 +176,7 @@ private:
 	void update_highscore_sprites();
 
 	void show_intro(SDL_Event* event);
-	void update_fps();
+	void update_fps(int delta);
 
 /** Definition in Game_Cleanup.cpp */
 	void reset_game();							///Resets containers of enemies, towers and variables that change during gameplay.
@@ -266,7 +268,7 @@ private:
 	void update_boost();
 
 	void get_rewards(Enemy* enemy);
-	void update_state();
+	void update(int delta);
 
 public:
 	TowerList* get_towers();
