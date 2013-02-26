@@ -65,7 +65,7 @@ void Game::update_timer() {
 void Game::update_boost() {
 	if (need_boost_update) {
 		for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++) {
-			(*iter_tower)->update_boost(tower_list);
+			(*iter_tower)->update_boost();
 		}
 	}
 
@@ -139,8 +139,8 @@ void Game::update_state()
 	update_boost();
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		(*iter_tower)->update(enemy_list);
-		(*iter_tower)->shoot_if_possible(projectile_list);
+		(*iter_tower)->update();
+		(*iter_tower)->shoot_if_possible();
 	}
 
 	ProjectileList new_projectiles;

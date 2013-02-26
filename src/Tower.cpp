@@ -196,16 +196,17 @@ bool Tower::target_in_sight() {
 		return false;
 }
 
-void Tower::find_new_target(EnemyList &object_list) {
+void Tower::find_new_target() {
 	/**
 	 * Finds a new target for the tower if it has no current target
 	 * or if its current target has gone out of range.
 	 */
+	EnemyList* enemy_list = get_game()->get_enemies();
 
 	if (current_target == NULL || get_distance_to(current_target) > get_range()) {
 		Enemy* closest_object = NULL;
 		float closest_distance = 99999.0f;
-		for (EnemyList::iterator it = object_list.begin(); it != object_list.end(); it++) {
+		for (EnemyList::iterator it = enemy_list->begin(); it != enemy_list->end(); it++) {
 			if (get_distance_to(*it) < closest_distance) {
 				closest_distance = get_distance_to(*it);
 				closest_object = (*it);
@@ -235,14 +236,15 @@ bool Tower::is_loaded() {
 		return false;
 }
 
-void Tower::shoot(ProjectileList &projectile_list) {
+void Tower::shoot() {
 	/**
 	 * Shoots an projectile in the towers current cannon-direction.
 	 * The type of projectile being shot depends on the type of the tower.
 	 */
+	ProjectileList* p_list = get_game()->get_projectiles();
 	Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, -(target_angle + 90));
 	if (p != NULL)
-		projectile_list.push_back(p);
+		p_list->push_back(p);
 }
 
 void Tower::apply_boost(float mod)
@@ -259,21 +261,22 @@ void Tower::set_target(Enemy* target) {
 	current_target = target;
 }
 
-void Tower::update_boost(TowerList &tower_list) {
+void Tower::update_boost() {
 	///Does a check to see if the current tower is in the range of a boost-tower and should get boosted.
 
-	TowerList::iterator iter_object = tower_list.begin();
+	TowerList* tower_list = get_game()->get_towers();
+	TowerList::iterator iter_object = tower_list->begin();
 
 	float old_boost_percent = boost_modifier;
 
 	if (get_type() == towers::BOOST || get_type() == towers::WALL)
 		return;
 
-	if (!tower_list.empty()) {
+	if (!tower_list->empty()) {
 		// If *this tower is a boost tower, ignore.
 		boost_modifier = 1.0f;
-		for (iter_object = tower_list.begin();
-				iter_object != tower_list.end(); iter_object++) {
+		for (iter_object = tower_list->begin();
+				iter_object != tower_list->end(); iter_object++) {
 			// If the tower is a boost tower
 			if ((*iter_object)->get_type() == towers::BOOST) {
 				// And if the current tower is in the range of the boost tower
@@ -289,15 +292,16 @@ void Tower::update_boost(TowerList &tower_list) {
 	}
 }
 
-void Tower::update(EnemyList &enemy_list) {
+void Tower::update() {
 	///Updates the state of the current tower which includes rotating, reloading and finding new targets.
 
-	EnemyList::iterator iter_object = enemy_list.begin();
-	if (!enemy_list.empty()) {
+	EnemyList* enemy_list = get_game()->get_enemies();
+	EnemyList::iterator iter_object = enemy_list->begin();
+	if (!enemy_list->empty()) {
 		rotation_modifier = 0.0;
 		format_angle(current_angle);
 		reload(); // Reloading if not loaded
-		find_new_target(enemy_list);
+		find_new_target();
 		if (current_target != NULL) {
 			if (target_in_range(current_target)) {
 				update_aim();
@@ -306,7 +310,7 @@ void Tower::update(EnemyList &enemy_list) {
 	}
 }
 
-void Tower::shoot_if_possible(ProjectileList &projectile_list) {
+void Tower::shoot_if_possible() {
 	/**
 	 * Checks if the current target is an enemy, is within the map-grid, is in range,
 	 * in sight and if the tower is loaded. If it is, it will shoot.
@@ -314,7 +318,7 @@ void Tower::shoot_if_possible(ProjectileList &projectile_list) {
 	if (current_target != NULL) {
 		if (target_in_range(current_target) && target_in_sight()
 				&& current_target->get_x() > -(current_target->get_width()) && is_loaded()) {
-			shoot(projectile_list);
+			shoot();
 		}
 	}
 }

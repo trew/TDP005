@@ -35,7 +35,7 @@ bool Game::sell(Tile* tile)
 		grid->clear_paths();
 		for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 		{
-			(*iter_enemy)->try_update_path(grid);
+			(*iter_enemy)->try_update_path();
 		}
 		tile_selection = NULL;
 		hide_option_box();

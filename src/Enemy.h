@@ -45,7 +45,7 @@ public:
 	bool is_killed() { return killed; }					///< Is enemy killed by player?
 	bool has_reached_goal() { return reached_goal; }	///< Has enemy reached its goal?
 
-	bool try_update_path(Grid* grid);								///< Is there a way to reach goal?
+	bool try_update_path();								///< Is there a way to reach goal?
 	void update_path();									///< Set new path
 	void apply_new_path(Path*);				///< Convert int path to pairs
 
@@ -59,7 +59,6 @@ public:
 	double get_speed();
 	Direction get_direction();
 private:
-	Grid* grid;
 	Path* current_path;				///< List if current path
 	Path* new_path_int;	///< New path returned from dijkstra
 	Tile* current_tile;

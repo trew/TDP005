@@ -46,7 +46,7 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	// loop through all enemies and update their path
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{
-		if ( !(*iter_enemy)->try_update_path(grid)) {
+		if ( !(*iter_enemy)->try_update_path()) {
 			// couldn't update path, don't place tower
 			tile->set_tower(NULL);
 			delete new_tower;
@@ -60,6 +60,10 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	money -= new_tower->get_cost_buy();
 	update_money();
 	tower_list.push_back(new_tower);
+	if (option_box_visible) {
+		hide_option_box();
+		select(tile);
+	}
 }
 
 void Game::upgrade_tower(towers::TowerType tower_type)
@@ -225,7 +229,7 @@ void Game::buildmenu_selection_not_set(SDL_Event* event)
 			send_new_wave();
 			grid->clear_paths();
 			for(iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++) {
-				(*iter_enemy)->try_update_path(grid);
+				(*iter_enemy)->try_update_path();
 			}
 		}
 	}

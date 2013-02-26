@@ -66,7 +66,6 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	}
 
-	grid = get_game()->get_grid();
 	health = max_health;
 
 	type = _type;
@@ -82,6 +81,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 	width = width_in;
 	height = height_in;
 
+	Grid* grid = game->get_grid();
 	current_tile = NULL;
 	current_destination = grid->get_start_tile();
 	current_path = NULL;
@@ -138,11 +138,12 @@ bool Enemy::is_on_tile(Tile* tile) {
 	return (tile == current_tile || tile == current_destination);
 }
 
-bool Enemy::try_update_path(Grid* grid)
+bool Enemy::try_update_path()
 {
 	/**
 	 * Returns true if a path to goal can be found, otherwise returns false.
 	 */
+	Grid* grid = get_game()->get_grid();
 
 	//Return true if enemy has reached goal.
 	Path* path_list = grid->get_path(current_destination, grid->get_portal_tile());
