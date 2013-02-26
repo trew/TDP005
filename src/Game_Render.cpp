@@ -189,28 +189,18 @@ void Game::draw_menu_towers()
 void Game::draw_build_item()
 {
 	// Draw selected builditem and buildability-color.
-	if (buildmenu_selection != NULL && building_flag == true)
+	if (buildmenu_selection != NULL)
 	{
 		int m_x, m_y;
 		SDL_GetMouseState(&m_x, &m_y);
 		int pos_x = m_x;
 		int pos_y = m_y;
-		int snap_x = m_x;
-		int snap_y = m_y;
 		Tile* hovered_tile = grid->get_tile_from_mouse(m_x, m_y);
-		snap_XY_to_grid(snap_x, snap_y);
-		if (!snap_to_grid)
-		{
-			pos_x = m_x - 20;
-			pos_y = m_y - 20;
-		}
-		else
-		{
-			snap_XY_to_grid(pos_x, pos_y);
-		}
 
-		if (m_x < GRIDWIDTH)
+		if (m_x < GRIDWIDTH && hovered_tile != NULL)
 		{
+			pos_x = hovered_tile->get_x_pixel_pos();
+			pos_y = hovered_tile->get_y_pixel_pos();
 			if (hovered_tile->get_tower() == NULL)
 			{
 				//There is no tower, draw green square

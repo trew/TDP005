@@ -77,7 +77,6 @@ private:
 	bool fullscreen;
 	bool need_boost_update;	///< Indicates whether we need to update the boost connections
 
-	bool snap_to_grid;
 	bool option_box_visible;
 	bool update_enemy_path;		///Sets true if player build or sell a tower
 
@@ -85,8 +84,7 @@ private:
 	bool sound_enabled;
 	bool music_enabled;
 
-	bool building_flag;			///True if player has selected a tower from the building menu.
-	Tower* hovered_build_item;
+	Tower* hovered_build_item;	///Set if player has selected a tower from the building menu.
 
 	/** Player values */
 	std::string playername;		///Entered when achieving place in highscore
@@ -167,9 +165,7 @@ private:
 private:
 /** *** Game Functions *** */
 /** Definition in Game.cpp */
-	GridPosition get_grid_pixel_position(GridPosition pos);		///Convert X and Y coordinates to appropriate place in Gridcontrol
 	void set_boost_update(bool);
-	void snap_XY_to_grid(int &X, int &Y);		///Snap X and Y to top left corner of a grid spot.
 
 	bool read_highscores_from_file();
 	int  get_highscore_pos();
@@ -196,8 +192,8 @@ private:
 	bool optbox_do_selection(Sprite* curr_opt_sel, GridPosition position); ///Passes on to optbox_do_selection(int, int, int)
 	bool optbox_do_selection(int type, GridPosition position);
 	void arrowkey_bflag_not_set(SDL_Event* event);
-	void buildingflag_not_set(SDL_Event* event);
-	void buildingflag_set(SDL_Event* event);
+	void buildmenu_selection_not_set(SDL_Event* event);
+	void buildmenu_selection_set(SDL_Event* event);
 	void left_mousebutton(int m_x, int m_y);
 
 	/** Handle event depending on gamestate */

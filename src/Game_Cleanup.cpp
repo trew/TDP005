@@ -38,7 +38,6 @@ void Game::reset_game()
 
 	tile_selection = NULL;
 	buildmenu_selection = NULL;
-	building_flag = false;
 	option_box_visible = false;
 	money = STARTING_MONEY;
 	score = 0;

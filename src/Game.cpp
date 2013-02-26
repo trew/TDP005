@@ -40,9 +40,7 @@ Game::Game()
 	current_fps = 0;
 
 	/* Flags */
-	building_flag = false;
 	grid_visible = true;
-	snap_to_grid = true;
 	option_box_visible = false;
 	music_enabled = true;
 	sound_enabled = true;
@@ -80,17 +78,6 @@ void Game::set_boost_update(bool val) {
 
 Grid* Game::get_grid() {
 	return grid;
-}
-
-void Game::snap_XY_to_grid(int &X, int &Y)
-{
-	/**
-	 * Takes positions in pixels as arguments and snaps them to the
-	 * top left corner of the grid position
-	 */
-	X = (X - (X % TILESIZE));
-	Y = (Y - (Y % TILESIZE));
-
 }
 
 bool Game::read_highscores_from_file()

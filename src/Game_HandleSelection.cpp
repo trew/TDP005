@@ -53,7 +53,6 @@ void Game::cancel_selection()
 	}
 	tile_selection = NULL;
 	buildmenu_selection = NULL;
-	building_flag = false;
 	selection_sprite->hide();
 	hide_option_box();
 }

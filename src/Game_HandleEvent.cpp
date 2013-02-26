@@ -60,7 +60,7 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	money -= new_tower->get_cost_buy();
 	update_money();
 	tower_list.push_back(new_tower);
-	if (!building_flag)
+	if (buildmenu_selection != NULL)
 	{
 		tile_selection = tile;
 		select(tile_selection);
@@ -206,7 +206,7 @@ void Game::arrowkey_bflag_not_set(SDL_Event* event)
 
 }
 
-void Game::buildingflag_not_set(SDL_Event* event)
+void Game::buildmenu_selection_not_set(SDL_Event* event)
 //Player does not have an object selected from Buildmenu
 {
 	if (!game_started && event->key.keysym.sym == SDLK_RETURN)
@@ -286,7 +286,7 @@ void Game::buildingflag_not_set(SDL_Event* event)
 	}
 }
 
-void Game::buildingflag_set(SDL_Event* event)
+void Game::buildmenu_selection_set(SDL_Event* event)
 {
 	//Player have an object from menu selected
 	if (event->key.keysym.sym == SDLK_LEFT)
@@ -375,16 +375,16 @@ void Game::left_mousebutton(int m_x, int m_y)
 		else //if (!ShowOptionBox)
 
 		{
-			if (building_flag && buildmenu_selection != NULL && tile->get_tower() == NULL )
+			if (buildmenu_selection != NULL && tile->get_tower() == NULL )
 			{
 				//Create new tower
 				create_new_tower(buildmenu_selection->get_type(), tile->get_position());
 			}
-			else if (building_flag == false)
+			else if (buildmenu_selection == NULL)
 			{
 				select(tile);
 			}
-			else
+			else // tower is occupying this tile, cannot build there
 			{
 				SFX_cant_build->play();
 			}
@@ -424,19 +424,18 @@ void Game::left_mousebutton(int m_x, int m_y)
 					game_state = INGAMEMENU;
 				}
 
-				if (tile_selection != NULL && ((*iter_ingame_button)->get_type() > BUTTONS) && !building_flag
+				if (tile_selection != NULL &&
+						((*iter_ingame_button)->get_type() > BUTTONS) &&
+						buildmenu_selection == NULL
 						&& !optionbox_visible())
 				{
-
 					switch ((*iter_ingame_button)->get_type())
 					{
-
 					case BUTTON_UPGR:
 						Tower* t = tile_selection->get_tower();
 						if (t != NULL)
 							upgrade_tower(t->get_type());
 						break;
-
 					case BUTTON_SELL:
 						sell(tile_selection);
 						break;
@@ -451,7 +450,6 @@ void Game::left_mousebutton(int m_x, int m_y)
 					< (*iter_build_obj)->get_y() + 40))
 			{
 				select_from_buildmenu((*iter_build_obj));
-				building_flag = true;
 			}
 		}
 	}
@@ -478,13 +476,13 @@ void Game::state_gameplay_running(SDL_Event* event)
 			send_new_wave();
 		}
 
-		if (!building_flag)
+		if (buildmenu_selection == NULL)
 		{
-			buildingflag_not_set(event);
+			buildmenu_selection_not_set(event);
 		}
 		else //Player has selected a tower to build
 		{
-			buildingflag_set(event);
+			buildmenu_selection_set(event);
 		}
 
 	}
@@ -499,8 +497,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 
 		else if (event->button.button == SDL_BUTTON_RIGHT)
 		{
-			if (!building_flag && (m_x > selection_sprite->get_x()) && (m_x < selection_sprite->get_x() + TILESIZE) && (m_y
-					> selection_sprite->get_y()) && (m_y < selection_sprite->get_y() + TILESIZE))
+			if (buildmenu_selection == NULL && selection_sprite->overlaps(m_x, m_y))
 			{
 				if (selection_sprite->is_visible())
 				{
