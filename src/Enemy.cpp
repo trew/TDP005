@@ -19,13 +19,13 @@ int get_grid_position(int pos_x, int pos_y)
 	return pos_y * (GRIDWIDTH / TILESIZE) + pos_x;
 }
 
-Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): grid(grid)
+Enemy::Enemy(Grid* grid, EnemyType _type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): grid(grid)
 {
 /*
  * Create new enemy. New enemies have different hitpoints depending on level.
  */
-	switch(new_type) {
-	case ENEMY_DOG:
+	switch(_type) {
+	case DOG:
 		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
 		move_speed = 2;
 		max_health = static_cast<int>(dog_health + (dog_health * 0.24) * (new_level-1));
@@ -34,7 +34,7 @@ Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in,
 		reward_money = enemy_money_reward;
 
 		break;
-	case ENEMY_SNAIL:
+	case SNAIL:
 		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
 		move_speed = 1;
 		max_health = static_cast<int>(snail_health + (snail_health * 0.24) * (new_level-1));
@@ -43,7 +43,7 @@ Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in,
 		reward_money = enemy_money_reward;
 
 		break;
-	case ENEMY_FISH:
+	case FISH:
 		sprite_surf = load_image("./gfx/enemy/enemy-3-30x30.png");
 		move_speed = 1;
 		max_health = static_cast<int>(fish_health + (fish_health * 0.24) * (new_level-1));
@@ -52,7 +52,7 @@ Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in,
 		reward_money = enemy_money_reward;
 
 		break;
-	case ENEMY_PALS:
+	case PALS:
 		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
 		move_speed = 1;
 		max_health = static_cast<int>(pals_health + (pals_health * 0.24) * (new_level-1));
@@ -61,7 +61,7 @@ Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in,
 		reward_money = enemy_money_reward;
 
 		break;
-	case ENEMY_BOSS:
+	case BOSS:
 		sprite_surf = load_image("./gfx/enemy/enemy-5-30x30.png");
 		move_speed = 1;
 		max_health = boss_health + boss_health_mod * (new_level-1);
@@ -76,7 +76,7 @@ Enemy::Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in,
 
 	health = max_health;
 
-	type = new_type;
+	type = _type;
 	reached_goal = false;
 	killed = false;
 	x_pos = x_pos_in;
@@ -109,8 +109,8 @@ void Enemy::draw(SDL_Surface* dest_surf)
 	if (!visible)
 		return;
 	SDL_Rect dest_rect;
-	dest_rect.x = (Sint16)x_pos + 5;
-	dest_rect.y = (Sint16)y_pos + 5;
+	dest_rect.x = (Sint16)x_pos;
+	dest_rect.y = (Sint16)y_pos;
 
 	SDL_Rect src_rect = {0, 0, height, width};
 
@@ -119,8 +119,8 @@ void Enemy::draw(SDL_Surface* dest_surf)
 
 void Enemy::draw_health_bar(SDL_Surface* dest_surf) {
 	int margin = 10;
-	int x = (int)x_pos + margin;
-	int y = (int)y_pos + TILESIZE - 5;
+	int x = (int)x_pos + margin / 2;
+	int y = (int)y_pos + TILESIZE - 10;
 	int width = TILESIZE - 2*margin;
 	int height = 2;
 
@@ -135,6 +135,10 @@ void Enemy::draw_health_bar(SDL_Surface* dest_surf) {
 
 	rectangleColor(dest_surf, x, y, x + width, y + height, border_color);
 	lineColor(dest_surf, x + 1, y + 1, x + 1 + healthbar_width, y + 1, health_color);
+}
+
+EnemyType Enemy::get_type() {
+	return type;
 }
 
 bool Enemy::is_on_tile(Tile* tile) {
@@ -241,31 +245,31 @@ void Enemy::move()
 	// the set destination-vertex, then we reached the destination, and will
 	// start approaching a new tile
 	bool switch_tile = false;
-	float x_mov_diff = 0;
-	float y_mov_diff = 0;
+	float overshoot = 0;
 
-	if (dir == DOWN && y_pos + y_vel > current_destination->get_y_pixel_pos()) {
-		y_mov_diff = y_pos + y_vel - current_destination->get_y_pixel_pos();
+	if (dir == DOWN &&
+			get_center_y() + y_vel > current_destination->get_center_y()) {
 		switch_tile = true;
-		y_pos = current_destination->get_y_pixel_pos();
+		overshoot = get_center_y() + y_vel - current_destination->get_center_y();
+		set_center_y(current_destination->get_center_y());
 	}
-	else if (dir == UP && y_pos + y_vel < current_destination->get_y_pixel_pos()) {
-		y_mov_diff = y_pos + y_vel - current_destination->get_y_pixel_pos();
+	else if (dir == UP && get_center_y() + y_vel < current_destination->get_center_y()) {
 		switch_tile = true;
-		y_pos = current_destination->get_y_pixel_pos();
+		overshoot = current_destination->get_center_y() - (get_center_y() + y_vel);
+		set_center_y(current_destination->get_center_y());
 	}
 	else if (dir == UP || dir == DOWN) {
 		y_pos += y_vel;
 	}
-	else if (dir == RIGHT && x_pos + x_vel > current_destination->get_x_pixel_pos()) {
-		x_mov_diff = x_pos + x_vel - current_destination->get_x_pixel_pos();
+	else if (dir == RIGHT && get_center_x() + x_vel > current_destination->get_center_x()) {
 		switch_tile = true;
-		x_pos = current_destination->get_x_pixel_pos();
+		overshoot = get_center_x() + x_vel - current_destination->get_center_x();
+		set_center_x(current_destination->get_center_x());
 	}
-	else if (dir == LEFT && x_pos + x_vel < current_destination->get_x_pixel_pos()) {
-		x_mov_diff = x_pos + x_vel - current_destination->get_x_pixel_pos();
+	else if (dir == LEFT && get_center_x() + x_vel < current_destination->get_center_x()) {
 		switch_tile = true;
-		x_pos = current_destination->get_x_pixel_pos();
+		overshoot = current_destination->get_center_x() - (get_center_x() + x_vel);
+		set_center_x(current_destination->get_center_x());
 	}
 	else if (dir == LEFT || dir == RIGHT) {
 		x_pos += x_vel;
@@ -278,8 +282,15 @@ void Enemy::move()
 		current_tile = current_destination;
 		current_destination = current_path->back();
 		current_path->pop_back();
-		x_pos += x_mov_diff;
-		y_pos += y_mov_diff;
+		Direction new_dir = move_dir();
+		if (new_dir == LEFT)
+			x_pos -= overshoot;
+		else if (new_dir == RIGHT)
+			x_pos += overshoot;
+		else if (new_dir == UP)
+			y_pos -= overshoot;
+		else if (new_dir == DOWN)
+			y_pos += overshoot;
 	} else {
 		reached_goal = true;
 	}

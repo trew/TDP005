@@ -75,6 +75,7 @@ private:
 	int current_fps;
 	Uint32 fps_timer;
 	bool fullscreen;
+	bool need_boost_update;	///< Indicates whether we need to update the boost connections
 
 	bool snap_to_grid;
 	bool option_box_visible;
@@ -85,6 +86,7 @@ private:
 	bool music_enabled;
 
 	bool building_flag;			///True if player has selected a tower from the building menu.
+	Tower* hovered_build_item;
 
 	/** Player values */
 	std::string playername;		///Entered when achieving place in highscore
@@ -166,6 +168,7 @@ private:
 /** *** Game Functions *** */
 /** Definition in Game.cpp */
 	GridPosition get_grid_pixel_position(GridPosition pos);		///Convert X and Y coordinates to appropriate place in Gridcontrol
+	void set_boost_update(bool);
 	void snap_XY_to_grid(int &X, int &Y);		///Snap X and Y to top left corner of a grid spot.
 
 	bool read_highscores_from_file();
@@ -186,8 +189,8 @@ private:
 
 /** Definition in Game_HandleEvent.cpp */
 	bool is_arrow_key(SDL_Event* event);
-	void create_new_tower(int tower_type, GridPosition);
-	void upgrade_tower(int tower_type);
+	void create_new_tower(towers::TowerType tower_type, GridPosition);
+	void upgrade_tower(towers::TowerType tower_type);
 	void send_new_wave();
 
 	bool optbox_do_selection(Sprite* curr_opt_sel, GridPosition position); ///Passes on to optbox_do_selection(int, int, int)
@@ -214,8 +217,6 @@ private:
 /** Definition in Game_HandleSelection.cpp */
 	bool sell(Tile*);
 	void cancel_selection();
-	void clear_selectioninfo();
-	void set_selection_info(Tower*);
 	void select(Tile*);
 	void select_from_buildmenu(Tower*);
 
@@ -266,6 +267,7 @@ private:
 	void update_score();
 	void update_level();
 	void update_timer();
+	void update_boost();
 
 	void get_rewards(Enemy* enemy);
 	void update_state();
@@ -294,16 +296,15 @@ private:
 	ProjectileList projectile_list;
 	ProjectileList::iterator iter_projectile;
 
-	Sprite_List ingame_menu_buttons;
-	Sprite_List::iterator iter_ingame_menu_button;
+	ButtonList ingame_menu_buttons;
+	ButtonList::iterator iter_ingame_menu_button;
 
-	Sprite_List mainmenu_buttons;
-	Sprite_List::iterator iter_mainmenu_button;
+	ButtonList mainmenu_buttons;
+	ButtonList::iterator iter_mainmenu_button;
 
-	Sprite_List ingame_buttons;
-	Sprite_List::iterator iter_ingame_button;
+	ButtonList ingame_buttons;
+	ButtonList::iterator iter_ingame_button;
 
-	Sprite_List selection_text;			///Informationtext about current selection.
 	Sprite_List::iterator iter_sel;
 
 	HighscoreList highscores;

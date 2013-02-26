@@ -25,21 +25,23 @@ void Level::reset() {
 
 void Level::compose_new_wave(Grid* grid) {
 	int amount_of_enemies = 15;
-	int enemy_type = 0;
+	EnemyType enemy_type = DOG;
 	int enemy_type_range;
 	if (current_boss_level < 5) enemy_type_range = current_boss_level;
-	else enemy_type_range = 4;
+	else enemy_type_range = 3;
 	int pos = 0;
 	int prev_pos = 40;
 	while (amount_of_enemies > 0) {
 		pos = -(prev_pos + (rand() % 25) +15);
-		enemy_type = ENEMY + (rand() % enemy_type_range)+1;
+		int i = (rand() % (enemy_type_range));
+		if (i > 3) i = 3;
+		enemy_type = (EnemyType)i;
 		Enemy* new_enemy;
-		new_enemy = new Enemy(grid, enemy_type, pos, 7*TILESIZE,30, 30, current_level);
+		new_enemy = new Enemy(grid, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_level);
 		if(current_level % 5 == 0) {
-			enemy_type = ENEMY_BOSS;
+			enemy_type = BOSS;
 			delete new_enemy; new_enemy = NULL;
-			new_enemy = new Enemy(grid, enemy_type, pos, 7*TILESIZE,30, 30, current_boss_level);
+			new_enemy = new Enemy(grid, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_boss_level);
 			amount_of_enemies = 0;
 			current_boss_level++;
 		}

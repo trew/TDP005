@@ -40,17 +40,17 @@ std::string Game::get_timer_str() {
 
 void Game::update_lives() {
 	lives_text->update_text(get_lives_str());
-	lives_text->set_x_pos(menu_money_score->get_x_pos() + 50);
+	lives_text->set_x(menu_money_score->get_x() + 50);
 }
 
 void Game::update_money() {
 	money_text->update_text(get_money_str());
-	money_text->set_x_pos(menu_money_score->get_x_pos() + (180 - money_text->get_width()) );
+	money_text->set_x(menu_money_score->get_x() + (180 - money_text->get_width()) );
 }
 
 void Game::update_score() {
 	score_text->update_text(get_score_str());
-	score_text->set_x_pos(menu_money_score->get_x_pos() + (180 - score_text->get_width()) );
+	score_text->set_x(menu_money_score->get_x() + (180 - score_text->get_width()) );
 }
 void Game::update_level() {
 	level_text->update_text(get_level_str());
@@ -60,7 +60,15 @@ void Game::update_timer() {
 	if(timer == old_timer) return;
 	old_timer = timer;
 	timer_text->update_text(get_timer_str());
-	timer_text->set_x_pos( 590 - timer_text->get_width() );
+	timer_text->set_x( 590 - timer_text->get_width() );
+}
+void Game::update_boost() {
+	if (need_boost_update) {
+		for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++) {
+			(*iter_tower)->update_boost(tower_list);
+		}
+	}
+
 }
 
 void Game::get_rewards(Enemy* enemy) {
@@ -84,8 +92,8 @@ void Game::update_state()
 			get_rewards((*iter_enemy));
 			for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 			{
-				if((*iter_tower)->has_this_target((*iter_enemy)))
-					(*iter_tower)->null_current_target();
+				if((*iter_tower)->get_target() == (*iter_enemy))
+					(*iter_tower)->set_target(NULL);
 			}
 			if( (*iter_enemy) != NULL)
 				delete (*iter_enemy);
@@ -118,8 +126,8 @@ void Game::update_state()
 			update_lives();
 			for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 			{
-				if((*iter_tower)->has_this_target((*iter_enemy)))
-					(*iter_tower)->null_current_target();
+				if((*iter_tower)->get_target() == (*iter_enemy))
+					(*iter_tower)->set_target(NULL);
 			}
 			delete (*iter_enemy);
 			(*iter_enemy) = NULL;
@@ -128,9 +136,9 @@ void Game::update_state()
 	}
 	update_enemy_path = false;
 
+	update_boost();
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		(*iter_tower)->update_boost(tower_list);
 		(*iter_tower)->update(enemy_list);
 		(*iter_tower)->shoot_if_possible(projectile_list);
 	}
@@ -141,12 +149,16 @@ void Game::update_state()
 		(*iter_projectile)->update();
 
 		float p_x, p_y; // Projectile X and Y position
-		p_x = (*iter_projectile)->get_x_pos();
-		p_y = (*iter_projectile)->get_y_pos();
+		int p_w, p_h;
+		p_x = (*iter_projectile)->get_x();
+		p_y = (*iter_projectile)->get_y();
+		p_w = (*iter_projectile)->get_width();
+		p_h = (*iter_projectile)->get_height();
 
 		///Remove projectile if it has hit a target or if its position is out of the grid
-		if (((p_x > GRIDWIDTH) || (p_x < 0) || (p_y > GRIDHEIGHT) || (p_y < 0)) ||
-			(*iter_projectile)->is_dead() )
+		if ( (p_x > GRIDWIDTH + p_w || p_x < 0 - p_w) ||
+			 (p_y > GRIDHEIGHT+ p_h || p_y < 0 - p_h) ||
+			 (*iter_projectile)->is_dead() )
 		{
 			delete (*iter_projectile);
 			iter_projectile = projectile_list.erase(iter_projectile);
@@ -161,8 +173,8 @@ void Game::update_state()
 		{
 			if (enemy_list.empty())
 				break;
-			e_x = (*iter_enemy)->get_x_pos();
-			e_y = (*iter_enemy)->get_y_pos();
+			e_x = (*iter_enemy)->get_x();
+			e_y = (*iter_enemy)->get_y();
 			e_h = (*iter_enemy)->get_height();
 			e_w = (*iter_enemy)->get_width();
 
@@ -172,7 +184,7 @@ void Game::update_state()
 				(*iter_enemy)->take_damage((*iter_projectile)->get_damage());
 
 				//Spawn a lot of projectiles around enemy
-				if( (*iter_projectile)->get_type() == PROJECTILE_BOMB ) {
+				if( (*iter_projectile)->get_int_type() == PROJECTILE_BOMB ) {
 					for(int i = 0; i<90; i+=15) {
 
 						int new_projectile_dmg = (int)((*iter_projectile)->get_damage() / 2.7f);
@@ -209,7 +221,7 @@ void Game::update_state()
 	new_projectiles.clear();
 
 	//Check if its time to send new wave
-	if (enemy_list.back()->get_x_pos() >= 0 && (!(level_control->last_enemy_is_sent())) ) {
+	if (enemy_list.back()->get_x() >= 0 && (!(level_control->last_enemy_is_sent())) ) {
 		level_control->set_last_enemy_sent();
 	}
 	if (level_control->time_to_send_wave())

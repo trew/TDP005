@@ -76,9 +76,9 @@ float Sprite::get_distance_to(Sprite *target)
 	/*
 	 * Calculates the distance between two sprites center positions
 	 */
-	float delta_x = x_pos + (width / 2.0f) - (target->get_x_pos() + target->get_width() / 2.0f);
-	float delta_y = y_pos + (height / 2.0f) - (target->get_y_pos() + target->get_height() / 2.0f);
-	double distance = sqrt( pow(delta_x, 2.0) + pow(delta_y, 2.0) );
+	float delta_x = x_pos + (width / 2) - (target->get_x() + target->get_width() / 2);
+	float delta_y = y_pos + (height / 2) - (target->get_y() + target->get_height() / 2);
+	double distance = sqrt( pow(delta_x, 2) + pow(delta_y, 2) );
 	return (float)distance;
 }
 
@@ -138,24 +138,40 @@ void Sprite::set_type(int new_type)
 	type = new_type;
 }
 
-void Sprite::set_x_pos(float x)
+void Sprite::set_center_x(float _x) {
+	x_pos = _x - width / 2;
+}
+
+void Sprite::set_center_y(float _y) {
+	y_pos = _y - height / 2;
+}
+
+void Sprite::set_x(float x)
 {
 	///Set x position
 	x_pos = x;
 }
-void Sprite::set_y_pos(float y)
+void Sprite::set_y(float y)
 {
 	///Set y position
 	y_pos = y;
 }
 
-float Sprite::get_x_pos()
+float Sprite::get_center_x() {
+	return x_pos + width / 2;
+}
+
+float Sprite::get_center_y() {
+	return y_pos + height / 2;
+}
+
+float Sprite::get_x()
 {
 	///Returns x position
 	return x_pos;
 }
 
-float Sprite::get_y_pos()
+float Sprite::get_y()
 {
 	///Returns y position
 	return y_pos;
@@ -171,7 +187,7 @@ int Sprite::get_width()
 	return width;
 }
 
-int Sprite::get_type()
+int Sprite::get_int_type()
 {
 	///Returns type
 	return type;

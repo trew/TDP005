@@ -15,6 +15,7 @@
 #include <map>
 #include <list>
 #include <vector>
+#include "Tower/Tower.h"
 
 /**
  * \brief The Tower class
@@ -23,31 +24,15 @@
  */
 class Tower: public Sprite {
 public:
-	Tower(int new_type, Tile* tile);			///<Constructor
+	Tower(towers::TowerType, Tile* tile);			///<Constructor
 	virtual ~Tower();							///<Destructor
 
 public: // Selectors
-	int get_sell_value() { return sell_value; } ///<Returns sell-value
-	float get_range(); 							///<Returns range
-	int get_level(); 							///<Returns level
-	int get_damage(); 							///<Returns damage
-	float get_boostmod(); 						///<Returns boostmod
-	int get_cost_buy(); 						///<Returns cost (when buying)
-	int get_cost_upgrade(); 					///<Returns upgrade-cost
-	std::string conv_float_to_string(float i); 		///<Converts float to string
-	std::string get_type_str(); 				///<Returns type as string
-	std::string get_range_str();				///<Returns range as string
-	std::string get_level_str();				///<Returns level as string
-	std::string get_damage_str();				///<Returns damage as string
-	std::string get_cost_buy_str();				///<Returns cost (when buying) as string
-	std::string get_cost_upgrade_str();			///<Returns upgrade-cost as string
 	double get_angle();							///<Returns current angle
-	Sprite* get_current_target();				///<Returns current target
-
-	void add_to_sell_value(int cost) { sell_value += cost; }///<Adds value to sell-value
 
 public:
-	void display_range(SDL_Surface* dest_surf, float x_pos, float y_pos); ///<Displays range as filled circle
+	void draw_range(SDL_Surface* dest_surf); ///<Displays range as filled circle
+	void draw_range(SDL_Surface* dest_surf, float x_pos, float y_pos); ///<Displays range as filled circle
 	void draw(SDL_Surface* dest_surf); 				///<Draws the tower onto the destination surface
 	void draw(SDL_Surface* dest_surf, int x, int y);///<Draws the tower onto the destination surface at (X,Y)
 
@@ -56,7 +41,7 @@ public:
 	void rotate(double value);						///<Rotates the tower
 
 	bool target_in_sight();							///<Checks if tower is aiming at target
-	bool target_in_range(Sprite *s);				///<Checks if target is in range
+	bool target_in_range(Enemy*);				///<Checks if target is in range
 	void update_aim();								///<Rotates the cannon so that it aims more towards the current target.
 	void find_new_target(EnemyList &enemy_list);	///<Finds new target for tower if possible
 	void reload();									///<Handles reloadtimer
@@ -64,45 +49,46 @@ public:
 	void shoot(ProjectileList& list);			///<Fires an projectile //TODO: projectile_list
 	void apply_boost(float mod); ///<Applies boost to the towers stats
 
-	bool has_this_target(Sprite* target);			///<Checks if the target is the towers current target
-	void null_current_target();						///<Sets current target to NULL
+	Sprite* get_target();				///<Returns current target
+	void set_target(Enemy* target);
 
 	void update_boost(TowerList &tower_list);		///<Updates the towers boost-percentage and boosts the tower with apply_boost.
 	void update(EnemyList &enemy_list);			///<Update tower state
 	void shoot_if_possible(ProjectileList &projectile_list); ///<Shoots at the enemy if conditions are right.
 
-	void set_selected();							///<Sets tower as selected
-	void clear_selected();							///<Deselects tower if it is selected
-	Sprite_List get_infosprites();					///<Returns sprites containing text-information
-	void update_info_sprites();						///<Updates the text-information stored in the sprites
+	void set_selected(bool selected);				///<Sets tower as selected
+	Sprite_List* get_infosprites();					///<Returns sprites containing text-information
 
-	bool upgrade(int new_type);						///<Upgrades the tower to the new type and changes its stats thereafter.
+	bool upgrade(towers::TowerType type);						///<Upgrades the tower to the new type and changes its stats thereafter.
 
 	Tile* get_tile();
 	void set_tile(Tile*);
 
-private:
-	void init_info_sprites();						///<Initializes the information-sprites
+	/* Implementation details */
+	uint get_base_damage();
+	float get_projectile_speed();
+	float get_reloading_time();
+	int get_spread();
+	float get_rotation_speed();
+	float get_range();
+	float get_base_range();
+	float get_boostmod();
+	towers::TowerType get_type();
 
+	int get_cost_buy();
+	int get_cost_upgrade();
+	void set_sell_value(int value);
+	int get_sell_value();
+	int get_level();
+	int get_max_level();
+
+	void set_range(float range);
+	void set_damage(int damage);
 private: // Properties
-	float 	range;				// Tower Range
-	float 	base_range;
-	float 	rotation_speed;	    // Cannon Rotationspeed
-	int 	spread;				// Angle-deviation-acceptance for when to fire at enemy
-	float	reloading_time;		// The tower's rate of fire
-	int 	damage;				// Attackdamage
-	int 	base_damage;
-	float	projectile_speed;	// Speed of the projectile being shot
-	int 	level;				// Current level
-	int		cost_buy;			// Cost to build
-	int 	cost_upgrade;		// Cost to upgrade
-	float 	boostmod;			// Boost modifier for boost towers
-	int 	sell_value;			// Value when selling
 	Tile*	tile;
+	towers::Tower* twr_impl;
 
 private: // Specific variables for calculations etc.
-	SDL_Surface* 	base_surf;
-	SDL_Surface* 	cannon_surf;
 	Enemy*			current_target;
 	double			current_angle;
 	double			target_angle;

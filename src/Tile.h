@@ -21,6 +21,8 @@ public:
 	void set_tower(Tower*);
 
 	GridPosition get_position();
+	float get_center_x();
+	float get_center_y();
 	int get_x_pixel_pos();
 	int get_y_pixel_pos();
 private:

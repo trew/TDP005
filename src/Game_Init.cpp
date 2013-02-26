@@ -79,14 +79,14 @@ bool Game::init()
 	selection_sprite = new Sprite(this, 	"./gfx/misc/marker44x44.png", -5, -5, 44, 44);
 	selection_sprite->hide();
 
-	score_text = new Text(get_score_str(), 0, (int)menu_money_score->get_y_pos() + 30, standard_font_16);
+	score_text = new Text(get_score_str(), 0, (int)menu_money_score->get_y() + 30, standard_font_16);
 	update_score();
-	split_money_score = new Text("-------------------------------------", (int)menu_money_score->get_x_pos() + 30, (int)menu_money_score->get_y_pos() + 45, standard_font_12);
-	money_text = new Text(get_money_str(), 0, (int)menu_money_score->get_y_pos() + 55, standard_font_16);
+	split_money_score = new Text("-------------------------------------", (int)menu_money_score->get_x() + 30, (int)menu_money_score->get_y() + 45, standard_font_12);
+	money_text = new Text(get_money_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
 	update_money();
-	lives_text = new Text(get_lives_str(), 0, (int)menu_money_score->get_y_pos() + 55, standard_font_16);
+	lives_text = new Text(get_lives_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
 	update_lives();
-	level_text = new Text("Wave: 1", (int)menu_money_score->get_x_pos() + 25, (int)menu_money_score->get_y_pos() + 30, standard_font_16);
+	level_text = new Text("Wave: 1", (int)menu_money_score->get_x() + 25, (int)menu_money_score->get_y() + 30, standard_font_16);
 	timer_text = new Text("",255,255,255, 0, 5, standard_font_12);
 	fps_text = new Text("", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
 
@@ -131,15 +131,15 @@ bool Game::init()
 	SFX_game_over = 	new Sound("./snd/game_over.wav", false, 0);
 
 	//Available towers in menu
-	build_list.push_back(new Tower(TOWER_BASE, NULL));
-	build_list.back()->set_x_pos(630);
-	build_list.back()->set_y_pos(175);
-	build_list.push_back(new Tower(TOWER_BOOST_LEVEL_1, NULL));
-	build_list.back()->set_x_pos(680);
-	build_list.back()->set_y_pos(175);
-	build_list.push_back(new Tower(TOWER_WALL, NULL));
-	build_list.back()->set_x_pos(730);
-	build_list.back()->set_y_pos(175);
+	build_list.push_back(new Tower(towers::SIMPLE, NULL));
+	build_list.back()->set_x(630);
+	build_list.back()->set_y(175);
+	build_list.push_back(new Tower(towers::BOOST, NULL));
+	build_list.back()->set_x(680);
+	build_list.back()->set_y(175);
+	build_list.push_back(new Tower(towers::WALL, NULL));
+	build_list.back()->set_x(730);
+	build_list.back()->set_y(175);
 
 	//Ingame buttons
 	ingame_buttons.push_back(new Button(BUTTON_MENU, 		600,   0, 112, 51, false, "./gfx/button/ingame-menuf10-112x51.png"));

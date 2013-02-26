@@ -61,39 +61,6 @@ const int BUTTON_WALL		=	112;
 const int BUTTON_TOGGLESOUND=	113;
 const int BUTTON_TOGGLEGRID	=	114;
 
-
-const int TOWER_WALL			=	1;
-const int TOWER_BASE			=	2;
-
-const int TOWER_BASIC_LEVEL_1 	=	3;
-const int TOWER_BASIC_LEVEL_2 	=	4;
-const int TOWER_BASIC_LEVEL_3 	=	5;
-
-const int TOWER_SPEED_LEVEL_1 	=	6;
-const int TOWER_SPEED_LEVEL_2 	=	7;
-const int TOWER_SPEED_LEVEL_3 	=	8;
-
-const int TOWER_RANGE_LEVEL_1 	=	9;
-const int TOWER_RANGE_LEVEL_2 	=	10;
-const int TOWER_RANGE_LEVEL_3 	=	11;
-
-const int TOWER_BOMB_LEVEL_1 	=	12;
-const int TOWER_BOMB_LEVEL_2 	=	13;
-const int TOWER_BOMB_LEVEL_3 	=	14;
-
-const int TOWER_BOOST_LEVEL_1	=	15;
-const int TOWER_BOOST_LEVEL_2	=	16;
-const int TOWER_BOOST_LEVEL_3	=	17;
-
-
-const int ENEMY			=	18;
-const int ENEMY_FISH	=	19;
-const int ENEMY_SNAIL	=	20;
-const int ENEMY_DOG		=	21;
-const int ENEMY_PALS	=	22;
-const int ENEMY_BOSS	=	23;
-
-
 const int PROJECTILE		=	25;
 const int PROJECTILE_BOMB	=	26;
 

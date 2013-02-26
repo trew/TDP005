@@ -25,8 +25,10 @@ public:
 	void draw(SDL_Surface* dest_surf); ///<Method for drawing the button at its position
 	void draw(SDL_Surface* dest_surf, int X, int Y); ///<Method for drawing the button at (X, Y)
 	void update(); ///<Updates the button's state, toggling on/off
+	int get_type() { return type; }
 
 private:
+	int type;
 	SDL_Surface* second_surf;
 	bool can_toggle;
 	bool is_toggled;

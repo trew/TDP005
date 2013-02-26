@@ -19,21 +19,10 @@ void Game::reset_game()
 	{
 		delete (*iter_tower);
 	}
+	tower_list.clear();
 
 	grid->clear_paths();
 	grid->reset();
-	/*
-	if(!selection.empty()) {
-		for (iter_sel = selection.begin(); iter_sel != selection.end(); iter_sel++)
-		{
-			delete (*iter_sel);
-		}
-
-	}
-	*/
-	selection_text.clear();
-
-	tower_list.clear();
 
 	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
 	{
@@ -41,8 +30,8 @@ void Game::reset_game()
 	}
 	projectile_list.clear();
 
-	selection_sprite->set_x_pos(-5);
-	selection_sprite->set_y_pos(-5);
+	selection_sprite->set_x(-5);
+	selection_sprite->set_y(-5);
 	selection_sprite->hide();
 
 	level_control->reset();
@@ -66,6 +55,8 @@ void Game::reset_game()
 
 void Game::cleanup()
 {
+	Mix_CloseAudio();
+
 	delete level_control;
 	delete grid;
 
@@ -162,7 +153,6 @@ void Game::cleanup()
 	delete SFX_game_over;
 
 	SDL_FreeSurface(screen);
-	Mix_CloseAudio();
 
 	TTF_CloseFont(standard_font_48);
 	TTF_CloseFont(standard_font_46);

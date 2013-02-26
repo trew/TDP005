@@ -19,10 +19,12 @@ class Sprite;
 class Tower;
 class Enemy;
 class Projectile;
+class Button;
 typedef std::list<Sprite*> Sprite_List;
 typedef std::list<Tower*> TowerList;
 typedef std::list<Enemy*> EnemyList;
 typedef std::list<Projectile*> ProjectileList;
+typedef std::list<Button*> ButtonList;
 typedef std::pair<int, int> GridPosition;
 
 /** \brief Sprites are the graphic objects of the game
@@ -43,24 +45,28 @@ public:
 	Game* get_game();
 
 	/* Sprite specific functions */
-	SDL_Surface* load_image(std::string file);	///<<Load image from file
+	static SDL_Surface* load_image(std::string file);	///<<Load image from file
 	void set_type(int newType);	///<Set new type
-	void set_x_pos(float X);		///<Set new x pos
-	void set_y_pos(float Y);		///<Set new y pos
+	void set_x(float X);		///<Set new x pos
+	void set_y(float Y);		///<Set new y pos
 	void hide();				///<Hide sprite
 	void show();				///<Show sprite
 	void toggle_visibility();	///<Toggle visibility
 	bool is_visible();		///<Is sprite visible?
 
-	float get_x_pos();		///<returns x position
-	float get_y_pos();		///<Returns y position
+	void set_center_x(float x);
+	void set_center_y(float y);
+	float get_center_x();
+	float get_center_y();
+	float get_x();		///<returns x position
+	float get_y();		///<Returns y position
 	int get_height();		///<Returns height of Sprite
 	int get_width();		///<Returns width of Sprite
 
 	/* Virtual functions for all inherited objects */
 	virtual void draw(SDL_Surface* dest_surf);	///<Blit sprite to surface
 	virtual void draw(SDL_Surface* dest_surf, int x, int y); ///<Blit sprite to surface
-	virtual int get_type();		///<Returns type
+	int get_int_type();		///<Returns type
 	float get_distance_to(Sprite *s); ///<Pure virtual
 
 	virtual void update();			///<Pure virtual
@@ -80,8 +86,6 @@ protected:
 	int width;									///<width
 	bool selected;								///<Selected or not
 	bool visible;								///<Visible or not
-	std::vector<Sprite*> infosprites;			///<List of all Textsprites
-	Sprite_List visible_infosprites;			///<List containing those textsprites that are currently visible
 
 private:
 	Game* game;

@@ -32,6 +32,14 @@ GridPosition Tile::get_position() {
 	return position;
 }
 
+float Tile::get_center_x() {
+	return position.second * TILESIZE + TILESIZE / 2.0f;
+}
+
+float Tile::get_center_y() {
+	return position.first * TILESIZE + TILESIZE / 2.0f;
+}
+
 int Tile::get_x_pixel_pos() {
 	return position.second * TILESIZE;
 }

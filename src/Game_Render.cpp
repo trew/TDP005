@@ -104,15 +104,23 @@ void Game::draw_selection()
 {
 	selection_sprite->draw(screen);
 
-	if(selection_text.empty())
-		return;
+	if (tile_selection != NULL && tile_selection->get_tower() != NULL) {
+		Tower* t = tile_selection->get_tower();
+		t->draw_range(screen);
 
-	//Draw selection and/or display info about current selection
-	for (iter_sel = selection_text.begin(); iter_sel != selection_text.end(); iter_sel++)
-	{
-		(*iter_sel)->draw(screen);
+		Sprite_List* s = t->get_infosprites();
+		for (iter_sel = s->begin(); iter_sel != s->end(); iter_sel++)
+		{
+			(*iter_sel)->draw(screen);
+		}
+
+	} else if (hovered_build_item != NULL) {
+		Sprite_List* s = hovered_build_item->get_infosprites();
+		for (iter_sel = s->begin(); iter_sel != s->end(); iter_sel++)
+		{
+			(*iter_sel)->draw(screen);
+		}
 	}
-
 }
 void Game::draw_enemies()
 {
@@ -131,11 +139,11 @@ void Game::draw_boost_connections()
 	//Draw visual connections between boostertowers and other towers
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		if ((*iter_tower)->get_type() == TOWER_BOOST_LEVEL_1 || (*iter_tower)->get_type() == TOWER_BOOST_LEVEL_2 || (*iter_tower)->get_type() == TOWER_BOOST_LEVEL_3)
+		if ((*iter_tower)->get_type() == towers::BOOST)
 
 			for (TowerList::iterator iter_tower_2 = tower_list.begin(); iter_tower_2 != tower_list.end(); iter_tower_2++)
 			{
-				if ((*iter_tower_2)->get_type() >= TOWER_BASE && (*iter_tower_2)->get_type() < TOWER_BOOST_LEVEL_1)
+				if ((*iter_tower_2)->get_type() != towers::BOOST && (*iter_tower_2)->get_type() != towers::WALL)
 				{
 					if ((*iter_tower)->get_distance_to((*iter_tower_2)) <= (*iter_tower)->get_range())
 					{
@@ -143,10 +151,10 @@ void Game::draw_boost_connections()
 						line_strength = 20 + line_strength % 13 * 20;
 
 						Sint16 x1, x2, y1, y2;
-						x1 = (Sint16)((*iter_tower)->get_x_pos() + TILESIZE / 2.0f);
-						y1 = (Sint16)((*iter_tower)->get_y_pos() + TILESIZE / 2.0f);
-						x2 = (Sint16)((*iter_tower_2)->get_x_pos() + TILESIZE / 2.0f);
-						y2 = (Sint16)((*iter_tower_2)->get_y_pos() + TILESIZE / 2.0f);
+						x1 = (Sint16)((*iter_tower)->get_x() + TILESIZE / 2.0f);
+						y1 = (Sint16)((*iter_tower)->get_y() + TILESIZE / 2.0f);
+						x2 = (Sint16)((*iter_tower_2)->get_x() + TILESIZE / 2.0f);
+						y2 = (Sint16)((*iter_tower_2)->get_y() + TILESIZE / 2.0f);
 						lineRGBA(screen, x1, y1, x2, y2, 0xFF, 0xFF, 0, line_strength);
 					}
 				}
@@ -207,7 +215,7 @@ void Game::draw_build_item()
 			{
 				//There is no tower, draw green square
 				buildmenu_selection->draw(screen, pos_x, pos_y);
-				buildmenu_selection->display_range(screen, pos_x, pos_y);
+				buildmenu_selection->draw_range(screen, pos_x, pos_y);
 				if (money >= buildmenu_selection->get_cost_buy())
 					free_spot->draw(screen, pos_x, pos_y);
 				else
@@ -221,7 +229,7 @@ void Game::draw_build_item()
 				{
 					buildmenu_selection->draw(screen, pos_x, pos_y);
 				}
-				buildmenu_selection->display_range(screen, pos_x, pos_y);
+				buildmenu_selection->draw_range(screen, pos_x, pos_y);
 				not_free_spot->draw(screen, pos_x, pos_y);
 			}
 		}
@@ -285,8 +293,8 @@ void Game::render_gameplay()
 	menu_lives->draw(screen);
 
 	draw_money_score();
-	draw_selection();
 	draw_enemies();
+	draw_selection();
 	map_exit->draw(screen);
 	draw_projectiles();
 	draw_menu_towers();

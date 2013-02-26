@@ -13,6 +13,14 @@
 #include "Game.h"
 #include <vector>
 
+enum EnemyType {
+	FISH,
+	SNAIL,
+	DOG,
+	PALS,
+	BOSS
+};
+
 typedef std::list<GridPosition> path_list;
 
 /** \brief Enemy class
@@ -25,12 +33,13 @@ typedef std::list<GridPosition> path_list;
 class Enemy: public Sprite {
 public:
 
-	Enemy(Grid* grid, int new_type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level);	///< Constructor
+	Enemy(Grid* grid, EnemyType type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level);	///< Constructor
 	virtual ~Enemy();			///< Destructor
 
 	void draw(SDL_Surface* dest_surf);					///< Draw image
 	void draw_health_bar(SDL_Surface* dest_surf);
 
+	EnemyType get_type();
 	void update();										///< Update state of enemy
 	void take_damage(int dmg);							///< Recieve damage
 	bool is_killed() { return killed; }					///< Is enemy killed by player?
@@ -68,6 +77,7 @@ private:
 	int level;
 	int cost;
 	Direction direction;
+	EnemyType type;
 
 	int reward_money;
 	int reward_score;

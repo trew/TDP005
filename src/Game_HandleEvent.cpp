@@ -14,7 +14,7 @@ bool Game::is_arrow_key(SDL_Event* event)
 			== SDLK_DOWN));
 }
 
-void Game::create_new_tower(int tower_type, GridPosition position)
+void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 {
 	Tile* tile = grid->get_tile(position);
 	if (!grid->is_placeable_tile(tile))
@@ -55,6 +55,7 @@ void Game::create_new_tower(int tower_type, GridPosition position)
 	}
 	//New tower CAN be placed.
 	SFX_build->play();
+	set_boost_update(true);
 	update_enemy_path = true;
 	money -= new_tower->get_cost_buy();
 	update_money();
@@ -68,7 +69,7 @@ void Game::create_new_tower(int tower_type, GridPosition position)
 
 }
 
-void Game::upgrade_tower(int tower_type)
+void Game::upgrade_tower(towers::TowerType tower_type)
 {
 	if (tile_selection != NULL)
 	{
@@ -82,10 +83,10 @@ void Game::upgrade_tower(int tower_type)
 		if (!tower->upgrade(tower_type))
 			return;
 		money -= cost;
-		tower->add_to_sell_value(cost);
+		set_boost_update(true);
+		tower->set_sell_value(tower->get_sell_value() + cost);
 		update_money();
 		SFX_upgrade->play();
-		set_selection_info(tower);
 		if (tower_type > 0)
 			hide_option_box();
 		else
@@ -103,7 +104,7 @@ void Game::send_new_wave()
 
 bool Game::optbox_do_selection(Sprite* curr_op_sel, GridPosition position)
 {
-	return optbox_do_selection(curr_op_sel->get_type(), position);
+	return optbox_do_selection(curr_op_sel->get_int_type(), position);
 }
 
 bool Game::optbox_do_selection(int type, GridPosition position)
@@ -116,29 +117,29 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 	case BUTTON_BASE:
 		if (grid->get_tile(position)->get_tower() == NULL)
 		{
-			create_new_tower(TOWER_BASE, position);
+			create_new_tower(towers::SIMPLE, position);
 		}
 		else
 		{
-			upgrade_tower(TOWER_BASIC_LEVEL_1);
+			upgrade_tower(towers::BASIC);
 		}
 		return true;
 
 	case BUTTON_BOOST:
-		create_new_tower(TOWER_BOOST_LEVEL_1, position);
+		create_new_tower(towers::BOOST, position);
 		return true;
 
 	case BUTTON_BASIC:
-		upgrade_tower(TOWER_BASIC_LEVEL_1);
+		upgrade_tower(towers::BASIC);
 
 		return true;
 
 	case BUTTON_BOMB:
-		upgrade_tower(TOWER_BOMB_LEVEL_1);
+		upgrade_tower(towers::BOMB);
 
 		return true;
 	case BUTTON_RANGE:
-		upgrade_tower(TOWER_RANGE_LEVEL_1);
+		upgrade_tower(towers::RANGE);
 
 		return true;
 	case BUTTON_SELL:
@@ -146,15 +147,19 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 
 		return true;
 	case BUTTON_SPEED:
-		upgrade_tower(TOWER_SPEED_LEVEL_1);
+		upgrade_tower(towers::SPEED);
 
 		return true;
 	case BUTTON_UPGRADE:
-		upgrade_tower(0);
-
-		return true;
+		Tower* t = grid->get_tile(position)->get_tower();
+		if (t != NULL) {
+			upgrade_tower(t->get_type());
+			return true;
+		} else {
+			return false;
+		}
 	case BUTTON_WALL:
-		create_new_tower(TOWER_WALL, position);
+		create_new_tower(towers::WALL, position);
 		return true;
 	default:
 		break;
@@ -229,8 +234,8 @@ void Game::buildingflag_not_set(SDL_Event* event)
 	int position = 0;
 	for (iter_op_box = optionbox.begin(); iter_op_box != optionbox.end(); iter_op_box++)
 	{
-		int posX = (int)selection_sprite->get_x_pos() + 2;
-		int posY = (int)selection_sprite->get_y_pos() + 2;
+		int posX = (int)selection_sprite->get_x() + 2;
+		int posY = (int)selection_sprite->get_y() + 2;
 		GridPosition pos = GridPosition(0,0);
 		Tile* tile = grid->get_tile_from_mouse(posX, posY);
 		if (tile != NULL)
@@ -333,6 +338,8 @@ void Game::left_mousebutton(int m_x, int m_y)
 			// if mouse is inside OptionBox
 			if ((*iter_op_box)->overlaps(m_x, m_y))
 			{
+				if (tile_selection != NULL)
+					tile = tile_selection;
 				for (iter_op_box = optionbox.begin()++; iter_op_box != optionbox.end(); iter_op_box++)
 				{
 					if ((*iter_op_box)->overlaps(m_x, m_y))
@@ -392,8 +399,8 @@ void Game::left_mousebutton(int m_x, int m_y)
 		//Stuff on menu
 		for (iter_ingame_button = ingame_buttons.begin(); iter_ingame_button != ingame_buttons.end(); iter_ingame_button++)
 		{
-			if ((m_x > (*iter_ingame_button)->get_x_pos()) && (m_x < (*iter_ingame_button)->get_x_pos() + (*iter_ingame_button)->get_width()) && (m_y
-					> (*iter_ingame_button)->get_y_pos()) && (m_y < (*iter_ingame_button)->get_y_pos() + (*iter_ingame_button)->get_height()))
+			if ((m_x > (*iter_ingame_button)->get_x()) && (m_x < (*iter_ingame_button)->get_x() + (*iter_ingame_button)->get_width()) && (m_y
+					> (*iter_ingame_button)->get_y()) && (m_y < (*iter_ingame_button)->get_y() + (*iter_ingame_button)->get_height()))
 			{
 
 				if ((*iter_ingame_button)->get_type() == BUTTON_TOGGLEGRID)
@@ -425,7 +432,9 @@ void Game::left_mousebutton(int m_x, int m_y)
 					{
 
 					case BUTTON_UPGR:
-						upgrade_tower(0);
+						Tower* t = tile_selection->get_tower();
+						if (t != NULL)
+							upgrade_tower(t->get_type());
 						break;
 
 					case BUTTON_SELL:
@@ -438,8 +447,8 @@ void Game::left_mousebutton(int m_x, int m_y)
 
 		for (iter_build_obj = build_list.begin(); iter_build_obj != build_list.end(); iter_build_obj++)
 		{
-			if ((m_x > (*iter_build_obj)->get_x_pos()) && (m_x < (*iter_build_obj)->get_x_pos() + 40) && (m_y > (*iter_build_obj)->get_y_pos()) && (m_y
-					< (*iter_build_obj)->get_y_pos() + 40))
+			if ((m_x > (*iter_build_obj)->get_x()) && (m_x < (*iter_build_obj)->get_x() + 40) && (m_y > (*iter_build_obj)->get_y()) && (m_y
+					< (*iter_build_obj)->get_y() + 40))
 			{
 				select_from_buildmenu((*iter_build_obj));
 				building_flag = true;
@@ -490,8 +499,8 @@ void Game::state_gameplay_running(SDL_Event* event)
 
 		else if (event->button.button == SDL_BUTTON_RIGHT)
 		{
-			if (!building_flag && (m_x > selection_sprite->get_x_pos()) && (m_x < selection_sprite->get_x_pos() + TILESIZE) && (m_y
-					> selection_sprite->get_y_pos()) && (m_y < selection_sprite->get_y_pos() + TILESIZE))
+			if (!building_flag && (m_x > selection_sprite->get_x()) && (m_x < selection_sprite->get_x() + TILESIZE) && (m_y
+					> selection_sprite->get_y()) && (m_y < selection_sprite->get_y() + TILESIZE))
 			{
 				if (selection_sprite->is_visible())
 				{
@@ -513,23 +522,18 @@ void Game::state_gameplay_running(SDL_Event* event)
 		{
 			int m_x, m_y;
 			SDL_GetMouseState(&m_x, &m_y);
-			bool hovering = false;
 
 			//Loop through build objects
 			for (iter_build_obj = build_list.begin(); iter_build_obj != build_list.end(); iter_build_obj++)
 			{
-				if ((m_x > (*iter_build_obj)->get_x_pos()) && (m_x < (*iter_build_obj)->get_x_pos() + 40) && (m_y > (*iter_build_obj)->get_y_pos()) && (m_y
-						< (*iter_build_obj)->get_y_pos() + 40))
+				if ((*iter_build_obj)->overlaps(m_x, m_y))
 				{
-					set_selection_info((*iter_build_obj));
-					hovering = true;
+					hovered_build_item = (*iter_build_obj);
+					return;
 				}
 			}
-			if (hovering == false)
-			{
-				clear_selectioninfo();
-			}
 		}
+		hovered_build_item = NULL;
 	}
 
 }
@@ -554,8 +558,8 @@ void Game::state_mainmenu(SDL_Event* event)
 		{
 			for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
 			{
-				if ((m_x > (*iter_mainmenu_button)->get_x_pos()) && (m_x < (*iter_mainmenu_button)->get_x_pos() + (*iter_mainmenu_button)->get_width()) && (m_y
-						> (*iter_mainmenu_button)->get_y_pos()) && (m_y < (*iter_mainmenu_button)->get_y_pos() + (*iter_mainmenu_button)->get_height()))
+				if ((m_x > (*iter_mainmenu_button)->get_x()) && (m_x < (*iter_mainmenu_button)->get_x() + (*iter_mainmenu_button)->get_width()) && (m_y
+						> (*iter_mainmenu_button)->get_y()) && (m_y < (*iter_mainmenu_button)->get_y() + (*iter_mainmenu_button)->get_height()))
 				{
 					switch ((*iter_mainmenu_button)->get_type())
 					{
@@ -679,10 +683,10 @@ void Game::state_ingame_menu(SDL_Event* event)
 		{
 			for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
 			{
-				if ((m_x > (*iter_ingame_menu_button)->get_x_pos())
-						&& (m_x < (*iter_ingame_menu_button)->get_x_pos() + (*iter_ingame_menu_button)->get_width()) && (m_y
-						> (*iter_ingame_menu_button)->get_y_pos())
-						&& (m_y < (*iter_ingame_menu_button)->get_y_pos() + (*iter_ingame_menu_button)->get_height()))
+				if ((m_x > (*iter_ingame_menu_button)->get_x())
+						&& (m_x < (*iter_ingame_menu_button)->get_x() + (*iter_ingame_menu_button)->get_width()) && (m_y
+						> (*iter_ingame_menu_button)->get_y())
+						&& (m_y < (*iter_ingame_menu_button)->get_y() + (*iter_ingame_menu_button)->get_height()))
 				{
 					switch ((*iter_ingame_menu_button)->get_type())
 					{

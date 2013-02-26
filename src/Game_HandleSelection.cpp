@@ -25,6 +25,7 @@ bool Game::sell(Tile* tile)
 
 		update_money();
 		SFX_sell->play();
+		set_boost_update(true);
 		update_enemy_path = true;
 		tower->get_tile()->set_tower(NULL);
 		tower_list.remove(tower);
@@ -36,7 +37,6 @@ bool Game::sell(Tile* tile)
 		{
 			(*iter_enemy)->try_update_path(grid);
 		}
-		clear_selectioninfo();
 		tile_selection = NULL;
 		hide_option_box();
 	}
@@ -47,30 +47,15 @@ void Game::cancel_selection()
 {
 	update_option_box();
 	if (tile_selection != NULL && tile_selection->get_tower() != NULL)
-		tile_selection->get_tower()->clear_selected();
+		tile_selection->get_tower()->set_selected(false);
 	if (buildmenu_selection != NULL) {
-		buildmenu_selection->clear_selected();
+		buildmenu_selection->set_selected(false);
 	}
 	tile_selection = NULL;
 	buildmenu_selection = NULL;
 	building_flag = false;
 	selection_sprite->hide();
 	hide_option_box();
-	clear_selectioninfo();
-
-}
-
-void Game::clear_selectioninfo()
-{
-	selection_text.clear();
-}
-
-void Game::set_selection_info(Tower* selection_ptr)
-{
-	clear_selectioninfo();
-	if (selection_ptr != NULL)
-		selection_text = selection_ptr->get_infosprites();
-
 }
 
 void Game::select(Tile* tile)
@@ -80,37 +65,34 @@ void Game::select(Tile* tile)
 		tower = tile_selection->get_tower();
 
 	if (buildmenu_selection != NULL) {
-		buildmenu_selection->clear_selected();
+		buildmenu_selection->set_selected(false);
 		buildmenu_selection = NULL;
 	}
 	tile_selection = tile;
 	last_selected_tile = tile_selection;
 	if (tower != NULL)
-		tower->clear_selected();
+		tower->set_selected(false);
 
 	tower = tile_selection->get_tower();
 
 	selection_sprite->show();
-	selection_sprite->set_x_pos(tile_selection->get_x_pixel_pos() - 2);
-	selection_sprite->set_y_pos(tile_selection->get_y_pixel_pos() - 2);
+	selection_sprite->set_x(tile_selection->get_x_pixel_pos() - 2);
+	selection_sprite->set_y(tile_selection->get_y_pixel_pos() - 2);
 	if (tower != NULL)
-		tower->set_selected();
+		tower->set_selected(true);
 	update_option_box();
-
-    set_selection_info(tower);
 }
 
 void Game::select_from_buildmenu(Tower* tower) {
 	if (tile_selection != NULL && tile_selection->get_tower() != NULL) {
-		tile_selection->get_tower()->clear_selected();
+		tile_selection->get_tower()->set_selected(false);
 		tile_selection = NULL;
 	}
 
 	buildmenu_selection = tower;
 	selection_sprite->show();
-	selection_sprite->set_x_pos(buildmenu_selection->get_x_pos() - 2);
-	selection_sprite->set_y_pos(buildmenu_selection->get_y_pos() - 2);
-	tower->set_selected();
+	selection_sprite->set_x(buildmenu_selection->get_x() - 2);
+	selection_sprite->set_y(buildmenu_selection->get_y() - 2);
+	tower->set_selected(true);
 	update_option_box();
-	set_selection_info(tower);
 }

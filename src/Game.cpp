@@ -32,6 +32,7 @@ Game::Game()
 	tile_selection = NULL;
 	last_selected_tile = NULL;
 	update_enemy_path = false;
+	need_boost_update = true;
 	old_game_state = 0;
 	timer = 0;
 	old_timer = 0;
@@ -66,10 +67,15 @@ Game::Game()
 	buildmenu_selection = NULL;
 	screen = NULL;
 	esc_back = NULL;
+	hovered_build_item = NULL;
 }
 
 Game::~Game(){
 	///Nothing needed in destructor. Cleanup is run at end of game.
+}
+
+void Game::set_boost_update(bool val) {
+	need_boost_update = val;
 }
 
 Grid* Game::get_grid() {
@@ -308,6 +314,8 @@ int Game::on_execute()
 
 		if (game_state == GAMEPLAY_RUNNING)
 			update_state();
+		else
+			update_boost();
 
 		update_fps();
 		render();
