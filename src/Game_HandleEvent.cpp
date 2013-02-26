@@ -84,7 +84,7 @@ void Game::upgrade_tower(towers::TowerType tower_type)
 		tower->set_sell_value(tower->get_sell_value() + cost);
 		update_money();
 		SFX_upgrade->play();
-		if (tower_type > 0)
+		if (tower_type > towers::WALL)
 			hide_option_box();
 		else
 			update_option_box();
