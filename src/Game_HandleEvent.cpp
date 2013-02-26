@@ -60,13 +60,6 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	money -= new_tower->get_cost_buy();
 	update_money();
 	tower_list.push_back(new_tower);
-	if (buildmenu_selection != NULL)
-	{
-		tile_selection = tile;
-		select(tile_selection);
-		hide_option_box();
-	}
-
 }
 
 void Game::upgrade_tower(towers::TowerType tower_type)
