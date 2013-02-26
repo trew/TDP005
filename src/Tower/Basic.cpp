@@ -10,9 +10,9 @@
 namespace towers {
 
 Basic::Basic() {
-	level_1 = (TowerData){format_range(1.3f), 20, 3,  7.0f, 20, 12.0f, 0,  40, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
-	level_2 = (TowerData){format_range(2.0f), 30, 3,  8.0f, 18, 15.0f, 0, 200, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
-	level_3 = (TowerData){format_range(2.3f), 70, 3, 10.0f, 14, 20.0f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
+	level_1 = (TowerData){format_range(1.3f), 20, 3, 350.f, 1000,  600.f, 0,  40, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
+	level_2 = (TowerData){format_range(2.0f), 30, 3, 400.f,  900,  750.f, 0, 200, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
+	level_3 = (TowerData){format_range(2.3f), 70, 3, 500.f,  700, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
 	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower

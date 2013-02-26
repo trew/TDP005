@@ -11,9 +11,9 @@ namespace towers {
 
 Range::Range() {
 	level = 1;
-	level_1 = (TowerData){format_range(2.2f), 35, 3,  5.0f, 40.0f, 15.0f, 0,  40, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
-	level_2 = (TowerData){format_range(2.8f), 45, 3,  5.5f, 37.0f, 17.0f, 0, 200, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
-	level_3 = (TowerData){format_range(3.7f),130, 3,  6.0f, 35.0f, 19.0f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
+	level_1 = (TowerData){format_range(2.2f), 35, 3, 250.f, 2000, 750.f, 0,  40, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
+	level_2 = (TowerData){format_range(2.8f), 45, 3, 275.f, 1850, 850.f, 0, 200, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
+	level_3 = (TowerData){format_range(3.7f),130, 3, 300.f, 1750, 950.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
 	update_data(level_1);
 	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

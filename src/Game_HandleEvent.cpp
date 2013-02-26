@@ -472,7 +472,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 
 	Uint8* keystate = SDL_GetKeyState(NULL);
 	if (keystate[SDLK_f]) FPS_MAX = 1000;
-	else FPS_MAX = 100;
+	else FPS_MAX = 50;
 
 	if (event->type == SDL_KEYDOWN)
 	{

@@ -22,7 +22,7 @@ void Timer::start() {
 }
 
 void Timer::stop() {
-	startTicks = 0;
+	startTicks = pausedTicks = 0;
 	started = false;
 	paused = false;
 }

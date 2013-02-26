@@ -12,7 +12,7 @@ namespace towers {
 
 Boost::Boost() {
 	level = 1;
-	level_1 = (TowerData){format_range(1.2f), 0, 3, 0.0f, 0, 0.0f, 20, 40, 0.2f, "./gfx/tower/tower-boost-lvl1.png", ""};
+	level_1 = (TowerData){format_range(1.2f), 0, 3, 0, 0, 0, 20, 40, 0.2f, "./gfx/tower/tower-boost-lvl1.png", ""};
 	level_2 = (TowerData){format_range(1.2f), 0, 3, 0, 0, 0, 20, 40, 0.2f, "./gfx/tower/tower-boost-lvl2.png", ""};
 	level_3 = (TowerData){format_range(1.2f), 0, 3, 0, 0, 0, 20, 40, 0.2f, "./gfx/tower/tower-boost-lvl3.png", ""};
 	sell_value = level_1.cost_buy;

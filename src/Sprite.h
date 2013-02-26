@@ -69,7 +69,7 @@ public:
 	int get_int_type();		///<Returns type
 	float get_distance_to(Sprite *s); ///<Pure virtual
 
-	virtual void update();			///<Pure virtual
+	virtual void update(int delta);			///<Pure virtual
 
 	virtual bool intersects(Sprite*);
 	virtual bool overlaps(int x, int y);

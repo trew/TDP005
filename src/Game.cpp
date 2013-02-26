@@ -307,9 +307,11 @@ int Game::on_execute()
 	/* Game */
 
 	fps_timer->start();
+	delta_timer->start();
 	int delta = 0;
 	while (game_running)
 	{
+		delta = delta_timer->get_ticks();
 		delta_timer->start();
 		while (SDL_PollEvent(&event))
 		{
@@ -324,9 +326,8 @@ int Game::on_execute()
 		update_fps(delta);
 		render();
 
-		delta = delta_timer->get_ticks();
-		if (delta < (1000 / FPS_MAX)) {
-			SDL_Delay( (1000 / FPS_MAX) - delta );
+		if (delta_timer->get_ticks() < (Uint32)(1000 / FPS_MAX)) {
+			SDL_Delay( (1000 / FPS_MAX) - delta_timer->get_ticks());
 		}
 	}
 	/* End Game */

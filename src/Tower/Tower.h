@@ -30,7 +30,7 @@ typedef struct {
 	uint damage;
 	uint max_level;
 	float rotation_speed;
-	float reloading_time;
+	int reloading_time;
 	float projectile_speed;
 	uint cost_buy;
 	uint cost_upgrade;
@@ -69,7 +69,7 @@ public:
 	float get_projectile_speed();
 	float get_rotation_speed();
 	int get_spread();
-	float get_reloading_time();
+	int get_reloading_time();
 
 	uint get_sell_value();
 	void set_sell_value(uint value);
@@ -97,7 +97,7 @@ protected:
 	uint base_damage;		// Attackdamage
 	uint max_level;
 	float rotation_speed;	// Cannon Rotationspeed
-	float reloading_time;	// The tower's rate of fire
+	int reloading_time;	// The tower's rate of fire
 	float projectile_speed;	// Speed of the projectile being shot
 	uint cost_buy;			// Cost to build
 	int spread;				// Angle-deviation-acceptance for when to fire at enemy

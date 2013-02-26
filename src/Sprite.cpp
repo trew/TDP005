@@ -223,7 +223,7 @@ void Sprite::update_text(std::string){
 
 /*****************************************************************************************/
 /* Virtuals */
-void Sprite::update()
+void Sprite::update(int delta)
 {
 	///Pure virtual
 }

@@ -86,7 +86,7 @@ void Game::update(int delta)
 		if(update_enemy_path) {
 			(*iter_enemy)->update_path();
 		}
-		(*iter_enemy)->update();
+		(*iter_enemy)->update(delta);
 		if ((*iter_enemy)->is_killed())						//Enemy was killed
 		{
 			get_rewards((*iter_enemy));
@@ -139,14 +139,13 @@ void Game::update(int delta)
 	update_boost();
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		(*iter_tower)->update();
-		(*iter_tower)->shoot_if_possible();
+		(*iter_tower)->update(delta);
 	}
 
 	ProjectileList new_projectiles;
 	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
 	{
-		(*iter_projectile)->update();
+		(*iter_projectile)->update(delta);
 
 		float p_x, p_y; // Projectile X and Y position
 		int p_w, p_h;
@@ -188,25 +187,25 @@ void Game::update(int delta)
 					for(int i = 0; i<90; i+=15) {
 
 						int new_projectile_dmg = (int)((*iter_projectile)->get_damage() / 2.7f);
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x             , e_y -1         , 225 +i, 1, new_projectile_dmg, 0, 600));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + e_w/4     , e_y -1         , 247 +i, 2, new_projectile_dmg, 0, 420));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w/2     , e_y -1         , 270 +i, 1, new_projectile_dmg, 0, 630));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + 3*(e_w/4) , e_y -1         , 292 +i, 2, new_projectile_dmg, 0, 400));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w       , e_y -1         , 315 +i, 1, new_projectile_dmg, 0, 600));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x             , e_y -1         , 225 +i,  50, new_projectile_dmg, 0, 600));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + e_w/4     , e_y -1         , 247 +i, 100, new_projectile_dmg, 0, 420));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w/2     , e_y -1         , 270 +i,  50, new_projectile_dmg, 0, 630));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + 3*(e_w/4) , e_y -1         , 292 +i, 100, new_projectile_dmg, 0, 400));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w       , e_y -1         , 315 +i,  50, new_projectile_dmg, 0, 600));
 
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + (e_w) +1  , e_y+(e_h/4)    , 337 +i, 2, new_projectile_dmg, 0, 420));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + (e_w) +1  , e_y+(e_h/2)    ,   0 +i, 1, new_projectile_dmg, 0, 630));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + (e_w) +1  , e_y+3*(e_h/4)  ,  22 +i, 2, new_projectile_dmg, 0, 400));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + (e_w) +1  , e_y+(e_h/4)    , 337 +i, 100, new_projectile_dmg, 0, 420));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + (e_w) +1  , e_y+(e_h/2)    ,   0 +i,  50, new_projectile_dmg, 0, 630));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + (e_w) +1  , e_y+3*(e_h/4)  ,  22 +i, 100, new_projectile_dmg, 0, 400));
 
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w       , e_y + e_h      ,  45 +i, 1, new_projectile_dmg, 0, 600));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + 3*(e_w/4) , e_y + e_h      ,  67 +i, 2, new_projectile_dmg, 0, 420));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + (e_w/2)   , e_y + e_h      ,  90 +i, 1, new_projectile_dmg, 0, 630));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + e_w/4     , e_y + e_h      , 112 +i, 2, new_projectile_dmg, 0, 400));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + e_w       , e_y + e_h      ,  45 +i,  50, new_projectile_dmg, 0, 600));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + 3*(e_w/4) , e_y + e_h      ,  67 +i, 100, new_projectile_dmg, 0, 420));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x + (e_w/2)   , e_y + e_h      ,  90 +i,  50, new_projectile_dmg, 0, 630));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x + e_w/4     , e_y + e_h      , 112 +i, 100, new_projectile_dmg, 0, 400));
 
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x -1          , e_y + e_h      , 135 +i, 1, new_projectile_dmg, 0, 600));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x -1          , e_y + 3*(e_h/4), 157 +i, 2, new_projectile_dmg, 0, 420));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x -1          , e_y + (e_h/2)  , 180 +i, 1, new_projectile_dmg, 0, 630));
-						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x -1          , e_y + e_h/4    , 202 +i, 2, new_projectile_dmg, 0, 400));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x -1          , e_y + e_h      , 135 +i,  50, new_projectile_dmg, 0, 600));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x -1          , e_y + 3*(e_h/4), 157 +i, 100, new_projectile_dmg, 0, 420));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-bomb.png", e_x -1          , e_y + (e_h/2)  , 180 +i,  50, new_projectile_dmg, 0, 630));
+						new_projectiles.push_back(new Projectile(this, "./gfx/tower/ammo/ammo-speed.png",e_x -1          , e_y + e_h/4    , 202 +i, 100, new_projectile_dmg, 0, 400));
 					}
 				}
 

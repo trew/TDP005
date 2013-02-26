@@ -160,7 +160,7 @@ float Tower::get_rotation_speed() {
 int Tower::get_spread() {
 	return spread;
 }
-float Tower::get_reloading_time() {
+int Tower::get_reloading_time() {
 	return reloading_time;
 }
 std::string Tower::get_range_str() {

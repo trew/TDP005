@@ -13,10 +13,10 @@ Simple::Simple() {
 	level = 1;
 	max_level = 1;
 	base_range = range = format_range(1.0f);
-	rotation_speed = 5.0;
-	reloading_time = 20;
+	rotation_speed = 250.0;
+	reloading_time = 400;
 	base_damage = damage = 10;
-	projectile_speed = 6;
+	projectile_speed = 300;
 	sell_value = cost_buy = 5;
 	cost_upgrade = 20;
 	set_cannon_surf(Sprite::load_image("./gfx/tower/tower-simple.png"));

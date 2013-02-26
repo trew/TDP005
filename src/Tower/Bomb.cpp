@@ -11,9 +11,9 @@ namespace towers {
 
 Bomb::Bomb() {
 	level = 1;
-	level_1 = (TowerData){format_range(1.2f), 15, 3,  6.0f,100.0f,  4.0f, 0,  40, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
-	level_2 = (TowerData){format_range(1.8f), 20, 3,  7.0f, 90.0f,  5.0f, 0, 200, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
-	level_3 = (TowerData){format_range(2.2f), 35, 3,  8.0f, 80.0f,  6.0f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
+	level_1 = (TowerData){format_range(1.2f), 15, 3, 300.f, 5000, 200.f, 0,  40, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
+	level_2 = (TowerData){format_range(1.8f), 20, 3, 350.f, 4500, 250.f, 0, 200, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
+	level_3 = (TowerData){format_range(2.2f), 35, 3, 400.f, 4000, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
 	update_data(level_1);
 	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

@@ -39,11 +39,11 @@ Tower::Tower(Game* game, towers::TowerType type, Tile* tile) :
 	width = 40;
 
 	// Tower specifics
+	loaded = false;
 	current_target = NULL;
 	current_angle = 0;
 	target_angle = 0;
 	rotation_modifier = 0.0;
-	reload_counter = 0;
 	boost_modifier = 1;
 
 	// Toggle smoothing for rotozoom
@@ -71,6 +71,7 @@ Tower::Tower(Game* game, towers::TowerType type, Tile* tile) :
 		break;
 	}
 	}
+	reload_timer = twr_impl->get_reloading_time();
 }
 
 Tower::~Tower() {
@@ -163,23 +164,23 @@ void Tower::format_angle(double &angle) {
 		angle += 360.0;
 }
 
-void Tower::update_aim() {
+void Tower::update_aim(int delta) {
 	update_angle_to_target();
 
-	if (current_angle - target_angle > -(get_rotation_speed())
-			&& current_angle - target_angle < get_rotation_speed())
+	if (current_angle - target_angle > -(get_rotation_speed() * (delta / 1000.f))
+			&& current_angle - target_angle < get_rotation_speed() * (delta / 1000.f))
 		current_angle = target_angle;
 
 	else if (current_angle != target_angle) {
 		if (target_angle > current_angle + 180)
-			rotation_modifier = -get_rotation_speed();
+			rotation_modifier = -get_rotation_speed() * (delta / 1000.f);
 
 		else if (current_angle > target_angle
 				&& current_angle - target_angle < 180)
-			rotation_modifier = -get_rotation_speed();
+			rotation_modifier = -get_rotation_speed() * (delta / 1000.f);
 
 		else
-			rotation_modifier = get_rotation_speed();
+			rotation_modifier = get_rotation_speed() * (delta / 1000.f);
 	}
 	rotate(rotation_modifier);
 }
@@ -220,31 +221,36 @@ void Tower::find_new_target() {
 	}
 }
 
-void Tower::reload() {
-	if (reload_counter < get_reloading_time()) {
-		reload_counter++;
+void Tower::reload(int delta) {
+	if (!loaded) {
+		reload_timer -= delta;
+		if (reload_timer <= 0) {
+			reload_timer = get_reloading_time();
+			loaded = true;
+		}
 	}
-
-	if (reload_counter >= get_reloading_time())
-		reload_counter = 0;
 }
 
 bool Tower::is_loaded() {
-	if (reload_counter == 0)
-		return true;
-	else
-		return false;
+	return loaded;
 }
 
-void Tower::shoot() {
+void Tower::try_shoot() {
 	/**
 	 * Shoots an projectile in the towers current cannon-direction.
 	 * The type of projectile being shot depends on the type of the tower.
 	 */
-	ProjectileList* p_list = get_game()->get_projectiles();
-	Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, -(target_angle + 90));
-	if (p != NULL)
-		p_list->push_back(p);
+	if (current_target != NULL) {
+		if (target_in_range(current_target) && target_in_sight()
+				&& current_target->get_x() > -(current_target->get_width()) && is_loaded()) {
+			ProjectileList* p_list = get_game()->get_projectiles();
+			Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, -(target_angle + 90));
+			if (p != NULL) {
+				p_list->push_back(p);
+				loaded = false;
+			}
+		}
+	}
 }
 
 void Tower::apply_boost(float mod)
@@ -292,35 +298,23 @@ void Tower::update_boost() {
 	}
 }
 
-void Tower::update() {
+void Tower::update(int delta) {
 	///Updates the state of the current tower which includes rotating, reloading and finding new targets.
 
 	EnemyList* enemy_list = get_game()->get_enemies();
 	EnemyList::iterator iter_object = enemy_list->begin();
+	reload(delta);
 	if (!enemy_list->empty()) {
 		rotation_modifier = 0.0;
 		format_angle(current_angle);
-		reload(); // Reloading if not loaded
 		find_new_target();
 		if (current_target != NULL) {
 			if (target_in_range(current_target)) {
-				update_aim();
+				update_aim(delta);
 			}
 		}
 	}
-}
-
-void Tower::shoot_if_possible() {
-	/**
-	 * Checks if the current target is an enemy, is within the map-grid, is in range,
-	 * in sight and if the tower is loaded. If it is, it will shoot.
-	 */
-	if (current_target != NULL) {
-		if (target_in_range(current_target) && target_in_sight()
-				&& current_target->get_x() > -(current_target->get_width()) && is_loaded()) {
-			shoot();
-		}
-	}
+	try_shoot();
 }
 
 void Tower::set_selected(bool _selected) {
@@ -371,7 +365,7 @@ float Tower::get_rotation_speed() {
 int Tower::get_spread() {
 	return twr_impl != NULL ? twr_impl->get_spread() : 0;
 }
-float Tower::get_reloading_time() {
+int Tower::get_reloading_time() {
 	return twr_impl != NULL ? twr_impl->get_reloading_time() : 0;
 }
 float Tower::get_boostmod() {

@@ -17,11 +17,11 @@ Projectile::Projectile(Game* game, std::string file, float x_pos_in, float y_pos
 	dead = false;
 	if(splash_area>0) {
 		type = PROJECTILE_BOMB;
-		life_time = SDL_GetTicks() +time;
+		life_time = time;
 	}
 	else {
 		type = PROJECTILE;
-		life_time = SDL_GetTicks() +time;
+		life_time = time;
 	}
 	x_pos = x_pos_in;
 	y_pos = y_pos_in;
@@ -42,12 +42,16 @@ double Projectile::conv_degree_to_radian(double a)
 }
 
 
-void Projectile::update()
+void Projectile::update(int delta)
 {
-	if(life_time < SDL_GetTicks()) dead = true;
+	life_time -= delta;
+	if (life_time < 0) {
+		dead = true;
+		return;
+	}
 	double radianAngle = conv_degree_to_radian(direction);
-	x_pos = x_pos + movespeed * cos(radianAngle);
-	y_pos = y_pos + movespeed * sin(radianAngle);
+	x_pos += (movespeed * cos(radianAngle)) * (delta / 1000.f);
+	y_pos += (movespeed * sin(radianAngle)) * (delta / 1000.f);
 }
 
 void Projectile::draw(SDL_Surface* dest_surf) {

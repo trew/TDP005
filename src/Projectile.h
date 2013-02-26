@@ -24,7 +24,7 @@ public:
 	virtual ~Projectile();	///< Destructor
 
 	void draw(SDL_Surface* dest_surf);		///< Draw projectile to screen
-	void update();			///< Update projectile
+	void update(int delta);			///< Update projectile
 
 	int get_damage();		///< Get damage from projectile
 	double get_splash_area();	///< Should be used to give damage to enemies in an area. NOT DONE!
@@ -37,7 +37,7 @@ private:
 	double splash_area;
 
 private:
-	Uint32 life_time;
+	int life_time;
 	bool dead;
 	double conv_radian_to_degree(double a);
     double conv_degree_to_radian(double a);

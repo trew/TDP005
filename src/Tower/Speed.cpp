@@ -11,9 +11,9 @@ namespace towers {
 
 Speed::Speed() {
 	level = 1;
-	level_1 = (TowerData){format_range(1.2f), 16, 3,  8.0f, 14.0f, 10.0f, 0,  40, 0, "./gfx/tower/tower-speed-lvl1.png", "./gfx/tower/cannon-speed.png"};
-	level_2 = (TowerData){format_range(1.7f), 18, 3, 10.0f, 10.0f, 12.0f, 0, 200, 0, "./gfx/tower/tower-speed-lvl2.png", "./gfx/tower/cannon-speed.png"};
-	level_3 = (TowerData){format_range(2.0f), 30, 3, 12.0f,  5.0f, 14.0f, 0,   0, 0, "./gfx/tower/tower-speed-lvl3.png", "./gfx/tower/cannon-speed.png"};
+	level_1 = (TowerData){format_range(1.2f), 16, 3, 400.f, 700, 500.f, 0,  40, 0, "./gfx/tower/tower-speed-lvl1.png", "./gfx/tower/cannon-speed.png"};
+	level_2 = (TowerData){format_range(1.7f), 18, 3, 500.f, 500, 600.f, 0, 200, 0, "./gfx/tower/tower-speed-lvl2.png", "./gfx/tower/cannon-speed.png"};
+	level_3 = (TowerData){format_range(2.0f), 30, 3, 600.f, 250, 700.f, 0,   0, 0, "./gfx/tower/tower-speed-lvl3.png", "./gfx/tower/cannon-speed.png"};
 	update_data(level_1);
 	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

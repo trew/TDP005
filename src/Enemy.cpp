@@ -19,7 +19,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 	switch(_type) {
 	case DOG:
 		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
-		move_speed = 2;
+		move_speed = 100;
 		max_health = static_cast<int>(dog_health + (dog_health * 0.24) * (new_level-1));
 		cost = dog_cost;
 		reward_score = dog_cost;
@@ -28,7 +28,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case SNAIL:
 		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
-		move_speed = 1;
+		move_speed = 50;
 		max_health = static_cast<int>(snail_health + (snail_health * 0.24) * (new_level-1));
 		cost = snail_cost;
 		reward_score = snail_cost;
@@ -37,7 +37,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case FISH:
 		sprite_surf = load_image("./gfx/enemy/enemy-3-30x30.png");
-		move_speed = 1;
+		move_speed = 50;
 		max_health = static_cast<int>(fish_health + (fish_health * 0.24) * (new_level-1));
 		cost = fish_cost;
 		reward_score = fish_cost;
@@ -46,7 +46,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case PALS:
 		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
-		move_speed = 1;
+		move_speed = 50;
 		max_health = static_cast<int>(pals_health + (pals_health * 0.24) * (new_level-1));
 		cost = pals_cost;
 		reward_score = pals_cost;
@@ -55,7 +55,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case BOSS:
 		sprite_surf = load_image("./gfx/enemy/enemy-5-30x30.png");
-		move_speed = 1;
+		move_speed = 50;
 		max_health = boss_health + boss_health_mod * (new_level-1);
 		cost = 0;
 		reward_score = boss_cost;
@@ -204,7 +204,7 @@ Direction Enemy::move_dir()
 	return direction;
 }
 
-void Enemy::move()
+void Enemy::move(int delta)
 {
 	/**
 	 * Execute movement in movement direction.
@@ -213,23 +213,23 @@ void Enemy::move()
 	switch (dir)
 	{
 	case RIGHT:
-		x_vel = move_speed;
+		x_vel = move_speed * (delta / 1000.f);
 		y_vel = 0;
 		break;
 
 	case LEFT:
-		x_vel = -move_speed;
+		x_vel = -(move_speed * (delta / 1000.f));
 		y_vel = 0;
 		break;
 
 	case UP:
 		x_vel = 0;
-		y_vel = -move_speed;
+		y_vel = -(move_speed * delta / 1000.f);
 		break;
 
 	case DOWN:
 		x_vel = 0;
-		y_vel = move_speed;
+		y_vel = move_speed * (delta / 1000.f);
 		break;
 	default:
 		break;
@@ -291,12 +291,12 @@ void Enemy::move()
 
 }
 
-void Enemy::update()
+void Enemy::update(int delta)
 {
 	/// Checks if enemy is dead and execute movement.
 	if (health < 0)
 		killed = true;
-	move();
+	move(delta);
 }
 
 void Enemy::take_damage(int dmg)
