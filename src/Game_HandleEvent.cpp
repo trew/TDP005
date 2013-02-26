@@ -116,20 +116,18 @@ bool Game::optbox_do_selection(int type, GridPosition position)
 		if (grid->get_tile(position)->get_tower() == NULL)
 		{
 			create_new_tower(towers::SIMPLE, position);
+			return true;
 		}
-		else
-		{
-			upgrade_tower(towers::BASIC);
-		}
-		return true;
+		break;
 	}
 	case BUTTON_BOOST:
 	{
 		if (grid->get_tile(position)->get_tower() == NULL)
 		{
 			create_new_tower(towers::BOOST, position);
+			return true;
 		}
-		return true;
+		break;
 	}
 	case BUTTON_BASIC:
 	{
