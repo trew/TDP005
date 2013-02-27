@@ -31,7 +31,7 @@ void Basic::update_informationtext() {
 		add_row_to_information_text("Range: " + get_range_str());
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + get_cost_upgrade_str());
-	add_row_to_information_text("Sell value: " + conv_int_to_string(get_sell_value()));
+	add_row_to_information_text("Sell value: " + conv_int_to_string(get_sell_value() / 2));
 }
 
 Basic::~Basic() {
