@@ -67,6 +67,7 @@ void Game::update_boost() {
 		for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++) {
 			(*iter_tower)->update_boost();
 		}
+		need_boost_update = false;
 	}
 
 }
