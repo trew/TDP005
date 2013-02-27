@@ -6,6 +6,7 @@
  */
 
 #include "Timer.h"
+#include <iostream>
 
 Timer::Timer() {
 	startTicks = pausedTicks = 0;

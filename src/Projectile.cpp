@@ -6,6 +6,7 @@
  */
 
 #include "Projectile.h"
+#include "Game.h"
 #include "Define.h"
 #include <cmath>
 #include <string>

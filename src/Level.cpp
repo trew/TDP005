@@ -9,6 +9,7 @@
 #include <iostream>
 
 Level::Level() {
+	timer = new Timer();
 	reset();
 }
 
@@ -17,6 +18,7 @@ Level::~Level() {
 }
 
 void Level::reset() {
+	timer->stop();
 	current_level = 0;
 	current_boss_level = 1;
 	wave_delay = 30000;		//ms
@@ -61,9 +63,11 @@ EnemyList Level::get_new_wave(Game* game) {
 }
 
 bool Level::time_to_send_wave() {
+	if (!timer->is_started()) {
+		timer->start();
+	}
 	if (!last_enemy_sent) return false;
-	if ((wave_start_delay + wave_delay) < SDL_GetTicks()) return true;
-	return false;
+	return (timer->get_ticks() > wave_delay);
 }
 
 bool Level::last_enemy_is_sent() {
@@ -71,7 +75,7 @@ bool Level::last_enemy_is_sent() {
 }
 
 void Level::set_last_enemy_sent() {
-	wave_start_delay = SDL_GetTicks();
+	timer->start();
 	last_enemy_sent = true;
 }
 
@@ -80,11 +84,12 @@ int Level::time_before_next_wave() {
 	 * Returns time before next wave in seconds if below 10s.
 	 * Returns -1 if last enemy isn't on screen.
 	 */
-	if (!last_enemy_sent) return -1;
-	if (((wave_start_delay + wave_delay - SDL_GetTicks()) / 1000) < 11)
-		return ((wave_start_delay + wave_delay - SDL_GetTicks()) / 1000);
-	else
+	if (!last_enemy_sent)
 		return -1;
+	if (wave_delay - timer->get_ticks() < 11000) {
+		return (int)((wave_delay - timer->get_ticks()) / 1000.f);
+	}
+	return -1;
 }
 
 
@@ -93,10 +98,9 @@ int Level::get_level() {
 }
 
 void Level::pause_timer() {
-	timer_paused_at = SDL_GetTicks();
+	timer->pause();
 }
 
 void Level::resume_timer() {
-	Uint32 diff = SDL_GetTicks() - timer_paused_at;
-	wave_start_delay += diff;
+	timer->unpause();
 }

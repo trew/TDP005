@@ -40,6 +40,7 @@
 #include "Level.h"
 
 class Level;
+class Timer;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -273,6 +274,7 @@ private:
 	void update(int delta);
 
 public:
+	float get_game_speed();
 	float get_time_modifier();
 	TowerList* get_towers();
 	EnemyList* get_enemies();

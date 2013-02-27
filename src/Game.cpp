@@ -279,11 +279,15 @@ ProjectileList* Game::get_projectiles() {
 }
 
 float Game::get_time_modifier() {
-	return delta / 1000.f * game_speed;
+	return delta / 1000.f; // * game_speed;
+}
+
+float Game::get_game_speed() {
+	return game_speed;
 }
 
 void Game::update_fps(int delta) {
-	if ( fps_timer->get_ticks() < 1000 ) {
+	if ( fps_timer->get_ticks() < 1000) {
 		current_fps++;
 	} else {
 		fps_timer->start();
@@ -311,7 +315,6 @@ int Game::on_execute()
 	show_intro(&event);
 
 	/* Game */
-
 	fps_timer->start();
 	delta_timer->start();
 	while (game_running)
