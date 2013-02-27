@@ -320,3 +320,7 @@ Direction Enemy::get_direction() {
 	 */
 	return direction;
 }
+
+const int Enemy::get_path_length() {
+	return current_path->size();
+}

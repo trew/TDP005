@@ -203,21 +203,32 @@ void Tower::find_new_target() {
 	 */
 	EnemyList* enemy_list = get_game()->get_enemies();
 
+	Enemy* closest_object = NULL;
 	if (current_target == NULL || get_distance_to(current_target) > get_range()) {
-		Enemy* closest_object = NULL;
 		float closest_distance = 99999.0f;
+		int enemy_path_length = 99999;
 		for (EnemyList::iterator it = enemy_list->begin(); it != enemy_list->end(); it++) {
-			if (get_distance_to(*it) < closest_distance) {
-				closest_distance = get_distance_to(*it);
-				closest_object = (*it);
+			if (target_in_range((*it))) {
+				if (closest_object == NULL) {
+					closest_object = (*it);
+					closest_distance = (*it)->get_distance_to(this);
+					enemy_path_length = (*it)->get_path_length();
+				} else if ((*it)->get_path_length() < enemy_path_length) {
+					closest_object = (*it);
+					closest_distance = (*it)->get_distance_to(this);
+					enemy_path_length = (*it)->get_path_length();
+				} else if ((*it)->get_path_length() == enemy_path_length) {
+					if ((*it)->get_distance_to(this) < closest_distance) {
+						closest_object = (*it);
+						closest_distance = (*it)->get_distance_to(this);
+						enemy_path_length = (*it)->get_path_length();
+					}
+				}
+
 			}
 		}
-
-		if (target_in_range(closest_object))
-			current_target = closest_object;
-		else
-			current_target = NULL;
 	}
+	current_target = closest_object;
 }
 
 void Tower::reload(int delta) {

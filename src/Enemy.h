@@ -54,6 +54,7 @@ public:
 	int get_reward_score() { return reward_score; }		///< Recieve score from enemy
 
 	GridPosition get_current_destination();
+	const int get_path_length();
 	bool is_on_tile(Tile*);
 
 	double get_speed();
