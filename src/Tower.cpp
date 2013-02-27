@@ -166,20 +166,20 @@ void Tower::format_angle(double &angle) {
 void Tower::update_aim(int delta) {
 	update_angle_to_target();
 
-	if (current_angle - target_angle > -(get_rotation_speed() * (delta / 1000.f))
-			&& current_angle - target_angle < get_rotation_speed() * (delta / 1000.f))
+	if (current_angle - target_angle > -(get_rotation_speed() * get_game()->get_time_modifier())
+			&& current_angle - target_angle < get_rotation_speed() * get_game()->get_time_modifier())
 		current_angle = target_angle;
 
 	else if (current_angle != target_angle) {
 		if (target_angle > current_angle + 180)
-			rotation_modifier = -get_rotation_speed() * (delta / 1000.f);
+			rotation_modifier = -get_rotation_speed() * get_game()->get_time_modifier();
 
 		else if (current_angle > target_angle
 				&& current_angle - target_angle < 180)
-			rotation_modifier = -get_rotation_speed() * (delta / 1000.f);
+			rotation_modifier = -get_rotation_speed() * get_game()->get_time_modifier();
 
 		else
-			rotation_modifier = get_rotation_speed() * (delta / 1000.f);
+			rotation_modifier = get_rotation_speed() * get_game()->get_time_modifier();
 	}
 	rotate(rotation_modifier);
 }

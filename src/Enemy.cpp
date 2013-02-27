@@ -299,7 +299,7 @@ void Enemy::move(int delta)
 void Enemy::update(int delta)
 {
 	/// Checks if enemy is dead and execute movement.
-	if (health < 0)
+	if (health <= 0)
 		killed = true;
 	move(delta);
 }
