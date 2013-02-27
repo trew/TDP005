@@ -393,25 +393,25 @@ bool Tower::upgrade(towers::TowerType type) {
 			{
 				delete twr_impl;
 				twr_impl = new towers::Basic();
-				break;
+				return true;
 			}
 			case towers::SPEED:
 			{
 				delete twr_impl;
 				twr_impl = new towers::Speed();
-				break;
+				return true;
 			}
 			case towers::RANGE:
 			{
 				delete twr_impl;
 				twr_impl = new towers::Range();
-				break;
+				return true;
 			}
 			case towers::BOMB:
 			{
 				delete twr_impl;
 				twr_impl = new towers::Bomb();
-				break;
+				return true;
 			}
 			default:
 			{

@@ -15,7 +15,7 @@ Bomb::Bomb() {
 	level_2 = (TowerData){format_range(1.8f), 20, 3, 350.f, 4500, 250.f, 0, 200, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
 	level_3 = (TowerData){format_range(2.2f), 35, 3, 400.f, 4000, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
 	update_data(level_1);
-	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower
+	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
 	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();
@@ -61,15 +61,15 @@ bool Bomb::upgrade(TowerType type) {
 		update_data(level_2);
 		set_base_surf(Sprite::load_image(level_2.base_surface_location));
 		set_cannon_surf(Sprite::load_image(level_2.cannon_surface_location));
-
+		update_informationtext();
 	} else if (level == 3) {
 		update_data(level_3);
 		sell_value += level_2.cost_upgrade;
 		set_base_surf(Sprite::load_image(level_3.base_surface_location));
 		set_cannon_surf(Sprite::load_image(level_3.cannon_surface_location));
-
+		update_informationtext();
 	}
-	return false;
+	return true;
 }
 
 } /* namespace towers */

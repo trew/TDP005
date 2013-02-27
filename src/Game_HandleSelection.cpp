@@ -37,8 +37,7 @@ bool Game::sell(Tile* tile)
 		{
 			(*iter_enemy)->try_update_path();
 		}
-		tile_selection = NULL;
-		hide_option_box();
+		update_option_box();
 	}
 	return true;
 }

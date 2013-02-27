@@ -10,7 +10,7 @@
 namespace towers {
 
 Wall::Wall() {
-	cost_buy = 1;
+	sell_value = cost_buy = 1;
 	set_base_surf(Sprite::load_image("./gfx/tower/wall.png"));
 	update_informationtext();
 }

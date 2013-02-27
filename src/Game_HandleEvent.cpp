@@ -73,15 +73,14 @@ void Game::upgrade_tower(towers::TowerType tower_type)
 		Tower* tower = tile_selection->get_tower();
 		if (tower == NULL) return;
 
-		if (money < tower->get_cost_upgrade())
+		int cost = tower->get_cost_upgrade();
+		if (money < cost)
 			return;
 
-		int cost = tower->get_cost_upgrade();
 		if (!tower->upgrade(tower_type))
 			return;
 		money -= cost;
 		set_boost_update(true);
-		tower->set_sell_value(tower->get_sell_value() + cost);
 		update_money();
 		SFX_upgrade->play();
 		if (tower_type > towers::WALL)

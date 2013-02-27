@@ -15,7 +15,7 @@ Basic::Basic() {
 	level_3 = (TowerData){format_range(2.3f), 70, 3, 500.f,  700, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
-	sell_value = level_1.cost_buy + 20; // 20 is cost to upgrade from simple tower
+	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
 	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();
@@ -31,6 +31,7 @@ void Basic::update_informationtext() {
 		add_row_to_information_text("Range: " + get_range_str());
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + get_cost_upgrade_str());
+	add_row_to_information_text("Sell value: " + conv_int_to_string(get_sell_value()));
 }
 
 Basic::~Basic() {
@@ -61,15 +62,14 @@ bool Basic::upgrade(TowerType type) {
 		update_data(level_2);
 		set_base_surf(Sprite::load_image(level_2.base_surface_location));
 		set_cannon_surf(Sprite::load_image(level_2.cannon_surface_location));
-
 	} else if (level == 3) {
 		update_data(level_3);
 		sell_value += level_2.cost_upgrade;
 		set_base_surf(Sprite::load_image(level_3.base_surface_location));
 		set_cannon_surf(Sprite::load_image(level_3.cannon_surface_location));
-
 	}
-	return false;
+	update_informationtext();
+	return true;
 }
 
 } /* namespace towers */
