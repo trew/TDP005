@@ -58,20 +58,15 @@ EnemyList Level::get_new_wave(Game* game) {
 	enemies_in_wave.clear();
 	current_level++;
 	compose_new_wave(game);
+	timer = wave_delay;
 	last_enemy_sent = false;
 	return enemies_in_wave;
 }
 
 bool Level::time_to_send_wave(int delta) {
 	if (!last_enemy_sent) return false;
-
 	timer -= delta;
-	if (timer <= 0) {
-		last_enemy_sent = false;
-		timer = wave_delay;
-		return true;
-	}
-	return false;
+	return timer <= 0;
 }
 
 bool Level::last_enemy_is_sent() {
