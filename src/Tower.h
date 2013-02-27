@@ -95,7 +95,6 @@ private: // Specific variables for calculations etc.
 	int				reload_timer;
 	bool 			loaded;
 	int				smoothing;
-	float			boost_modifier;
 };
 
 #endif /* TOWER_H_ */

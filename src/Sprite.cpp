@@ -137,11 +137,11 @@ void Sprite::set_type(int new_type)
 }
 
 void Sprite::set_center_x(float _x) {
-	x_pos = _x - width / 2;
+	x_pos = _x - width / 2.f;
 }
 
 void Sprite::set_center_y(float _y) {
-	y_pos = _y - height / 2;
+	y_pos = _y - height / 2.f;
 }
 
 void Sprite::set_x(float x)
@@ -156,11 +156,11 @@ void Sprite::set_y(float y)
 }
 
 float Sprite::get_center_x() {
-	return x_pos + width / 2;
+	return x_pos + width / 2.f;
 }
 
 float Sprite::get_center_y() {
-	return y_pos + height / 2;
+	return y_pos + height / 2.f;
 }
 
 float Sprite::get_x()

@@ -44,7 +44,6 @@ Tower::Tower(Game* game, towers::TowerType type, Tile* tile) :
 	current_angle = 0;
 	target_angle = 0;
 	rotation_modifier = 0.0;
-	boost_modifier = 1;
 
 	// Toggle smoothing for rotozoom
 	smoothing = 1;
@@ -271,24 +270,21 @@ void Tower::update_boost() {
 	///Does a check to see if the current tower is in the range of a boost-tower and should get boosted.
 
 	TowerList* tower_list = get_game()->get_towers();
-	TowerList::iterator iter_object = tower_list->begin();
-
-	float old_boost_percent = boost_modifier;
+	TowerList::iterator tower = tower_list->begin();
 
 	if (get_type() == towers::BOOST || get_type() == towers::WALL)
 		return;
 
+	float old_boost_percent = 1.0f;
 	if (!tower_list->empty()) {
 		// If *this tower is a boost tower, ignore.
-		boost_modifier = 1.0f;
-		for (iter_object = tower_list->begin();
-				iter_object != tower_list->end(); iter_object++) {
+		float boost_modifier = 1.0f;
+		for (tower = tower_list->begin(); tower != tower_list->end(); tower++) {
 			// If the tower is a boost tower
-			if ((*iter_object)->get_type() == towers::BOOST) {
+			if ((*tower)->get_type() == towers::BOOST) {
 				// And if the current tower is in the range of the boost tower
-				if (get_distance_to((*iter_object))
-						<= (*iter_object)->get_range()) {
-					boost_modifier += ((*iter_object)->get_boostmod());
+				if (get_distance_to((*tower)) <= (*tower)->get_range()) {
+					boost_modifier += ((*tower)->get_boostmod());
 				}
 			}
 		}

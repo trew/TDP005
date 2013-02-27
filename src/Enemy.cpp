@@ -213,26 +213,31 @@ void Enemy::move(int delta)
 	switch (dir)
 	{
 	case RIGHT:
-		x_vel = move_speed * (delta / 1000.f);
+	{
+		x_vel = move_speed * get_game()->get_time_modifier();
 		y_vel = 0;
 		break;
-
+	}
 	case LEFT:
-		x_vel = -(move_speed * (delta / 1000.f));
+	{
+		x_vel = -(move_speed * get_game()->get_time_modifier());
 		y_vel = 0;
 		break;
-
+	}
 	case UP:
+	{
 		x_vel = 0;
-		y_vel = -(move_speed * delta / 1000.f);
+		y_vel = -(move_speed * get_game()->get_time_modifier());
 		break;
-
+	}
 	case DOWN:
+	{
 		x_vel = 0;
-		y_vel = move_speed * (delta / 1000.f);
+		y_vel = move_speed * get_game()->get_time_modifier();
 		break;
+	}
 	default:
-		break;
+		return;
 	}
 
 	// If enemy movespeed is so fast that it would walk over

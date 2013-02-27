@@ -232,7 +232,7 @@ void Game::buildmenu_selection_not_set(SDL_Event* event)
 	}
 	if (event->key.keysym.sym == SDLK_SPACE)
 	{
-		if (selection_sprite->is_visible())
+		if (tile_selection != NULL)
 		{
 			toggle_option_box();
 		}
@@ -471,7 +471,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 
 	Uint8* keystate = SDL_GetKeyState(NULL);
 	if (keystate[SDLK_f]) FPS_MAX = 1000;
-	else FPS_MAX = 50;
+	else FPS_MAX = 60;
 
 	if (event->type == SDL_KEYDOWN)
 	{

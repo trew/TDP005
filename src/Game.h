@@ -75,6 +75,8 @@ private:
 	int FPS_MAX;
 	int current_fps;
 	Timer* delta_timer;
+	int delta;
+	float game_speed;
 	Timer* fps_timer;
 	bool fullscreen;
 	bool need_boost_update;	///< Indicates whether we need to update the boost connections
@@ -271,6 +273,7 @@ private:
 	void update(int delta);
 
 public:
+	float get_time_modifier();
 	TowerList* get_towers();
 	EnemyList* get_enemies();
 	ProjectileList* get_projectiles();
