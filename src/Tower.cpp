@@ -318,10 +318,10 @@ void Tower::update(int delta) {
 		if (current_target != NULL) {
 			if (target_in_range(current_target)) {
 				update_aim(delta);
+				try_shoot();
 			}
 		}
 	}
-	try_shoot();
 }
 
 void Tower::set_selected(bool _selected) {
