@@ -223,6 +223,6 @@ void Game::update(int delta)
 	if (enemy_list.back()->get_x() >= 0 && (!(level_control->last_enemy_is_sent())) ) {
 		level_control->set_last_enemy_sent();
 	}
-	if (level_control->time_to_send_wave())
+	if (level_control->time_to_send_wave(delta))
 		send_new_wave();
 }

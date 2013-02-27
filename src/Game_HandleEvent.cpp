@@ -427,7 +427,6 @@ void Game::left_mousebutton(int m_x, int m_y)
 				}
 
 				if ((*iter_ingame_button)->get_type() == BUTTON_MENU) {
-					level_control->pause_timer();
 					old_game_state = game_state;
 					game_state = INGAMEMENU;
 				}
@@ -472,6 +471,10 @@ void Game::state_gameplay_running(SDL_Event* event)
 	Uint8* keystate = SDL_GetKeyState(NULL);
 	if (keystate[SDLK_f]) FPS_MAX = 1000;
 	else FPS_MAX = 60;
+
+	if (keystate[SDLK_g]) game_speed = 2.f;
+	else game_speed = 1.f;
+
 
 	if (event->type == SDL_KEYDOWN)
 	{
@@ -677,7 +680,6 @@ void Game::state_ingame_menu(SDL_Event* event)
 	{
 		if (event->key.keysym.sym == SDLK_ESCAPE)
 		{
-			level_control->resume_timer();
 			game_state = old_game_state;
 		}
 	}
@@ -696,7 +698,6 @@ void Game::state_ingame_menu(SDL_Event* event)
 					switch ((*iter_ingame_menu_button)->get_type())
 					{
 					case BUTTON_RESUMEGAME:
-						level_control->resume_timer();
 						game_state = old_game_state;
 						break;
 					case BUTTON_EXITTOMENU:
@@ -724,12 +725,10 @@ void Game::handle_event(SDL_Event* event)
 	{
 		if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
 		{
-			level_control->pause_timer();
 			old_game_state = game_state;
 			game_state = INGAMEMENU;
 		}
 		else if (game_state == INGAMEMENU) {
-			level_control->resume_timer();
 			game_state = old_game_state;
 		}
 	}

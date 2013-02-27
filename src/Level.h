@@ -8,11 +8,7 @@
 #ifndef LEVEL_H_
 #define LEVEL_H_
 
-#include <list>
 #include "Enemy.h"
-#include "Timer.h"
-#include <ctime>
-#include <cstdlib>
 
 /** \brief Controls difficulty and waves.
  *
@@ -21,7 +17,6 @@
  * Every 5 level a boss appears and the level after that is allowed to use a new enemy type.
  * After 20 levels, there is no new types.
  */
-class Timer;
 class Level {
 public:
 	Level();		///< Constructor
@@ -31,15 +26,12 @@ public:
 
 	int get_level();				///< Get current level
 
-	bool time_to_send_wave();		///< Time to send next wave?
+	bool time_to_send_wave(int delta);		///< Time to send next wave?
 	bool last_enemy_is_sent();		///< Is last enemy on grid?
 	void set_last_enemy_sent();		///< Last enemy is on grid
 	void reset();					///< Reset level to 1
 
 	int time_before_next_wave();	///< Returns time in seconds
-
-	void pause_timer();
-	void resume_timer();
 private:
 	void compose_new_wave(Game*);
 
@@ -48,11 +40,8 @@ private:
 	int current_boss_level;
 
 	bool last_enemy_sent;
-	Timer* timer;
+	int timer;
 	Uint32 wave_delay;
-	Uint32 wave_start_delay;
-	Uint32 timer_paused_at;
-
 };
 
 #endif /* LEVEL_H_ */

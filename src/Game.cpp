@@ -279,7 +279,7 @@ ProjectileList* Game::get_projectiles() {
 }
 
 float Game::get_time_modifier() {
-	return delta / 1000.f; // * game_speed;
+	return delta / 1000.f * game_speed;
 }
 
 float Game::get_game_speed() {
@@ -327,7 +327,7 @@ int Game::on_execute()
 		}
 
 		if (game_state == GAMEPLAY_RUNNING)
-			update(delta);
+			update((int)(delta * game_speed));
 		else
 			update_boost();
 

@@ -9,7 +9,7 @@
 #include <iostream>
 
 Level::Level() {
-	timer = new Timer();
+	timer = 0;
 	reset();
 }
 
@@ -18,11 +18,11 @@ Level::~Level() {
 }
 
 void Level::reset() {
-	timer->stop();
+	timer = wave_delay;
 	current_level = 0;
 	current_boss_level = 1;
+	last_enemy_sent = true;
 	wave_delay = 30000;		//ms
-	wave_start_delay = 0;
 }
 
 void Level::compose_new_wave(Game* game) {
@@ -62,12 +62,16 @@ EnemyList Level::get_new_wave(Game* game) {
 	return enemies_in_wave;
 }
 
-bool Level::time_to_send_wave() {
-	if (!timer->is_started()) {
-		timer->start();
-	}
+bool Level::time_to_send_wave(int delta) {
 	if (!last_enemy_sent) return false;
-	return (timer->get_ticks() > wave_delay);
+
+	timer -= delta;
+	if (timer <= 0) {
+		last_enemy_sent = false;
+		timer = wave_delay;
+		return true;
+	}
+	return false;
 }
 
 bool Level::last_enemy_is_sent() {
@@ -75,7 +79,6 @@ bool Level::last_enemy_is_sent() {
 }
 
 void Level::set_last_enemy_sent() {
-	timer->start();
 	last_enemy_sent = true;
 }
 
@@ -86,8 +89,8 @@ int Level::time_before_next_wave() {
 	 */
 	if (!last_enemy_sent)
 		return -1;
-	if (wave_delay - timer->get_ticks() < 11000) {
-		return (int)((wave_delay - timer->get_ticks()) / 1000.f);
+	if (timer < 10000) {
+		return timer / 1000 + 1;
 	}
 	return -1;
 }
@@ -95,12 +98,4 @@ int Level::time_before_next_wave() {
 
 int Level::get_level() {
 	return current_level;
-}
-
-void Level::pause_timer() {
-	timer->pause();
-}
-
-void Level::resume_timer() {
-	timer->unpause();
 }
