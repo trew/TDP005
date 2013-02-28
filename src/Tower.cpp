@@ -227,8 +227,8 @@ void Tower::find_new_target() {
 
 			}
 		}
+		current_target = closest_object;
 	}
-	current_target = closest_object;
 }
 
 void Tower::reload(int delta) {
