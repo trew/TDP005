@@ -39,6 +39,8 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 
 	if (grid->get_path(grid->get_start_tile(), grid->get_portal_tile())->size() == 0) {
 		tile->set_tower(NULL);
+		grid->clear_paths();
+		grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
 		delete new_tower;
 		return;
 	}
@@ -49,6 +51,8 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 		if ( !(*iter_enemy)->try_update_path()) {
 			// couldn't update path, don't place tower
 			tile->set_tower(NULL);
+			grid->clear_paths();
+			grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
 			delete new_tower;
 			return;
 		}
