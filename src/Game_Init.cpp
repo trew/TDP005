@@ -28,7 +28,7 @@ bool Game::init()
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 		return false;
 
-	SDL_WM_SetCaption("Tower Defence Pro 1.1 (Build 1.10.0000.000) © 2010 A15 Entertainment", NULL);
+	SDL_WM_SetCaption("Tower Defence Pro 1.11 © 2010-2013 A15 Entertainment", NULL);
 	SDL_EnableKeyRepeat(400, 70);
 	SDL_EnableUNICODE(SDL_ENABLE);
 
