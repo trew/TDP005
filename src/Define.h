@@ -8,7 +8,7 @@
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
-const int MUSIC_VOLUME  =  30;	//0 to MIX_MAX_VOLUME  (which is 128)
+const int MUSIC_VOLUME  =  15;	//0 to MIX_MAX_VOLUME  (which is 128)
 
 const int STARTING_MONEY = 100;
 const int STARTING_LIVES = 20;
