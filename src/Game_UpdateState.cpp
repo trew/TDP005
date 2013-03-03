@@ -81,6 +81,23 @@ void Game::get_rewards(Enemy* enemy) {
 
 void Game::update(int delta)
 {
+	int mx, my;
+	Uint8 mousestate = SDL_GetMouseState(&mx, &my);
+	if (mousestate & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+		sound_btn_repeat_value -= delta;
+		if (sound_btn_repeat_value < 0) {
+			sound_btn_repeat_value = sound_btn_repeat_delay;
+			if (sound_button->overlaps(mx, my)) {
+				handle_soundbutton(mx, my);
+			}
+		}
+	}
+
+	if (game_state != GAMEPLAY_RUNNING) {
+		update_boost();
+		return;
+	}
+
 	update_timer();
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{

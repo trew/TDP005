@@ -200,6 +200,7 @@ private:
 	void buildmenu_selection_not_set(SDL_Event* event);
 	void buildmenu_selection_set(SDL_Event* event);
 	void left_mousebutton(int m_x, int m_y);
+	void handle_soundbutton(int mx, int my);
 
 	/** Handle event depending on gamestate */
 	void state_gameplay_running(SDL_Event* event);
@@ -306,6 +307,9 @@ private:
 
 	ButtonList ingame_menu_buttons;
 	ButtonList::iterator iter_ingame_menu_button;
+	Button* sound_button;
+	int sound_btn_repeat_value;
+	int sound_btn_repeat_delay;
 
 	ButtonList mainmenu_buttons;
 	ButtonList::iterator iter_mainmenu_button;

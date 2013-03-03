@@ -46,6 +46,8 @@ Game::Game()
 	option_box_visible = false;
 	music_enabled = true;
 	sound_enabled = true;
+	sound_btn_repeat_delay = 100;
+	sound_btn_repeat_value = sound_btn_repeat_delay;
 
 	money = STARTING_MONEY;
 	score = 0;
@@ -68,6 +70,7 @@ Game::Game()
 	screen = NULL;
 	esc_back = NULL;
 	hovered_build_item = NULL;
+	sound_button = NULL;
 }
 
 Game::~Game(){
@@ -325,11 +328,7 @@ int Game::on_execute()
 		{
 			handle_event(&event);
 		}
-
-		if (game_state == GAMEPLAY_RUNNING)
-			update((int)(delta * game_speed));
-		else
-			update_boost();
+		update((int)(delta * game_speed));
 
 		update_fps(delta);
 		render();

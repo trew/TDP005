@@ -26,8 +26,11 @@ public:
 	void stop();			///< Stop playing sound
 	static bool toggle_sound();		///< Mute/Unmute
 
+	static int set_volume(int volume); ///< Sets the volume and returns the new volume. 0-128
+	static int get_volume();		   ///< Returns the current volume. 0-128
+	static bool enabled();
+
 private:
-	bool sound_on;
 	bool is_music;
 	int repeat;
 	Mix_Music *my_music;

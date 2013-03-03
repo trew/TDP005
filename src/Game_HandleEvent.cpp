@@ -421,15 +421,6 @@ void Game::left_mousebutton(int m_x, int m_y)
 					grid_visible = !grid_visible;
 				}
 
-				if ((*iter_ingame_button)->get_type() == BUTTON_TOGGLESOUND)
-				{
-					((*iter_ingame_button))->update();
-					if (Sound::toggle_sound())
-						music->play();
-					else
-						music->stop();
-				}
-
 				if ((*iter_ingame_button)->get_type() == BUTTON_MENU) {
 					old_game_state = game_state;
 					game_state = INGAMEMENU;
@@ -465,6 +456,26 @@ void Game::left_mousebutton(int m_x, int m_y)
 		}
 	}
 
+}
+
+void Game::handle_soundbutton(int mx, int my) {
+	// discover where on the button the player clicked, so we can do the appropriate
+	// changes
+	Button* btn = sound_button;
+	if (mx >= btn->get_x() + 26 && mx <= btn->get_x() + 39) {
+		if (my >= btn->get_y() + 6 && my <= btn->get_y() + 19) {
+			// this is the plus sign, increase volume
+			bool wasDisabled = !Sound::enabled();
+			Sound::set_volume(Sound::get_volume() + 1);
+			if (wasDisabled) {
+				music->play();
+			}
+		} else if (my >= btn->get_y() + 22 && my <= btn->get_y() + 35) {
+			// this is the minus sign, decrease volume
+			if (Sound::set_volume(Sound::get_volume() - 1) == 0)
+				music->stop();
+		}
+	}
 }
 
 void Game::state_gameplay_running(SDL_Event* event)

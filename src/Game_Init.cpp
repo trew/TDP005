@@ -143,7 +143,8 @@ bool Game::init()
 
 	//Ingame buttons
 	ingame_buttons.push_back(new Button(BUTTON_MENU, 		600,   0, 112, 51, false, "./gfx/button/ingame-menuf10-112x51.png"));
-	ingame_buttons.push_back(new Button(BUTTON_TOGGLESOUND, 712,   0, 44,  42,  true, "./gfx/button/ingame-soundon-44x51.png", "./gfx/button/ingame-soundoff-44x51.png"));
+	sound_button = new Button(BUTTON_TOGGLESOUND, 712,   0, 44,  42, false, "./gfx/button/ingame-sound-44x51.png");
+	ingame_buttons.push_back(sound_button);
 	ingame_buttons.push_back(new Button(BUTTON_TOGGLEGRID, 	756,   0, 44,  42,  true, "./gfx/button/ingame-gridon-44x51.png", "./gfx/button/ingame-gridoff-44x51.png"));
 	ingame_buttons.push_back(new Button(BUTTON_UPGR, 		647, 280, 48,  48, false, "./gfx/button/menu-button-upgrade-48x48.png"));
 	ingame_buttons.push_back(new Button(BUTTON_SELL, 		705, 279, 48,  48, false, "./gfx/button/menu-button-sell-48x48.png"));
@@ -163,9 +164,9 @@ bool Game::init()
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);
 	not_free_spot = new Sprite(this, "./gfx/misc/spot-taken-4.png", 0, 0, 40, 40);
 
+	Sound::set_volume(SOUND_VOLUME);
 	if (music_enabled)
 	{
-		Mix_VolumeMusic(MUSIC_VOLUME);
 		music->play();
 	}
 

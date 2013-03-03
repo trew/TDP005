@@ -55,20 +55,33 @@ void Sound::play()
 void Sound::stop()
 {
 	if (is_music && my_music != NULL) {
-		Mix_FadeOutMusic(500);
+		Mix_HaltMusic();
 	}
 }
 
 bool Sound::toggle_sound()
 {
-	if (play_sounds)
-	{
-		play_sounds = false;
-		return false;
-	}
+	play_sounds = !play_sounds;
+	return play_sounds;
+}
+
+bool Sound::enabled() {
+	return play_sounds;
+}
+
+int Sound::set_volume(int vol) {
+	if (vol < 0 || vol > 128)
+		return Mix_Volume(-1, -1);
+	play_sounds = vol != 0;
+	if (vol > 15)
+		Mix_VolumeMusic(vol - 15);
+	else if (vol > 0)
+		Mix_VolumeMusic(1);
 	else
-	{
-		play_sounds = true;
-		return true;
-	}
+		Mix_VolumeMusic(0);
+	return Mix_Volume(-1, vol);
+}
+
+int Sound::get_volume() {
+	return Mix_Volume(-1, -1);
 }
