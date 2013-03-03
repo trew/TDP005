@@ -104,18 +104,19 @@ void Game::draw_selection()
 {
 	selection_sprite->draw(screen);
 
+	Tower* t = NULL;
 	if (tile_selection != NULL && tile_selection->get_tower() != NULL) {
-		Tower* t = tile_selection->get_tower();
+		t = tile_selection->get_tower();
 		t->draw_range(screen);
-
-		Sprite_List* s = t->get_infosprites();
-		for (iter_sel = s->begin(); iter_sel != s->end(); iter_sel++)
-		{
-			(*iter_sel)->draw(screen);
-		}
-
 	} else if (hovered_build_item != NULL) {
-		Sprite_List* s = hovered_build_item->get_infosprites();
+		t = hovered_build_item;
+	} else if (buildmenu_selection != NULL) {
+		t = buildmenu_selection;
+	}
+
+	// draw infosprites
+	if (t != NULL) {
+		Sprite_List* s = t->get_infosprites();
 		for (iter_sel = s->begin(); iter_sel != s->end(); iter_sel++)
 		{
 			(*iter_sel)->draw(screen);
