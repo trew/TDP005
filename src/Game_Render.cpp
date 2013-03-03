@@ -148,8 +148,8 @@ void Game::draw_boost_connections()
 				{
 					if ((*iter_tower)->get_distance_to((*iter_tower_2)) <= (*iter_tower)->get_range())
 					{
-						int line_strength = (*iter_tower)->get_type();
-						line_strength = 20 + line_strength % 13 * 20;
+						int line_strength = (*iter_tower)->get_level();
+						line_strength = 0x33 + line_strength * 12;
 
 						Sint16 x1, x2, y1, y2;
 						x1 = (Sint16)((*iter_tower)->get_x() + TILESIZE / 2.0f);

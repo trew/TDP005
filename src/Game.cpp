@@ -196,7 +196,7 @@ void Game::update_highscore_sprites()
 	{
 		{
 			std::ostringstream oss_name;
-			oss_name << conv_int_to_str(list_num) << ". " << (*iter_highscore)->second;
+			oss_name << itos(list_num) << ". " << (*iter_highscore)->second;
 			tmp_name = oss_name.str();
 
 			std::ostringstream oss_score;
@@ -295,9 +295,9 @@ void Game::update_fps(int delta) {
 	} else {
 		fps_timer->start();
 		std::string tmp = "FPS: ";
-		tmp.append(conv_int_to_str(current_fps));
+		tmp.append(itos(current_fps));
 		tmp.append(" - Delta: ");
-		tmp.append(conv_int_to_str(delta));
+		tmp.append(itos(delta));
 		fps_text->update_text(tmp);
 		current_fps = 0;
 	}

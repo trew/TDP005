@@ -163,24 +163,6 @@ int Tower::get_spread() {
 int Tower::get_reloading_time() {
 	return reloading_time;
 }
-std::string Tower::get_range_str() {
-	return conv_float_to_string(range);
-}
-std::string Tower::get_level_str() {
-	return conv_int_to_string(level);
-}
-std::string Tower::get_damage_str() {
-	return conv_int_to_string(damage);
-}
-std::string Tower::get_cost_buy_str() {
-	return conv_int_to_string(cost_buy);
-}
-std::string Tower::get_cost_upgrade_str() {
-	return conv_int_to_string(cost_upgrade);
-}
-std::string Tower::get_boostmod_str() {
-	return conv_float_to_string(boostmod);
-}
 
 float Tower::format_range(float range)
 {
@@ -191,11 +173,11 @@ float Tower::format_range(float range)
 	return range != 0.0 ? (range * (float)TILESIZE) + 20.0f : 0;
 }
 
-std::string Tower::conv_int_to_string(int i) {
-	return conv_float_to_string((float)i);
+std::string Tower::itos(int i) {
+	return ftos((float)i);
 }
 
-std::string Tower::conv_float_to_string(float f) {
+std::string Tower::ftos(float f) {
 	std::stringstream s_stream;
 	s_stream << f;
 	std::string tmp;

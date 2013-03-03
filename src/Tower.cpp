@@ -286,9 +286,7 @@ void Tower::update_boost() {
 	if (get_type() == towers::BOOST || get_type() == towers::WALL)
 		return;
 
-	float old_boost_percent = 1.0f;
 	if (!tower_list->empty()) {
-		// If *this tower is a boost tower, ignore.
 		float boost_modifier = 1.0f;
 		for (tower = tower_list->begin(); tower != tower_list->end(); tower++) {
 			// If the tower is a boost tower
@@ -299,9 +297,7 @@ void Tower::update_boost() {
 				}
 			}
 		}
-		if (boost_modifier != old_boost_percent) {
-			apply_boost(boost_modifier);
-		}
+		apply_boost(boost_modifier);
 	}
 }
 

@@ -27,14 +27,14 @@ Boost::~Boost() {
 void Boost::update_informationtext() {
 	clear_informationtext();
 	add_row_to_information_text("Type: " + get_type_str());
-	add_row_to_information_text("Level: " + get_level_str());
+	add_row_to_information_text("Level: " + itos(get_level()));
 	if (get_boostmod() > 0)
-		add_row_to_information_text("Boost Mod: " + get_boostmod_str());
+		add_row_to_information_text("Boost Mod: " + ftos(get_boostmod()));
 	if (get_cost_buy() > 0)
-		add_row_to_information_text("Buy cost: " + get_cost_buy_str());
+		add_row_to_information_text("Buy cost: " + itos(get_cost_buy()));
 	if (get_cost_upgrade() > 0)
-		add_row_to_information_text("Upgrade cost: " + get_cost_upgrade_str());
-	add_row_to_information_text("Sell value: " + conv_int_to_string(get_sell_value() / 2));
+		add_row_to_information_text("Upgrade cost: " + itos(get_cost_upgrade()));
+	add_row_to_information_text("Sell value: " + itos(get_sell_value() / 2));
 }
 
 TowerType Boost::get_type() {

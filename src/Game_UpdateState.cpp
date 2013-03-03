@@ -8,7 +8,7 @@
 #include "Game.h"
 #include <iostream>
 
-std::string Game::conv_int_to_str(int i)
+std::string Game::itos(int i)
 {
 	std::stringstream s_stream;
 	s_stream << i;
@@ -18,24 +18,24 @@ std::string Game::conv_int_to_str(int i)
 }
 
 std::string Game::get_lives_str() {
-	return conv_int_to_str(lives);
+	return itos(lives);
 }
 
 std::string Game::get_money_str() {
 	std::string return_str = "$";
-	return return_str.append(conv_int_to_str(money));
+	return return_str.append(itos(money));
 }
 std::string Game::get_score_str() {
-	return conv_int_to_str(score);
+	return itos(score);
 }
 std::string Game::get_level_str() {
 	std::string tmp = "Wave: ";
-	return tmp.append(conv_int_to_str(level_control->get_level()));
+	return tmp.append(itos(level_control->get_level()));
 }
 std::string Game::get_timer_str() {
 	if (level_control->time_before_next_wave() == -1) return "Press N for next wave";
 	std::string tmp = "Next wave in: ";
-	return (tmp.append(conv_int_to_str(level_control->time_before_next_wave())));
+	return (tmp.append(itos(level_control->time_before_next_wave())));
 }
 
 void Game::update_lives() {
@@ -127,7 +127,7 @@ void Game::update(int delta)
 			else
 			{
 				std::string str = "Your score: ";
-				str.append(conv_int_to_str(score));
+				str.append(itos(score));
 				gameover_score_text->update_text(str);
 
 				if(!read_highscores_from_file() || (get_highscore_pos() != -1))

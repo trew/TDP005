@@ -77,15 +77,11 @@ public:
 	uint get_cost_buy();
 	uint get_cost_upgrade();
 
-	std::string get_range_str();
-	std::string get_level_str();
-	std::string get_damage_str();
-	std::string get_cost_buy_str();
-	std::string get_cost_upgrade_str();
-	std::string get_boostmod_str();
-
 	SDL_Surface* get_base_surface();
 	SDL_Surface* get_cannon_surface();
+
+	std::string ftos(float f); 		///<Converts float to string
+	std::string itos(int i); 			///<Converts int to string
 
 protected:
 	Tower();
@@ -108,9 +104,6 @@ protected:
 	uint cost_upgrade;		// Cost to upgrade
 	float boostmod;			// Boost modifier for boost towers
 	uint sell_value;		// Value when selling
-
-	std::string conv_float_to_string(float f); 		///<Converts float to string
-	std::string conv_int_to_string(int i); 			///<Converts int to string
 
 	void set_base_surf(SDL_Surface*);
 	void set_cannon_surf(SDL_Surface*);

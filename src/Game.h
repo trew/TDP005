@@ -258,7 +258,7 @@ private:
 /** Definition in Game_UpdateState.cpp */
 
 	/**Update text sprites */
-	std::string conv_int_to_str(int i);
+	std::string itos(int i);
 	std::string get_lives_str();
 	std::string get_money_str();
 	std::string get_score_str();

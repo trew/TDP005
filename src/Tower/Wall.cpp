@@ -18,7 +18,7 @@ Wall::Wall() {
 void Wall::update_informationtext() {
 	clear_informationtext();
 	add_row_to_information_text("Type: " + get_type_str());
-	add_row_to_information_text("Cost: " + get_cost_buy_str());
+	add_row_to_information_text("Cost: " + itos(get_cost_buy()));
 	add_row_to_information_text("Sell value: 0");
 }
 
