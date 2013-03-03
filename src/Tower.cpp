@@ -86,9 +86,9 @@ void Tower::draw_range(SDL_Surface* dest_surf, float x_pos, float y_pos) {
 	///Draws a filled circle on the map, showing the range of the tower.
 
 	filledCircleColor(dest_surf, (Sint16) x_pos + TILESIZE / 2,
-			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range(), 0x0000FF11);
+			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range_in_pixels(), 0x0000FF11);
 	circleColor(dest_surf, (Sint16) x_pos + TILESIZE / 2,
-			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range(), 0x5555FF44);
+			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range_in_pixels(), 0x5555FF44);
 }
 
 void Tower::draw(SDL_Surface* dest_surf) {
@@ -125,7 +125,7 @@ void Tower::draw(SDL_Surface* dest_surf, int x, int y) {
 }
 
 bool Tower::target_in_range(Enemy *target) {
-	return get_distance_to(target) <= get_range();
+	return get_distance_to(target) <= get_range_in_pixels();
 }
 
 void Tower::update_angle_to_target() {
@@ -204,7 +204,7 @@ void Tower::find_new_target() {
 	EnemyList* enemy_list = get_game()->get_enemies();
 
 	Enemy* closest_object = NULL;
-	if (current_target == NULL || get_distance_to(current_target) > get_range()) {
+	if (current_target == NULL || get_distance_to(current_target) > get_range_in_pixels()) {
 		float closest_distance = 99999.0f;
 		int enemy_path_length = 99999;
 		for (EnemyList::iterator it = enemy_list->begin(); it != enemy_list->end(); it++) {
@@ -263,12 +263,6 @@ void Tower::try_shoot() {
 	}
 }
 
-void Tower::apply_boost(float mod)
-{
-	set_range(get_base_range() * mod);
-	set_damage((int)((float)get_base_damage() * mod));
-}
-
 Sprite* Tower::get_target() {
 	return current_target;
 }
@@ -292,7 +286,7 @@ void Tower::update_boost() {
 			// If the tower is a boost tower
 			if ((*tower)->get_type() == towers::BOOST) {
 				// And if the current tower is in the range of the boost tower
-				if (get_distance_to((*tower)) <= (*tower)->get_range()) {
+				if (get_distance_to((*tower)) <= (*tower)->get_range_in_pixels()) {
 					boost_modifier += ((*tower)->get_boostmod());
 				}
 			}
@@ -353,11 +347,8 @@ int Tower::get_level() {
 int Tower::get_max_level() {
 	return twr_impl != NULL ? twr_impl->get_max_level() : 0;
 }
-float Tower::get_range() {
-	return twr_impl != NULL ? twr_impl->get_range() : 0;
-}
-float Tower::get_base_range() {
-	return twr_impl != NULL ? twr_impl->get_base_range() : 0;
+float Tower::get_range_in_pixels() {
+	return twr_impl != NULL ? twr_impl->get_range_in_pixels() : 0;
 }
 float Tower::get_projectile_speed() {
 	return twr_impl != NULL ? twr_impl->get_projectile_speed() : 0;
@@ -381,6 +372,11 @@ void Tower::set_range(float range) {
 void Tower::set_damage(int dmg) {
 	if (twr_impl != NULL)
 		twr_impl->set_damage(dmg);
+}
+void Tower::apply_boost(float mod)
+{
+	if (twr_impl != NULL)
+		twr_impl->apply_boost(mod);
 }
 /***** END: FUNCTIONS TOWARDS THE IMPLEMENTATION INTERFACE *********/
 

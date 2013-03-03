@@ -46,7 +46,7 @@ public:
 	void find_new_target();							///<Finds new target for tower if possible
 	void reload(int delta);									///<Handles reloadtimer
 	bool is_loaded();								///<Checks if tower is loaded
-	void try_shoot();									///<Fires an projectile //TODO: projectile_list
+	void try_shoot();									///<Fires an projectile
 	void apply_boost(float mod); ///<Applies boost to the towers stats
 
 	Sprite* get_target();				///<Returns current target
@@ -69,8 +69,7 @@ public:
 	int get_reloading_time();
 	int get_spread();
 	float get_rotation_speed();
-	float get_range();
-	float get_base_range();
+	float get_range_in_pixels();
 	float get_boostmod();
 	towers::TowerType get_type();
 

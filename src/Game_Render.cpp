@@ -146,7 +146,7 @@ void Game::draw_boost_connections()
 			{
 				if ((*iter_tower_2)->get_type() != towers::BOOST && (*iter_tower_2)->get_type() != towers::WALL)
 				{
-					if ((*iter_tower)->get_distance_to((*iter_tower_2)) <= (*iter_tower)->get_range())
+					if ((*iter_tower)->get_distance_to((*iter_tower_2)) <= (*iter_tower)->get_range_in_pixels())
 					{
 						int line_strength = (*iter_tower)->get_level();
 						line_strength = 0x33 + line_strength * 12;

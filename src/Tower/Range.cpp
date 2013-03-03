@@ -11,9 +11,9 @@ namespace towers {
 
 Range::Range() {
 	level = 1;
-	level_1 = (TowerData){format_range(2.2f), 35, 3, 250.f,  800, 750.f, 0,  40, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
-	level_2 = (TowerData){format_range(2.8f), 45, 3, 275.f,  740, 850.f, 0, 200, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
-	level_3 = (TowerData){format_range(3.7f),130, 3, 300.f,  700, 950.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
+	level_1 = (TowerData){2.2f, 35, 3, 250.f,  800, 750.f, 0,  40, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
+	level_2 = (TowerData){2.8f, 45, 3, 275.f,  740, 850.f, 0, 200, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
+	level_3 = (TowerData){3.7f,130, 3, 300.f,  700, 950.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
 	update_data(level_1);
 	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
@@ -27,7 +27,7 @@ void Range::update_informationtext() {
 	add_row_to_information_text("Level: " + itos(get_level()));
 	if (get_damage() > 0)
 		add_row_to_information_text("Damage: " + itos(get_damage()));
-	if (get_range() > 0)
+	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
 	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
 	if (get_cost_upgrade() > 0)

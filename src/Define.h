@@ -10,7 +10,7 @@
 
 const int SOUND_VOLUME  =  35;
 
-const int STARTING_MONEY = 100;
+const int STARTING_MONEY = 10000;
 const int STARTING_LIVES = 20;
 
 const int DEVSCREEN 	=	1;

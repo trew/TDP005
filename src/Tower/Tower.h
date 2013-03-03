@@ -61,6 +61,7 @@ public:
 	uint get_max_level();
 	uint get_damage();
 	void set_damage(uint damage);
+	float get_range_in_pixels();
 	float get_range();
 	void set_range(float range);
 	uint get_base_damage();
@@ -70,6 +71,8 @@ public:
 	float get_rotation_speed();
 	int get_spread();
 	int get_reloading_time();
+
+	void apply_boost(float mod);
 
 	uint get_sell_value();
 	void set_sell_value(uint value);

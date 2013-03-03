@@ -12,7 +12,7 @@ namespace towers {
 Simple::Simple() {
 	level = 1;
 	max_level = 1;
-	base_range = range = format_range(1.0f);
+	base_range = range = 1.0f;
 	rotation_speed = 250.0;
 	reloading_time = 400;
 	base_damage = damage = 10;
@@ -28,7 +28,7 @@ void Simple::update_informationtext() {
 	add_row_to_information_text("Type: " + get_type_str());
 	if (get_damage() > 0)
 		add_row_to_information_text("Damage: " + itos(get_damage()));
-	if (get_range() > 0)
+	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
 	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
 	if (get_cost_buy() > 0)

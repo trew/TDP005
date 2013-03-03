@@ -125,6 +125,9 @@ void Tower::set_damage(uint _damage) {
 float Tower::get_range() {
 	return range;
 }
+float Tower::get_range_in_pixels() {
+	return format_range(range);
+}
 void Tower::set_range(float _range) {
 	range = _range;
 	update_informationtext();
@@ -162,6 +165,11 @@ int Tower::get_spread() {
 }
 int Tower::get_reloading_time() {
 	return reloading_time;
+}
+
+void Tower::apply_boost(float mod) {
+	set_range(get_base_range() * mod);
+	set_damage(get_base_damage() * mod);
 }
 
 float Tower::format_range(float range)
