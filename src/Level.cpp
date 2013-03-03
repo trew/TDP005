@@ -22,43 +22,50 @@ void Level::reset() {
 	current_level = 0;
 	current_boss_level = 1;
 	last_enemy_sent = true;
-	wave_delay = 30000;		//ms
+	wave_delay = 40000;		//ms
 }
 
 void Level::compose_new_wave(Game* game) {
-	int amount_of_enemies = 15;
+	int points = 140 + current_level * 10;
 	EnemyType enemy_type = DOG;
-	int enemy_type_range;
-	if (current_boss_level < 5) enemy_type_range = current_boss_level;
-	else enemy_type_range = 3;
-	int pos = 0;
+
+	int enemy_type_range = 3;
+	if (current_boss_level < 5)
+		enemy_type_range = current_boss_level;
+
 	int prev_pos = 40;
-	while (amount_of_enemies > 0) {
-		pos = -(prev_pos + (rand() % 25) +15);
+	int pos = -(prev_pos + (rand() % 25) +15);
+
+	if(current_level % 5 == 0) {
+		enemy_type = BOSS;
+		Enemy* new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_boss_level);
+		points = 0;
+		current_boss_level++;
+		enemies_in_wave.push_back(new_enemy);
+		return;
+	}
+
+	while (points > 0) {
 		int i = (rand() % (enemy_type_range));
 		if (i > 3) i = 3;
 		enemy_type = (EnemyType)i;
-		Enemy* new_enemy;
-		new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_level);
-		if(current_level % 5 == 0) {
-			enemy_type = BOSS;
-			delete new_enemy; new_enemy = NULL;
-			new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_boss_level);
-			amount_of_enemies = 0;
-			current_boss_level++;
-		}
+		Enemy* new_enemy = new Enemy(game, (EnemyType)enemy_type, pos, 7*TILESIZE + 5,30, 30, current_level);
 
 		enemies_in_wave.push_back(new_enemy);
-		amount_of_enemies--;
+		points -= new_enemy->get_cost_buy();
 		prev_pos = -pos;
+		pos = -(prev_pos + (rand() % 25) +15);
 	}
 }
 
 EnemyList Level::get_new_wave(Game* game) {
 	enemies_in_wave.clear();
 	current_level++;
+	int boss_lev = current_boss_level;
 	compose_new_wave(game);
 	timer = wave_delay;
+	if (boss_lev != current_boss_level)
+		timer += wave_delay; // twice as much time for a boss
 	last_enemy_sent = false;
 	return enemies_in_wave;
 }

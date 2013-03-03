@@ -19,7 +19,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 	switch(_type) {
 	case DOG:
 		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
-		move_speed = 100;
+		move_speed = 90;
 		max_health = static_cast<int>(dog_health + (dog_health * 0.24) * (new_level-1));
 		cost = dog_cost;
 		reward_score = dog_cost;
@@ -28,7 +28,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case SNAIL:
 		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
-		move_speed = 50;
+		move_speed = 35;
 		max_health = static_cast<int>(snail_health + (snail_health * 0.24) * (new_level-1));
 		cost = snail_cost;
 		reward_score = snail_cost;
@@ -46,7 +46,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case PALS:
 		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
-		move_speed = 50;
+		move_speed = 45;
 		max_health = static_cast<int>(pals_health + (pals_health * 0.24) * (new_level-1));
 		cost = pals_cost;
 		reward_score = pals_cost;
@@ -55,7 +55,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 		break;
 	case BOSS:
 		sprite_surf = load_image("./gfx/enemy/enemy-5-30x30.png");
-		move_speed = 50;
+		move_speed = 30;
 		max_health = boss_health + boss_health_mod * (new_level-1);
 		cost = 0;
 		reward_score = boss_cost;
