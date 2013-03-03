@@ -12,9 +12,9 @@ namespace towers {
 
 Boost::Boost() {
 	level = 1;
-	level_1 = (TowerData){1.2f, 0, 3, 0, 0, 0, 20, 40, 0.2f, "./gfx/tower/tower-boost-lvl1.png", ""};
-	level_2 = (TowerData){1.5f, 0, 3, 0, 0, 0, 20,200, 0.25f, "./gfx/tower/tower-boost-lvl2.png", ""};
-	level_3 = (TowerData){2.0f, 0, 3, 0, 0, 0, 20, 40, 0.35f, "./gfx/tower/tower-boost-lvl3.png", ""};
+	level_1 = (TowerData){1.2f, 0, 3, 0, 0, 0, 20, 40, 0.1f, "./gfx/tower/tower-boost-lvl1.png", ""};
+	level_2 = (TowerData){1.5f, 0, 3, 0, 0, 0, 20,200, 0.2f, "./gfx/tower/tower-boost-lvl2.png", ""};
+	level_3 = (TowerData){2.0f, 0, 3, 0, 0, 0, 20, 40, 0.3f, "./gfx/tower/tower-boost-lvl3.png", ""};
 	sell_value = level_1.cost_buy;
 	update_data(level_1);
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

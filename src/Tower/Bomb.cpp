@@ -11,9 +11,9 @@ namespace towers {
 
 Bomb::Bomb() {
 	level = 1;
-	level_1 = (TowerData){1.2f, 15, 3, 300.f, 2000, 200.f, 0,  40, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
-	level_2 = (TowerData){1.8f, 20, 3, 350.f, 1800, 250.f, 0, 200, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
-	level_3 = (TowerData){2.2f, 35, 3, 400.f, 1600, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
+	level_1 = (TowerData){1.0f, 20, 3, 300.f, 2000, 200.f, 0,  40, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
+	level_2 = (TowerData){1.5f, 35, 3, 350.f, 1800, 250.f, 0, 200, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
+	level_3 = (TowerData){2.0f, 60, 3, 400.f, 1600, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
 	update_data(level_1);
 	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

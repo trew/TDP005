@@ -169,7 +169,7 @@ int Tower::get_reloading_time() {
 
 void Tower::apply_boost(float mod) {
 	set_range(get_base_range() * mod);
-	set_damage(get_base_damage() * mod);
+	set_damage((int)(get_base_damage() * mod));
 }
 
 float Tower::format_range(float range)
