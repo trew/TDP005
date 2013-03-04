@@ -40,6 +40,8 @@ Game::Game()
 	fps_timer = delta_timer = NULL;
 	delta = 0;
 	game_speed = 1.f;
+	sound_volume = 0;
+	config = NULL;
 
 	/* Flags */
 	grid_visible = true;

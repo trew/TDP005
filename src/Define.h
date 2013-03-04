@@ -8,8 +8,6 @@
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
-const int SOUND_VOLUME  =  35;
-
 const int STARTING_MONEY = 100;
 const int STARTING_LIVES = 20;
 

@@ -188,8 +188,6 @@ std::string Tower::itos(int i) {
 std::string Tower::ftos(float f) {
 	std::stringstream s_stream;
 	s_stream << f;
-	std::string tmp;
-	s_stream >> tmp;
-	return tmp;
+	return s_stream.str();
 }
 } /* namespace towers */

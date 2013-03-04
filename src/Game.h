@@ -39,6 +39,8 @@
 #include "Dijkstra.h"
 #include "Level.h"
 
+#include "ConfigFile.h"
+
 class Level;
 class Timer;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
@@ -105,6 +107,9 @@ private:
 	Tile* last_selected_tile;
 	Tower* buildmenu_selection; //The selected tower in the build menu
 
+	void parse_config();
+	ConfigFile* config;
+
 	/** Sprites */
 	Sprite* dev_screen;
 	Sprite* intro_screen;
@@ -167,6 +172,7 @@ private:
 	Sound* SFX_new_highscore;
 	Sound* SFX_game_over;
 
+	int sound_volume;
 private:
 /** *** Game Functions *** */
 /** Definition in Game.cpp */

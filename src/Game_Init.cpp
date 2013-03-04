@@ -6,8 +6,17 @@
  */
 #include "Game.h"
 
+void Game::parse_config() {
+	config = new ConfigFile("tdp005.config");
+	fullscreen = config->get_value<bool>("fullscreen", false);
+	sound_volume = config->get_value<int>("sound_volume", 35);
+	grid_visible = config->get_value<bool>("grid", true);
+}
+
 bool Game::init()
 {
+	parse_config();
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		std::cerr << SDL_GetError() << std::endl;
 		return false;
@@ -177,7 +186,7 @@ bool Game::init()
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);
 	not_free_spot = new Sprite(this, "./gfx/misc/spot-taken-4.png", 0, 0, 40, 40);
 
-	Sound::set_volume(SOUND_VOLUME);
+	Sound::set_volume(sound_volume);
 	if (music_enabled)
 	{
 		music->play();
