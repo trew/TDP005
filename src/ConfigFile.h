@@ -65,6 +65,8 @@ public:
 		}
 	}
 
+	void save() const;
+
 private:
 	std::map<std::string, std::string> contents;
 	std::string filename;

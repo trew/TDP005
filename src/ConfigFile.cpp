@@ -6,6 +6,7 @@
  */
 
 #include "ConfigFile.h"
+#include <ctime>
 
 using ConfigUtil::warn;
 
@@ -124,3 +125,27 @@ void ConfigFile::parse() {
 	file.close();
 }
 
+void ConfigFile::save() const {
+	std::ofstream file;
+	file.open(filename.c_str());
+	if (!file) {
+		warn("File " + filename + " could not be opened.");
+		return;
+	}
+
+	time_t t = time(0); //time now
+	struct tm* timeinfo;
+	char buffer[80];
+
+	time ( &t );
+	timeinfo = localtime( &t );
+	strftime (buffer, 80, "%F %X", timeinfo);
+
+	file << "# Configuration file" << std::endl;
+	file << "# " << buffer << std::endl << std::endl;
+
+	for (std::map<std::string, std::string>::const_iterator it = contents.begin(); it != contents.end(); it++) {
+		file << (*it).first << "=" << (*it).second << std::endl;
+	}
+	file.close();
+}
