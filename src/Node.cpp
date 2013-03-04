@@ -6,6 +6,7 @@
  */
 
 #include "Node.h"
+#include <cstddef>
 
 const int max_cost = 1000000;
 
