@@ -434,13 +434,17 @@ void Game::left_mousebutton(int m_x, int m_y)
 					switch ((*iter_ingame_button)->get_type())
 					{
 					case BUTTON_UPGR:
+					{
 						Tower* t = tile_selection->get_tower();
 						if (t != NULL)
 							upgrade_tower(t->get_type());
 						break;
+					}
 					case BUTTON_SELL:
+					{
 						sell(tile_selection);
 						break;
+					}
 					}
 				}
 			}

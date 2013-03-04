@@ -8,6 +8,7 @@
 #include "Grid.h"
 #include "Dijkstra.h"
 #include "Define.h"
+#include <cstddef>
 
 Grid::Grid() :
 		start_tile(NULL), portal_tile(NULL), width(0), height(0) {
