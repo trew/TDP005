@@ -8,22 +8,30 @@
 
 bool Game::init()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		std::cerr << SDL_GetError() << std::endl;
 		return false;
+	}
 
 	if (fullscreen)
 	{
-		if ((screen = SDL_SetVideoMode(WWIDTH, WHEIGHT, WBPP, SDL_HWSURFACE || SDL_FULLSCREEN)) == NULL)
+		if ((screen = SDL_SetVideoMode(WWIDTH, WHEIGHT, WBPP, SDL_HWSURFACE || SDL_FULLSCREEN)) == NULL) {
+			std::cerr << SDL_GetError() << std::endl;
 			return false;
+		}
 	}
 	else
 	{
-		if ((screen = SDL_SetVideoMode(WWIDTH, WHEIGHT, WBPP, SDL_HWSURFACE || SDL_DOUBLEBUF)) == NULL)
+		if ((screen = SDL_SetVideoMode(WWIDTH, WHEIGHT, WBPP, SDL_HWSURFACE || SDL_DOUBLEBUF)) == NULL) {
+			std::cerr << SDL_GetError() << std::endl;
 			return false;
+		}
 	}
 
-	if (TTF_Init() < 0)
+	if (TTF_Init() < 0) {
+		std::cerr << TTF_GetError() << std::endl;
 		return false;
+	}
 
 	if (Mix_Init(MIX_INIT_OGG) == 0) {
 		std::cerr << Mix_GetError() << std::endl;
