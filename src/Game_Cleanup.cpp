@@ -54,6 +54,12 @@ void Game::reset_game()
 
 void Game::cleanup()
 {
+	config->set_value<bool>("fullscreen", fullscreen);
+	config->set_value<int>("sound_volume", Sound::get_volume());
+	config->set_value<bool>("grid", grid);
+	config->save();
+	delete config;
+
 	Mix_CloseAudio();
 
 	delete level_control;
