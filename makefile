@@ -1,17 +1,13 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
--include ../makefile.init
+-include makefile.init
 
 RM := rm -rf
 
 # All of the sources participating in the build are defined here
--include sources.mk
--include src/Tower/subdir.mk
--include src/subdir.mk
--include subdir.mk
--include objects.mk
+-include make/sources.mk
+-include make/src/Tower/subdir.mk
+-include make/src/subdir.mk
+-include make/subdir.mk
+-include make/objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C++_DEPS)),)
@@ -34,27 +30,26 @@ ifneq ($(strip $(C_UPPER_DEPS)),)
 endif
 endif
 
--include ../makefile.defs
+-include makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: TDP005.exe
+all: tdp005
 
 # Tool invocations
-TDP005.exe: $(OBJS) $(USER_OBJS)
+tdp005: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cygwin C++ Linker'
-	g++ -L"C:\cygwin\usr\local\lib" -o "TDP005.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -o "tdp005" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) TDP005.exe
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) tdp005
 	-@echo ' '
 
 .PHONY: all clean dependents
 .SECONDARY:
 
--include ../makefile.targets
+-include makefile.targets

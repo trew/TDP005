@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lSDL -lsdlgfx -lSDL_ttf -lSDL_mixer -lSDL_image -lSDLmain
+LIBS := -lSDL -lSDL_gfx -lSDL_ttf -lSDL_mixer -lSDL_image -lSDLmain
 
