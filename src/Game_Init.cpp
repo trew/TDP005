@@ -25,6 +25,11 @@ bool Game::init()
 	if (TTF_Init() < 0)
 		return false;
 
+	if (Mix_Init(MIX_INIT_OGG) == 0) {
+		std::cerr << Mix_GetError() << std::endl;
+		return false;
+	}
+
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 		return false;
 
@@ -120,7 +125,7 @@ bool Game::init()
 	optionbox_buttonstorage[BUTTON_WALL]->set_type(BUTTON_WALL);
 
 	//Load sounds
-	music =			 	new Sound("./snd/Ultrasyd_-_Lonesome_Robot.mp3", true, -1);
+	music =			 	new Sound("./snd/Ultrasyd_Lonesome_Robot.ogg", true, -1);
 
 	SFX_cant_build = 	new Sound("./snd/SFX_1.wav", false, 0);
 	SFX_build = 		new Sound("./snd/SFX_4.wav", false, 0);
