@@ -22,11 +22,11 @@ void Level::reset() {
 	current_level = 0;
 	current_boss_level = 1;
 	last_enemy_sent = true;
-	wave_delay = 40000;		//ms
+	wave_delay = 30000;		//ms
 }
 
 void Level::compose_new_wave(Game* game) {
-	int points = 140 + current_level * 10;
+	int points = 150 + current_level * 3; // slightly increase the amount of points given to the wave
 	EnemyType enemy_type = DOG;
 
 	int enemy_type_range = 3;
@@ -63,9 +63,9 @@ EnemyList Level::get_new_wave(Game* game) {
 	current_level++;
 	int boss_lev = current_boss_level;
 	compose_new_wave(game);
-	timer = wave_delay;
+	timer = wave_delay + 1000 * (current_level - 1);
 	if (boss_lev != current_boss_level)
-		timer += wave_delay; // twice as much time for a boss
+		timer += 10000; // 10 more s for boss
 	last_enemy_sent = false;
 	return enemies_in_wave;
 }
