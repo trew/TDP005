@@ -64,6 +64,9 @@ public:
 			return default_value;
 		}
 	}
+	template <typename V> void set_value(const std::string &key, V const &value) {
+		contents[key] = Convert::T_to_string(value);
+	}
 
 	void save() const;
 
