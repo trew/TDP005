@@ -14,7 +14,7 @@ namespace towers {
 
 Tower::Tower() {
 	spread = 15;
-	reloading_time = 0;
+	base_reloading_time = reloading_time = 0;
 	projectile_speed = 0.0f;
 	boostmod = 0.0f;
 	base_damage = damage = 0;
@@ -101,7 +101,7 @@ void Tower::update_data(TowerData data) {
 	max_level = data.max_level;
 	base_range = range = data.range;
 	base_damage = damage = data.damage;
-	reloading_time = data.reloading_time;
+	base_reloading_time = reloading_time = data.reloading_time;
 	rotation_speed = data.rotation_speed;
 	boostmod = data.boostmod;
 	cost_buy = data.cost_buy;
@@ -166,10 +166,20 @@ int Tower::get_spread() {
 int Tower::get_reloading_time() {
 	return reloading_time;
 }
+void Tower::set_reloading_time(int time) {
+	if (time < 10)
+		time = 10;
+	reloading_time = time;
+	update_informationtext();
+}
+int Tower::get_base_reloading_time() const {
+	return base_reloading_time;
+}
 
 void Tower::apply_boost(float mod) {
 	set_range(get_base_range() * mod);
 	set_damage((int)(get_base_damage() * mod));
+	set_reloading_time(get_base_reloading_time() - (int)(get_base_reloading_time() * ((mod - 1.f) / 2)));
 }
 
 float Tower::format_range(float range)

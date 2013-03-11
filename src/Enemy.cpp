@@ -19,47 +19,42 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 	switch(_type) {
 	case DOG:
 		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
-		move_speed = 90;
-		max_health = static_cast<int>(dog_health + (dog_health * 0.24) * (new_level-1));
-		cost = dog_cost;
-		reward_score = dog_cost;
-		reward_money = enemy_money_reward;
+		move_speed = 110;
+		max_health = static_cast<int>(dog_health + (dog_health * 0.25) * (new_level-1));
+		reward_score = cost = dog_cost;
+		reward_money = dog_cost / 2;
 
 		break;
 	case SNAIL:
 		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
-		move_speed = 35;
-		max_health = static_cast<int>(snail_health + (snail_health * 0.24) * (new_level-1));
-		cost = snail_cost;
-		reward_score = snail_cost;
-		reward_money = enemy_money_reward;
+		move_speed = 45;
+		max_health = static_cast<int>(snail_health + (snail_health * 0.25) * (new_level-1));
+		reward_score = cost = snail_cost;
+		reward_money = snail_cost / 2;
 
 		break;
 	case FISH:
 		sprite_surf = load_image("./gfx/enemy/enemy-3-30x30.png");
-		move_speed = 50;
-		max_health = static_cast<int>(fish_health + (fish_health * 0.24) * (new_level-1));
-		cost = fish_cost;
-		reward_score = fish_cost;
-		reward_money = enemy_money_reward;
+		move_speed = 65;
+		max_health = static_cast<int>(fish_health + (fish_health * 0.25) * (new_level-1));
+		reward_score = cost = fish_cost;
+		reward_money = fish_cost / 2;
 
 		break;
 	case PALS:
 		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
-		move_speed = 45;
-		max_health = static_cast<int>(pals_health + (pals_health * 0.24) * (new_level-1));
-		cost = pals_cost;
-		reward_score = pals_cost;
-		reward_money = enemy_money_reward;
+		move_speed = 60;
+		max_health = static_cast<int>(pals_health + (pals_health * 0.25) * (new_level-1));
+		reward_score = cost = pals_cost;
+		reward_money = pals_cost / 2;
 
 		break;
 	case BOSS:
 		sprite_surf = load_image("./gfx/enemy/enemy-5-30x30.png");
-		move_speed = 30;
+		move_speed = 40;
 		max_health = boss_health + boss_health_mod * (new_level-1);
-		cost = 0;
-		reward_score = boss_cost;
-		reward_money = boss_money_reward;
+		reward_score = cost = boss_cost;
+		reward_money = boss_cost / 2;
 
 		break;
 	default:
@@ -308,6 +303,8 @@ void Enemy::take_damage(int dmg)
 {
 	///Subtract damage from health.
 	health -= dmg;
+	if (health < 0)
+		health = 0;
 }
 
 double Enemy::get_speed() {

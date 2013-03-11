@@ -15,7 +15,7 @@ Basic::Basic() {
 	level_3 = (TowerData){2.0f, 70, 3, 500.f,  280, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
-	sell_value = 25;
+	sell_value = 15;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
 	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();

@@ -15,7 +15,7 @@ Range::Range() {
 	level_2 = (TowerData){2.5f, 45, 3, 275.f,  740, 850.f, 0, 200, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
 	level_3 = (TowerData){3.5f,130, 3, 300.f,  700, 950.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
 	update_data(level_1);
-	sell_value = 25;
+	sell_value = 15;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
 	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();

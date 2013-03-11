@@ -71,6 +71,8 @@ public:
 	float get_rotation_speed();
 	int get_spread();
 	int get_reloading_time();
+	int get_base_reloading_time() const;
+	void set_reloading_time(int t);
 
 	void apply_boost(float mod);
 
@@ -94,9 +96,10 @@ protected:
 
 	float base_range;		// Tower Range
 	uint base_damage;		// Attackdamage
+	int reloading_time;	// The tower's rate of fire
+	int base_reloading_time;
 	uint max_level;
 	float rotation_speed;	// Cannon Rotationspeed
-	int reloading_time;	// The tower's rate of fire
 	float projectile_speed;	// Speed of the projectile being shot
 	uint cost_buy;			// Cost to build
 	int spread;				// Angle-deviation-acceptance for when to fire at enemy

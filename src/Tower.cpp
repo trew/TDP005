@@ -287,7 +287,7 @@ void Tower::update_boost() {
 			if ((*tower)->get_type() == towers::BOOST) {
 				// And if the current tower is in the range of the boost tower
 				if (get_distance_to((*tower)) <= (*tower)->get_range_in_pixels()) {
-					boost_modifier += ((*tower)->get_boostmod());
+					boost_modifier += (*tower)->get_boostmod();
 				}
 			}
 		}
