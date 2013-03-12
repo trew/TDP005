@@ -280,18 +280,25 @@ void Tower::update_boost() {
 	if (get_type() == towers::BOOST || get_type() == towers::WALL)
 		return;
 
+	std::list<float> modifiers(24);
 	if (!tower_list->empty()) {
-		float boost_modifier = 1.0f;
 		for (tower = tower_list->begin(); tower != tower_list->end(); tower++) {
 			// If the tower is a boost tower
 			if ((*tower)->get_type() == towers::BOOST) {
 				// And if the current tower is in the range of the boost tower
 				if (get_distance_to((*tower)) <= (*tower)->get_range_in_pixels()) {
-					boost_modifier += (*tower)->get_boostmod();
+					modifiers.push_back((*tower)->get_boostmod());
 				}
 			}
 		}
-		apply_boost(boost_modifier);
+		modifiers.sort();
+		float mod = 1.f;
+		int i = 1;
+		for (std::list<float>::reverse_iterator it = modifiers.rbegin(); it != modifiers.rend(); it++) {
+			mod += (*it) / i;
+			i *= 2;
+		}
+		apply_boost(mod);
 	}
 }
 

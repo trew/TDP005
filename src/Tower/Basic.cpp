@@ -10,12 +10,12 @@
 namespace towers {
 
 Basic::Basic() {
-	level_1 = (TowerData){1.2f, 20, 3, 350.f,  400,  600.f, 0,  40, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
-	level_2 = (TowerData){1.5f, 30, 3, 400.f,  360,  750.f, 0, 200, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
-	level_3 = (TowerData){2.0f, 70, 3, 500.f,  280, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
+	level_1 = (TowerData){1.2f, 20, 3, 350.f,  700,  600.f, 0,  70, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
+	level_2 = (TowerData){1.5f, 35, 3, 400.f,  600,  750.f, 0, 400, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
+	level_3 = (TowerData){2.0f,100, 3, 500.f,  450, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
-	sell_value = 15;
+	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
 	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();

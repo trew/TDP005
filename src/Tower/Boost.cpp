@@ -12,8 +12,8 @@ namespace towers {
 
 Boost::Boost() {
 	level = 1;
-	level_1 = (TowerData){1.2f, 0, 3, 0, 0, 0, 20, 40, 0.1f, "./gfx/tower/tower-boost-lvl1.png", ""};
-	level_2 = (TowerData){1.5f, 0, 3, 0, 0, 0, 20,200, 0.2f, "./gfx/tower/tower-boost-lvl2.png", ""};
+	level_1 = (TowerData){1.2f, 0, 3, 0, 0, 0, 20, 70, 0.1f, "./gfx/tower/tower-boost-lvl1.png", ""};
+	level_2 = (TowerData){1.5f, 0, 3, 0, 0, 0, 20,400, 0.2f, "./gfx/tower/tower-boost-lvl2.png", ""};
 	level_3 = (TowerData){2.0f, 0, 3, 0, 0, 0, 20,  0, 0.3f, "./gfx/tower/tower-boost-lvl3.png", ""};
 	sell_value = level_1.cost_buy;
 	update_data(level_1);
@@ -32,7 +32,7 @@ void Boost::update_informationtext() {
 		add_row_to_information_text("Boost Mod: " + ftos(get_boostmod()));
 	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
-	if (get_cost_buy() > 0)
+	if (level == 1)
 		add_row_to_information_text("Buy cost: " + itos(get_cost_buy()));
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + itos(get_cost_upgrade()));
