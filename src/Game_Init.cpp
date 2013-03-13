@@ -111,6 +111,7 @@ bool Game::init()
 	level_text = new Text("Wave: 1", (int)menu_money_score->get_x() + 25, (int)menu_money_score->get_y() + 30, standard_font_16);
 	timer_text = new Text("",255,255,255, 0, 5, standard_font_12);
 	fps_text = new Text("", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
+	speed_text = new Text("", 255,255,255, 570, 580, standard_font_12); speed_text->hide();
 
 	//Optionbox buttons and background
 	option_box_BGx1 = new Sprite(this, "./gfx/menu/popup-menu-1x-40x43.png", 0, 0, 40, 43);

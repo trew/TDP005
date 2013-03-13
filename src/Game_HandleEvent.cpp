@@ -491,15 +491,30 @@ void Game::state_gameplay_running(SDL_Event* event)
 	if (keystate[SDLK_f]) FPS_MAX = 1000;
 	else FPS_MAX = 60;
 
-	if (keystate[SDLK_g]) game_speed = 2.f;
-	else game_speed = 1.f;
-
-
 	if (event->type == SDL_KEYDOWN)
 	{
 		if (event->key.keysym.sym == SDLK_ESCAPE)
 		{
 			cancel_selection();
+		}
+		else if (event->key.keysym.sym == SDLK_KP_PLUS) {
+			if (game_speed < 2.f) {
+				game_speed *= 2;
+				std::string s("x");
+				s.append(ftos(game_speed));
+				speed_text->update_text(s);
+				speed_text->set_center_x(585);
+				game_speed == 1.f ? speed_text->hide() : speed_text->show();
+			}
+		} else if (event->key.keysym.sym == SDLK_KP_MINUS) {
+			if (game_speed > .5f) {
+				game_speed /= 2;
+				std::string s("x");
+				s.append(ftos(game_speed));
+				speed_text->update_text(s);
+				speed_text->set_center_x(585);
+				game_speed == 1.f ? speed_text->hide() : speed_text->show();
+			}
 		}
 		else if (game_started && event->key.keysym.sym == SDLK_n)
 		{

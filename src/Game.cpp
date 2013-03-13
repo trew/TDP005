@@ -63,7 +63,7 @@ Game::Game()
 	selection_sprite = free_spot = not_free_spot = NULL;
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
-	fps_text = timer_text = NULL;
+	fps_text = timer_text = speed_text = NULL;
 	intro_screen = highscore_screen = ingame_menu_screen = main_menu_screen = dev_screen = introduction_screen = gameover_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
@@ -357,3 +357,8 @@ int Game::on_execute()
 	return 0;
 }
 
+std::string Game::ftos(float f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}

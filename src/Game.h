@@ -148,6 +148,7 @@ private:
 	int old_timer;
 	Sprite* timer_text;
 	Sprite* fps_text;
+	Sprite* speed_text;
 	Sprite* split_money_score;		///A line separating money and score
 
 	Sprite* free_spot;			///When trying to build a tower...
@@ -286,6 +287,8 @@ public:
 	TowerList* get_towers();
 	EnemyList* get_enemies();
 	ProjectileList* get_projectiles();
+
+	std::string ftos(float);
 
 private:
 /** Sprite containers */

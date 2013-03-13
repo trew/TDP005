@@ -285,6 +285,7 @@ void Game::render_gameplay()
 
 	draw_money_score();
 	draw_enemies();
+	speed_text->draw(screen);
 	draw_selection();
 	map_exit->draw(screen);
 	draw_projectiles();
