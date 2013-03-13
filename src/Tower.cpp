@@ -41,7 +41,7 @@ Tower::Tower(Game* game, towers::TowerType type, Tile* tile) :
 	// Tower specifics
 	loaded = false;
 	current_target = NULL;
-	current_angle = 0;
+	old_angle = current_angle = 0;
 	target_angle = 0;
 	rotation_modifier = 0.0;
 
@@ -103,14 +103,18 @@ void Tower::draw(SDL_Surface* dest_surf, int x, int y) {
 	dest_rect.y = y;
 
 	SDL_Surface* base_surf = twr_impl->get_base_surface();
-	SDL_Surface* cannon_surf = twr_impl->get_cannon_surface();
+	SDL_Surface* base_cannon_surf = twr_impl->get_base_cannon_surface();
 	if (base_surf != NULL) {
 		SDL_BlitSurface(base_surf, NULL, dest_surf, &dest_rect);
 	}
 
-	if (cannon_surf != NULL) {
-		SDL_Surface *cannon_surf_rotated;
-		cannon_surf_rotated = rotozoomSurface(cannon_surf, current_angle, 1, 1);
+	if (base_cannon_surf != NULL) {
+		SDL_Surface *cannon_surf_rotated = twr_impl->get_cannon_surface();
+		if (old_angle != current_angle || cannon_surf_rotated == NULL) {
+			cannon_surf_rotated = rotozoomSurface(base_cannon_surf, current_angle, 1, 1);
+			twr_impl->set_cannon_surf(cannon_surf_rotated);
+		}
+		old_angle = current_angle;
 
 		SDL_Rect compensation_rect;
 		compensation_rect.x = x - (int) ((double) cannon_surf_rotated->w / 2.0)
@@ -120,7 +124,6 @@ void Tower::draw(SDL_Surface* dest_surf, int x, int y) {
 
 		SDL_BlitSurface(cannon_surf_rotated, NULL, dest_surf,
 				&compensation_rect);
-		SDL_FreeSurface(cannon_surf_rotated);
 	}
 }
 

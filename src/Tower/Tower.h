@@ -83,15 +83,18 @@ public:
 	uint get_cost_upgrade();
 
 	SDL_Surface* get_base_surface();
+	SDL_Surface* get_base_cannon_surface();
 	SDL_Surface* get_cannon_surface();
 
 	std::string ftos(float f); 		///<Converts float to string
 	std::string itos(int i); 			///<Converts int to string
 
+	void set_cannon_surf(SDL_Surface*);
 protected:
 	Tower();
 
 	SDL_Surface* 	base_surf;
+	SDL_Surface*	base_cannon_surf;
 	SDL_Surface* 	cannon_surf;
 
 	float base_range;		// Tower Range
@@ -112,7 +115,7 @@ protected:
 	uint sell_value;		// Value when selling
 
 	void set_base_surf(SDL_Surface*);
-	void set_cannon_surf(SDL_Surface*);
+	void set_base_cannon_surf(SDL_Surface*);
 
 	void clear_informationtext();
 	void add_row_to_information_text(std::string); ///< Helper function

@@ -17,7 +17,7 @@ Basic::Basic() {
 	update_data(level_1);
 	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
-	set_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
+	set_base_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
 	update_informationtext();
 }
 
@@ -62,12 +62,12 @@ bool Basic::upgrade(TowerType type) {
 		sell_value += level_1.cost_upgrade;
 		update_data(level_2);
 		set_base_surf(Sprite::load_image(level_2.base_surface_location));
-		set_cannon_surf(Sprite::load_image(level_2.cannon_surface_location));
+		set_base_cannon_surf(Sprite::load_image(level_2.cannon_surface_location));
 	} else if (level == 3) {
 		update_data(level_3);
 		sell_value += level_2.cost_upgrade;
 		set_base_surf(Sprite::load_image(level_3.base_surface_location));
-		set_cannon_surf(Sprite::load_image(level_3.cannon_surface_location));
+		set_base_cannon_surf(Sprite::load_image(level_3.cannon_surface_location));
 	}
 	update_informationtext();
 	return true;

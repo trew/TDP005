@@ -89,6 +89,7 @@ private: // Properties
 private: // Specific variables for calculations etc.
 	Enemy*			current_target;
 	double			current_angle;
+	double			old_angle; //the angle held last frame, determines whether to remake the surface using rotozoom
 	double			target_angle;
 	double			rotation_modifier;
 	int				reload_timer;

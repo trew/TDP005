@@ -27,12 +27,14 @@ Tower::Tower() {
 	cost_buy = 0;
 	base_surf = NULL;
 	cannon_surf = NULL;
+	base_cannon_surf = NULL;
 	infotext = NULL;
 }
 
 Tower::~Tower() {
 	SDL_FreeSurface(base_surf);
 	SDL_FreeSurface(cannon_surf);
+	SDL_FreeSurface(base_cannon_surf);
 	if (infotext != NULL) {
 		for (Sprite_List::iterator it = infotext->begin(); it != infotext->end(); it++) {
 			delete (*it);
@@ -77,6 +79,10 @@ SDL_Surface* Tower::get_cannon_surface() {
 	return cannon_surf;
 }
 
+SDL_Surface* Tower::get_base_cannon_surface() {
+	return base_cannon_surf;
+}
+
 SDL_Surface* Tower::get_base_surface() {
 	return base_surf;
 }
@@ -85,6 +91,13 @@ void Tower::set_base_surf(SDL_Surface* surf) {
 	if (surf == base_surf) return;
 	SDL_FreeSurface(base_surf);
 	base_surf = surf;
+}
+
+void Tower::set_base_cannon_surf(SDL_Surface* surf) {
+	if (surf == base_cannon_surf) return;
+	SDL_FreeSurface(base_cannon_surf);
+	base_cannon_surf = surf;
+	set_cannon_surf(NULL);
 }
 
 void Tower::set_cannon_surf(SDL_Surface* surf) {

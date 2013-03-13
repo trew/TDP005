@@ -19,7 +19,7 @@ Simple::Simple() {
 	projectile_speed = 300;
 	sell_value = cost_buy = 5;
 	cost_upgrade = 20;
-	set_cannon_surf(Sprite::load_image("./gfx/tower/tower-simple.png"));
+	set_base_cannon_surf(Sprite::load_image("./gfx/tower/tower-simple.png"));
 	update_informationtext();
 }
 
