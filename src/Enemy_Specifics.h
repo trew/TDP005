@@ -14,7 +14,7 @@ int fish_health =  90;
 int pals_health = 250;
 
 int boss_health = 2000;
-int boss_health_mod = 2500;
+int boss_health_mod = 2000;
 
 int dog_cost = 14;
 int snail_cost = 10;
