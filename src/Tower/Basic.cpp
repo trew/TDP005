@@ -10,9 +10,9 @@
 namespace towers {
 
 Basic::Basic() {
-	level_1 = (TowerData){1.2f, 20, 3, 350.f,  700,  600.f, 0,  70, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
-	level_2 = (TowerData){1.5f, 35, 3, 400.f,  600,  750.f, 0, 400, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
-	level_3 = (TowerData){2.0f,100, 3, 500.f,  450, 1000.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
+	level_1 = (TowerData){1.2f, 20, 3, 350.f,  700,  550.f, 0,  70, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
+	level_2 = (TowerData){1.5f, 35, 3, 400.f,  600,  575.f, 0, 400, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
+	level_3 = (TowerData){2.0f,100, 3, 500.f,  450,  600.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
 	sell_value = 25;

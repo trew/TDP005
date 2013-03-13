@@ -238,7 +238,8 @@ void Game::update(int delta)
 	new_projectiles.clear();
 
 	//Check if its time to send new wave
-	if (enemy_list.back()->get_x() >= 0 && (!(level_control->last_enemy_is_sent())) ) {
+	if (enemy_list.empty() ||
+			(enemy_list.back()->get_x() >= 0 && !level_control->last_enemy_is_sent()) ) {
 		level_control->set_last_enemy_sent();
 	}
 	if (level_control->time_to_send_wave(delta))

@@ -185,7 +185,7 @@ private:
 	void update_highscore_sprites();
 
 	void show_intro(SDL_Event* event);
-	void update_fps(int delta);
+	void update_fps(int delta, int, int, int);
 
 /** Definition in Game_Cleanup.cpp */
 	void reset_game();							///Resets containers of enemies, towers and variables that change during gameplay.

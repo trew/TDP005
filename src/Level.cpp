@@ -63,7 +63,7 @@ EnemyList Level::get_new_wave(Game* game) {
 	current_level++;
 	int boss_lev = current_boss_level;
 	compose_new_wave(game);
-	timer = wave_delay + 1000 * (current_level - 1); // 1 more s for every round
+	timer = wave_delay;
 	if (boss_lev != current_boss_level)
 		timer += 10000; // 10 more s for boss
 	last_enemy_sent = false;

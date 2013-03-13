@@ -291,7 +291,7 @@ float Game::get_game_speed() {
 	return game_speed;
 }
 
-void Game::update_fps(int delta) {
+void Game::update_fps(int delta, int ev, int upd, int ren) {
 	if ( fps_timer->get_ticks() < 1000) {
 		current_fps++;
 	} else {
@@ -300,6 +300,12 @@ void Game::update_fps(int delta) {
 		tmp.append(itos(current_fps));
 		tmp.append(" - Delta: ");
 		tmp.append(itos(delta));
+		tmp.append(" - Event: ");
+		tmp.append(itos(ev));
+		tmp.append(" - Update: ");
+		tmp.append(itos(upd));
+		tmp.append(" - Render: ");
+		tmp.append(itos(ren));
 		fps_text->update_text(tmp);
 		current_fps = 0;
 	}
@@ -322,6 +328,9 @@ int Game::on_execute()
 	/* Game */
 	fps_timer->start();
 	delta_timer->start();
+	int ev = 0;
+	int upd = 0;
+	int ren = 0;
 	while (game_running)
 	{
 		delta = delta_timer->get_ticks();
@@ -329,11 +338,14 @@ int Game::on_execute()
 		while (SDL_PollEvent(&event))
 		{
 			handle_event(&event);
+			ev = delta_timer->get_ticks();
 		}
 		update((int)(delta * game_speed));
+		upd = delta_timer->get_ticks() - ev;
 
-		update_fps(delta);
+		update_fps(delta, ev, upd, ren);
 		render();
+		ren = delta_timer->get_ticks() - upd;
 
 		if (delta_timer->get_ticks() < (Uint32)(1000 / FPS_MAX)) {
 			SDL_Delay( (1000 / FPS_MAX) - delta_timer->get_ticks());

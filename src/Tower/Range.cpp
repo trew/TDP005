@@ -11,9 +11,9 @@ namespace towers {
 
 Range::Range() {
 	level = 1;
-	level_1 = (TowerData){2.0f, 30, 3, 250.f, 1500, 750.f, 0,  70, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
-	level_2 = (TowerData){2.5f, 50, 3, 275.f, 1200, 850.f, 0, 400, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
-	level_3 = (TowerData){3.5f,150, 3, 300.f, 1000, 950.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
+	level_1 = (TowerData){2.0f, 30, 3, 250.f, 1500, 600.f, 0,  70, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
+	level_2 = (TowerData){2.5f, 50, 3, 275.f, 1200, 625.f, 0, 400, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
+	level_3 = (TowerData){3.5f,150, 3, 300.f, 1000, 650.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
 	update_data(level_1);
 	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));

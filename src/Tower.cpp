@@ -280,8 +280,8 @@ void Tower::update_boost() {
 	if (get_type() == towers::BOOST || get_type() == towers::WALL)
 		return;
 
-	std::list<float> modifiers(24);
 	if (!tower_list->empty()) {
+		std::list<float> modifiers(24);
 		for (tower = tower_list->begin(); tower != tower_list->end(); tower++) {
 			// If the tower is a boost tower
 			if ((*tower)->get_type() == towers::BOOST) {

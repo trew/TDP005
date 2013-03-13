@@ -12,8 +12,8 @@ namespace towers {
 Speed::Speed() {
 	level = 1;
 	level_1 = (TowerData){1.0f, 12, 3, 400.f, 280, 500.f, 0,  70, 0, "./gfx/tower/tower-speed-lvl1.png", "./gfx/tower/cannon-speed.png"};
-	level_2 = (TowerData){1.2f, 15, 3, 500.f, 200, 600.f, 0, 400, 0, "./gfx/tower/tower-speed-lvl2.png", "./gfx/tower/cannon-speed.png"};
-	level_3 = (TowerData){1.5f, 30, 3, 600.f, 100, 700.f, 0,   0, 0, "./gfx/tower/tower-speed-lvl3.png", "./gfx/tower/cannon-speed.png"};
+	level_2 = (TowerData){1.2f, 15, 3, 500.f, 200, 550.f, 0, 400, 0, "./gfx/tower/tower-speed-lvl2.png", "./gfx/tower/cannon-speed.png"};
+	level_3 = (TowerData){1.5f, 30, 3, 600.f, 100, 600.f, 0,   0, 0, "./gfx/tower/tower-speed-lvl3.png", "./gfx/tower/cannon-speed.png"};
 	update_data(level_1);
 	sell_value = 25;
 	set_base_surf(Sprite::load_image(level_1.base_surface_location));
