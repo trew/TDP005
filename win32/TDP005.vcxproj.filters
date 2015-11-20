@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{e839128c-da2d-4efb-bbea-ae21fac5d177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity">
+      <UniqueIdentifier>{594bd597-422d-4587-9643-9618f7eb94fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Pathfinding">
+      <UniqueIdentifier>{e60e7d7d-f1c1-43db-83ff-85fb57a63284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{9458abe3-b8a1-4254-91bf-d2ee5626671d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{831c9314-d4a3-4148-9333-8fde62658c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{730947c5-6abf-49ee-8df2-e63b9feb3af9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity">
+      <UniqueIdentifier>{279383b1-d100-4c16-b0dc-301db38d3c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{dcc643fa-fcd2-444a-8da6-33d8bc8357c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{ef5801de-611e-4a9a-b07a-7eb6a5b626fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Pathfinding">
+      <UniqueIdentifier>{ab89639d-5093-41f2-ad60-dfff1e8f0f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Tower">
+      <UniqueIdentifier>{1bfabb57-319f-4de1-aa95-9c07b9cf6be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity\Tower">
+      <UniqueIdentifier>{c64854af-3731-444a-b896-2f9e5f64793c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Core\ConfigFile.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Core\Define.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Core\Game.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Core\Level.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Basic.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Bomb.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Boost.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Range.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Simple.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Speed.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Tower.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Tower_Specifics.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\Wall.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Enemy.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Enemy_Specifics.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Projectile.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Sprite.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Pathfinding\Dijkstra.h">
+      <Filter>Header Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Pathfinding\Grid.h">
+      <Filter>Header Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Pathfinding\Node.h">
+      <Filter>Header Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Pathfinding\Tile.h">
+      <Filter>Header Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UI\Button.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UI\Sound.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UI\Text.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Utils\Timer.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Entity\Tower\BaseTower.h">
+      <Filter>Header Files\Entity\Tower</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\ConfigFile.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_Cleanup.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_HandleEvent.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_HandleSelection.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_Init.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_Optionbox.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_Render.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Game_UpdateState.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Core\Level.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Basic.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Bomb.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Boost.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Range.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Simple.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Speed.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Tower.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\Wall.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Enemy.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Projectile.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Sprite.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Pathfinding\Dijkstra.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Pathfinding\Grid.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Pathfinding\Node.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Pathfinding\Tile.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UI\Button.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UI\Sound.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UI\Text.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\Timer.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Entity\Tower\BaseTower.cpp">
+      <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

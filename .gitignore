@@ -1,17 +1,12 @@
-Debug/
-Release/
-*.d
-dll/
-.settings/
-.cproject
-.project
-TDP005.rar
+Debug
+Release
+dll
 *.swp
 highscore
 
 *.stackdump
-*.o
-*.dll
-*.exe
-tdp005
 tdp005.config
+*.opensdf
+*.sdf
+*.suo
+*.user
