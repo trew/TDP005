@@ -194,8 +194,6 @@ void Game::update_highscore_sprites()
 
 	int list_num = 1;
 	iter_highscore = highscores.begin();
-	iter_highscore_name = highscore_name_sprites.begin();
-	iter_highscore_score = highscore_score_sprites.begin();
 	while(iter_highscore != highscores.end())
 	{
 		{
@@ -217,12 +215,8 @@ void Game::update_highscore_sprites()
 			highscore_score_sprites.push_back(new Text(tmp_score, 167, 203, 237, 0, 0, standard_font_20));
 		}
 
-
-
 		list_num++;
 		iter_highscore++;
-		iter_highscore_name++;
-		iter_highscore_score++;
 	}
 }
 

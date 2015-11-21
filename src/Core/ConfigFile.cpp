@@ -133,16 +133,17 @@ void ConfigFile::save() const {
 		return;
 	}
 
+	// TODO localtime_s is windows-only.
 	time_t t = time(0); //time now
 	struct tm timeinfo;
 	char buffer[80];
 
 	time ( &t );
 	localtime_s(&timeinfo, &t);
-	//strftime (buffer, 80, "%F %X", &timeinfo);
+	strftime (buffer, 80, "%Y-%m-%d %X", &timeinfo);
 
 	file << "# Configuration file" << std::endl;
-	//file << "# " << buffer << std::endl << std::endl;
+	file << "# " << buffer << std::endl << std::endl;
 
 	for (std::map<std::string, std::string>::const_iterator it = contents.begin(); it != contents.end(); it++) {
 		file << (*it).first << "=" << (*it).second << std::endl;
