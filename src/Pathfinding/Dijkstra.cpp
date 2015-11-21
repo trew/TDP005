@@ -31,8 +31,12 @@ NodePath* Dijkstra::calculate_path(Node* start, Node* dest) {
 		(*it)->set_cost_from_start(max_cost);
 	}
 	start->set_cost_from_start(0);
+	while (!prio_queue.empty())
+	{
+		prio_queue.pop();
+	}
 	prio_queue.push(current_node);
-
+	
 	//Core loop
 	while (!prio_queue.empty()) {
 		current_node = prio_queue.top();
