@@ -15,7 +15,7 @@ namespace towers {
 
 class Simple: public towers::Tower {
 public:
-	Simple();
+	Simple(SDL_Renderer*);
 	virtual ~Simple();
 
 	TowerType get_type();

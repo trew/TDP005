@@ -14,7 +14,7 @@ namespace towers {
 
 class Range: public towers::Tower {
 public:
-	Range();
+	Range(SDL_Renderer*);
 	virtual ~Range();
 
 	void update_informationtext();

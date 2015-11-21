@@ -12,53 +12,59 @@ Text::Text(): Sprite(NULL), font(NULL)
 {
 }
 
-Text::Text(std::string input_text, int x, int y, TTF_Font* font_in): Sprite(NULL)
+Text::Text(SDL_Renderer* renderer, std::string input_text, int x, int y, TTF_Font* font_in): Sprite(NULL)
 {
 	if (input_text == "")
 		input_text = " ";
 
+	this->renderer = renderer;
 	font = font_in;
 	text_color.r = 0x01;
 	text_color.g = 0x9F;
 	text_color.b = 0xEC;
 
-	sprite_surf = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
+	SDL_Surface* textSurface = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
+	texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	SDL_FreeSurface(textSurface);
 
 	x_pos = x;
 	y_pos = y;
-	height = sprite_surf->h;
-	width = sprite_surf->w;
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 }
 
-Text::Text(std::string input_text, int r, int g, int b, int x, int y, TTF_Font* font_in): Sprite(NULL) {
+Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, int x, int y, TTF_Font* font_in) : Sprite(NULL) {
 	if (input_text == "")
 		input_text = " ";
 
+	this->renderer = renderer;
 	font = font_in;
 
 	text_color.r = r;
 	text_color.g = g;
 	text_color.b = b;
-	sprite_surf = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
+	SDL_Surface* textSurface = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
+	texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	SDL_FreeSurface(textSurface);
+
 	x_pos = x;
 	y_pos = y;
-	height = sprite_surf->h;
-	width = sprite_surf->w;
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 }
 
 void Text::update_text(std::string in_text)
 {
-	SDL_FreeSurface(sprite_surf);
+	SDL_DestroyTexture(texture);
 
 	if (in_text == "") {
-		sprite_surf = NULL;
+		texture = NULL;
 	}
 
 	else
 	{
-		sprite_surf = TTF_RenderText_Blended(font, in_text.c_str(), text_color);
-		height = sprite_surf->h;
-		width = sprite_surf->w;
+		SDL_Surface* textSurface = TTF_RenderText_Blended(font, in_text.c_str(), text_color);
+		texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+		SDL_FreeSurface(textSurface);
+		SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	}
 }
 

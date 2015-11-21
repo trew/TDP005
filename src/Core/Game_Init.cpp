@@ -29,26 +29,27 @@ bool Game::init()
 			std::cerr << SDL_GetError() << std::endl;
 			return false;
 		}
-
-		screen = SDL_CreateRGBSurface(0, WWIDTH, WHEIGHT, WBPP, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-		screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, WWIDTH, WHEIGHT);
 	}
 	else
 	{
-		if (SDL_CreateWindowAndRenderer(WWIDTH, WHEIGHT, 0, &window, &renderer) == -1)
+		window = SDL_CreateWindow("Tower Defence Pro 1.2 © 2010 - 2016 A15 Entertainment", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WWIDTH, WHEIGHT, SDL_WINDOW_OPENGL);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		if (window == NULL || renderer == NULL)
 		{
 			std::cerr << SDL_GetError() << std::endl;
 			return false;
 		}
-
-		screen = SDL_CreateRGBSurface(0, WWIDTH, WHEIGHT, WBPP, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-		screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WWIDTH, WHEIGHT);
 	}
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
 	if (TTF_Init() < 0) {
 		std::cerr << TTF_GetError() << std::endl;
 		return false;
 	}
+
 
 	if (Mix_Init(MIX_INIT_OGG) == 0) {
 		std::cerr << Mix_GetError() << std::endl;
@@ -71,13 +72,13 @@ bool Game::init()
 	standard_font_16 = TTF_OpenFont(standard_font.c_str(), 16);
 	standard_font_12 = TTF_OpenFont(standard_font.c_str(), 12);
 
-	input_text = new Text("Enter your name", 167, 203, 237, 0, 0, standard_font_46);
-	gameover_score_text = new Text("", 167, 203, 237, 0, 0, standard_font_42);
-	error_loading_highscore = new Text("Error! Cannot load highscores!", 200, 200,standard_font_42);
+	input_text = new Text(renderer, "Enter your name", 167, 203, 237, 0, 0, standard_font_46);
+	gameover_score_text = new Text(renderer, "", 167, 203, 237, 0, 0, standard_font_42);
+	error_loading_highscore = new Text(renderer, "Error! Cannot load highscores!", 200, 200, standard_font_42);
 	error_loading_highscore->hide();
 
-	press_enter_to_start = new Text("Deploy towers, then press enter to start", 70, 550, standard_font_32);
-	esc_back = new Text("Esc (back)", 520, 555, standard_font_32);
+	press_enter_to_start = new Text(renderer, "Deploy towers, then press enter to start", 70, 550, standard_font_32);
+	esc_back = new Text(renderer, "Esc (back)", 520, 555, standard_font_32);
 
 	grid = new Grid;
 	grid->create_grid(15, 15);
@@ -107,17 +108,17 @@ bool Game::init()
 	selection_sprite = new Sprite(this, 	"./gfx/misc/marker44x44.png", -5, -5, 44, 44);
 	selection_sprite->hide();
 
-	score_text = new Text(get_score_str(), 0, (int)menu_money_score->get_y() + 30, standard_font_16);
+	score_text = new Text(renderer, get_score_str(), 0, (int)menu_money_score->get_y() + 30, standard_font_16);
 	update_score();
-	split_money_score = new Text("-------------------------------------", (int)menu_money_score->get_x() + 30, (int)menu_money_score->get_y() + 45, standard_font_12);
-	money_text = new Text(get_money_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
+	split_money_score = new Text(renderer, "-------------------------------------", (int)menu_money_score->get_x() + 30, (int)menu_money_score->get_y() + 45, standard_font_12);
+	money_text = new Text(renderer, get_money_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
 	update_money();
-	lives_text = new Text(get_lives_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
+	lives_text = new Text(renderer, get_lives_str(), 0, (int)menu_money_score->get_y() + 55, standard_font_16);
 	update_lives();
-	level_text = new Text("Wave: 1", (int)menu_money_score->get_x() + 25, (int)menu_money_score->get_y() + 30, standard_font_16);
-	timer_text = new Text("",255,255,255, 0, 5, standard_font_12);
-	fps_text = new Text("", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
-	speed_text = new Text("", 255,255,255, 570, 580, standard_font_12); speed_text->hide();
+	level_text = new Text(renderer, "Wave: 1", (int)menu_money_score->get_x() + 25, (int)menu_money_score->get_y() + 30, standard_font_16);
+	timer_text = new Text(renderer, "", 255, 255, 255, 0, 5, standard_font_12);
+	fps_text = new Text(renderer, "", 255, 255, 255, 5, 5, standard_font_12); fps_text->hide();
+	speed_text = new Text(renderer, "", 255, 255, 255, 570, 580, standard_font_12); speed_text->hide();
 
 	//Optionbox buttons and background
 	option_box_BGx1 = new Sprite(this, "./gfx/menu/popup-menu-1x-40x43.png", 0, 0, 40, 43);
@@ -171,23 +172,23 @@ bool Game::init()
 	build_list.back()->set_y(175);
 
 	//Ingame buttons
-	ingame_buttons.push_back(new Button(BUTTON_MENU, 		600,   0, 112, 51, false, "./gfx/button/ingame-menuf10-112x51.png"));
-	sound_button = new Button(BUTTON_TOGGLESOUND, 712,   0, 44,  42, false, "./gfx/button/ingame-sound-44x51.png");
+	ingame_buttons.push_back(new Button(renderer, BUTTON_MENU, 		600,   0, 112, 51, false, "./gfx/button/ingame-menuf10-112x51.png"));
+	sound_button = new Button(renderer, BUTTON_TOGGLESOUND, 712, 0, 44, 42, false, "./gfx/button/ingame-sound-44x51.png");
 	ingame_buttons.push_back(sound_button);
-	ingame_buttons.push_back(new Button(BUTTON_TOGGLEGRID, 	756,   0, 44,  42,  true, "./gfx/button/ingame-gridon-44x51.png", "./gfx/button/ingame-gridoff-44x51.png"));
-	ingame_buttons.push_back(new Button(BUTTON_UPGR, 		647, 280, 48,  48, false, "./gfx/button/menu-button-upgrade-48x48.png"));
-	ingame_buttons.push_back(new Button(BUTTON_SELL, 		705, 279, 48,  48, false, "./gfx/button/menu-button-sell-48x48.png"));
+	ingame_buttons.push_back(new Button(renderer, BUTTON_TOGGLEGRID, 756, 0, 44, 42, true, "./gfx/button/ingame-gridon-44x51.png", "./gfx/button/ingame-gridoff-44x51.png"));
+	ingame_buttons.push_back(new Button(renderer, BUTTON_UPGR, 647, 280, 48, 48, false, "./gfx/button/menu-button-upgrade-48x48.png"));
+	ingame_buttons.push_back(new Button(renderer, BUTTON_SELL, 705, 279, 48, 48, false, "./gfx/button/menu-button-sell-48x48.png"));
 
 	//Ingame menu buttons
-	ingame_menu_buttons.push_back(new Button(BUTTON_RESUMEGAME, 340, 225, 121, 41, false, "./gfx/button/ingamemenu-continue-121x41.png", "./gfx/button/ingamemenu-continue-over-131x51.png"));
-	ingame_menu_buttons.push_back(new Button(BUTTON_EXITTOMENU, 317, 275, 166, 40, false, "./gfx/button/ingamemenu-exittomenu-166x40.png", "./gfx/button/ingamemenu-exittomenu-over-176x50.png"));
-	ingame_menu_buttons.push_back(new Button(BUTTON_EXITGAME,   329, 325, 142, 39, false, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png"));
+	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_RESUMEGAME, 340, 225, 121, 41, false, "./gfx/button/ingamemenu-continue-121x41.png", "./gfx/button/ingamemenu-continue-over-131x51.png"));
+	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_EXITTOMENU, 317, 275, 166, 40, false, "./gfx/button/ingamemenu-exittomenu-166x40.png", "./gfx/button/ingamemenu-exittomenu-over-176x50.png"));
+	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 329, 325, 142, 39, false, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png"));
 
 	//Main menu buttons
-	mainmenu_buttons.push_back(new Button(BUTTON_STARTGAME, 272, 230, 257, 53, false, "./gfx/button/mainmenu-startgame-257x53.png", "./gfx/button/mainmenu-startgame-over-267x63.png"));
-	mainmenu_buttons.push_back(new Button(BUTTON_HIGHSCORE, 287, 300, 226, 52, false, "./gfx/button/mainmenu-highscore-226x52.png", "./gfx/button/mainmenu-highscore-over-236x62.png"));
-	mainmenu_buttons.push_back(new Button(BUTTON_VIEW_HELP, 343, 370, 115, 50, false, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png"));
-	mainmenu_buttons.push_back(new Button(BUTTON_EXITGAME,  295, 440, 210, 53, false, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png"));
+	mainmenu_buttons.push_back(new Button(renderer, BUTTON_STARTGAME, 272, 230, 257, 53, false, "./gfx/button/mainmenu-startgame-257x53.png", "./gfx/button/mainmenu-startgame-over-267x63.png"));
+	mainmenu_buttons.push_back(new Button(renderer, BUTTON_HIGHSCORE, 287, 300, 226, 52, false, "./gfx/button/mainmenu-highscore-226x52.png", "./gfx/button/mainmenu-highscore-over-236x62.png"));
+	mainmenu_buttons.push_back(new Button(renderer, BUTTON_VIEW_HELP, 343, 370, 115, 50, false, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png"));
+	mainmenu_buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 295, 440, 210, 53, false, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png"));
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);

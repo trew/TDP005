@@ -10,14 +10,14 @@
 namespace towers {
 //                Range
 
-Boost::Boost() {
+Boost::Boost(SDL_Renderer* renderer) : Tower(renderer) {
 	level = 1;
 	level_1 = {1.2f, 0, 3, 0, 0, 0, 20, 70, 0.1f, "./gfx/tower/tower-boost-lvl1.png", ""};
 	level_2 = {1.5f, 0, 3, 0, 0, 0, 20,400, 0.2f, "./gfx/tower/tower-boost-lvl2.png", ""};
 	level_3 = {2.0f, 0, 3, 0, 0, 0, 20,  0, 0.3f, "./gfx/tower/tower-boost-lvl3.png", ""};
 	sell_value = level_1.cost_buy;
 	update_data(level_1);
-	set_base_surf(Sprite::load_image(level_1.base_surface_location));
+	setBaseTexture(Sprite::load_image(renderer, level_1.base_surface_location));
 	update_informationtext();
 }
 
@@ -53,11 +53,11 @@ bool Boost::upgrade(TowerType type) {
 
 	level++;
 	if (level == 2) {
-		set_base_surf(Sprite::load_image(level_2.base_surface_location));
+		setBaseTexture(Sprite::load_image(renderer, level_2.base_surface_location));
 		sell_value += level_1.cost_upgrade;
 		update_data(level_2);
 	} else if (level == 3) {
-		set_base_surf(Sprite::load_image(level_3.base_surface_location));
+		setBaseTexture(Sprite::load_image(renderer, level_3.base_surface_location));
 		sell_value += level_2.cost_upgrade;
 		update_data(level_3);
 	}

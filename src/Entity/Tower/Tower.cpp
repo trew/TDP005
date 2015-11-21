@@ -12,7 +12,8 @@
 
 namespace towers {
 
-Tower::Tower() {
+Tower::Tower(SDL_Renderer* _renderer) {
+	renderer = _renderer;
 	spread = 15;
 	base_reloading_time = reloading_time = 0;
 	projectile_speed = 0.0f;
@@ -25,16 +26,16 @@ Tower::Tower() {
 	level = 0;
 	max_level = 0;
 	cost_buy = 0;
-	base_surf = NULL;
-	cannon_surf = NULL;
-	base_cannon_surf = NULL;
+	baseTexture = NULL;
+	cannonTexture = NULL;
+	baseCannonTexture = NULL;
 	infotext = NULL;
 }
 
 Tower::~Tower() {
-	SDL_FreeSurface(base_surf);
-	SDL_FreeSurface(cannon_surf);
-	SDL_FreeSurface(base_cannon_surf);
+	SDL_DestroyTexture(baseTexture);
+	SDL_DestroyTexture(cannonTexture);
+	SDL_DestroyTexture(baseCannonTexture);
 	if (infotext != NULL) {
 		for (Sprite_List::iterator it = infotext->begin(); it != infotext->end(); it++) {
 			delete (*it);
@@ -68,42 +69,42 @@ void Tower::add_row_to_information_text(std::string val) {
 		y = 395;
 	else
 		y = (int)(infotext->back()->get_y() + infotext->back()->get_height() + 5);
-	Text* txt = new Text(val, x, y, Game::standard_font_16);
+	Text* txt = new Text(renderer, val, x, y, Game::standard_font_16);
 	infotext->push_back(txt);
 }
 
 void Tower::update_informationtext() {
 }
 
-SDL_Surface* Tower::get_cannon_surface() {
-	return cannon_surf;
+SDL_Texture* Tower::getCannonTexture() {
+	return cannonTexture;
 }
 
-SDL_Surface* Tower::get_base_cannon_surface() {
-	return base_cannon_surf;
+SDL_Texture* Tower::getBaseCannonTexture() {
+	return baseCannonTexture;
 }
 
-SDL_Surface* Tower::get_base_surface() {
-	return base_surf;
+SDL_Texture* Tower::getBaseTexture() {
+	return baseTexture;
 }
 
-void Tower::set_base_surf(SDL_Surface* surf) {
-	if (surf == base_surf) return;
-	SDL_FreeSurface(base_surf);
-	base_surf = surf;
+void Tower::setBaseTexture(SDL_Texture* texture) {
+	if (texture == baseTexture) return;
+	SDL_DestroyTexture(baseTexture);
+	baseTexture = texture;
 }
 
-void Tower::set_base_cannon_surf(SDL_Surface* surf) {
-	if (surf == base_cannon_surf) return;
-	SDL_FreeSurface(base_cannon_surf);
-	base_cannon_surf = surf;
-	set_cannon_surf(NULL);
+void Tower::setBaseCannonTexture(SDL_Texture* texture) {
+	if (texture == baseCannonTexture) return;
+	SDL_DestroyTexture(baseCannonTexture);
+	baseCannonTexture = texture;
+	setCannonTexture(NULL);
 }
 
-void Tower::set_cannon_surf(SDL_Surface* surf) {
-	if (surf == cannon_surf) return;
-	SDL_FreeSurface(cannon_surf);
-	cannon_surf = surf;
+void Tower::setCannonTexture(SDL_Texture* texture) {
+	if (texture == cannonTexture) return;
+	SDL_DestroyTexture(cannonTexture);
+	cannonTexture = texture;
 }
 
 Projectile* Tower::spawn_projectile(Game* g, float x, float y, float angle) {

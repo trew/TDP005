@@ -14,7 +14,7 @@ namespace towers {
 
 class Speed: public towers::Tower {
 public:
-	Speed();
+	Speed(SDL_Renderer*);
 	virtual ~Speed();
 
 	void update_informationtext();

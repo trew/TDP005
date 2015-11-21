@@ -23,7 +23,7 @@ public:
 	Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double movespeed_in, int damage_in, double splash_area_in, int life_time);
 	virtual ~Projectile();	///< Destructor
 
-	void draw(SDL_Surface* dest_surf);		///< Draw projectile to screen
+	void draw(SDL_Renderer* renderer);		///< Draw projectile to screen
 	void update(int delta);			///< Update projectile
 
 	int get_damage();		///< Get damage from projectile

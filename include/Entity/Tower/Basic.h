@@ -14,7 +14,7 @@ namespace towers {
 
 class Basic: public towers::Tower {
 public:
-	Basic();
+	Basic(SDL_Renderer* renderer);
 	virtual ~Basic();
 
 	void update_informationtext();

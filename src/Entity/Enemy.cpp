@@ -18,7 +18,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
  */
 	switch(_type) {
 	case DOG:
-		sprite_surf = load_image("./gfx/enemy/enemy-1-30x30.png");
+		texture = load_image(game->getRenderer(), "./gfx/enemy/enemy-1-30x30.png");
 		move_speed = 110;
 		max_health = static_cast<int>(dog_health + (dog_health * 0.3) * (new_level-1));
 		reward_score = cost = dog_cost;
@@ -26,7 +26,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 
 		break;
 	case SNAIL:
-		sprite_surf = load_image("./gfx/enemy/enemy-2-30x30.png");
+		texture = load_image(game->getRenderer(), "./gfx/enemy/enemy-2-30x30.png");
 		move_speed = 45;
 		max_health = static_cast<int>(snail_health + (snail_health * 0.3) * (new_level-1));
 		reward_score = cost = snail_cost;
@@ -34,7 +34,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 
 		break;
 	case FISH:
-		sprite_surf = load_image("./gfx/enemy/enemy-3-30x30.png");
+		texture = load_image(game->getRenderer(), "./gfx/enemy/enemy-3-30x30.png");
 		move_speed = 65;
 		max_health = static_cast<int>(fish_health + (fish_health * 0.3) * (new_level-1));
 		reward_score = cost = fish_cost;
@@ -42,7 +42,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 
 		break;
 	case PALS:
-		sprite_surf = load_image("./gfx/enemy/enemy-4-30x30.png");
+		texture = load_image(game->getRenderer(), "./gfx/enemy/enemy-4-30x30.png");
 		move_speed = 60;
 		max_health = static_cast<int>(pals_health + (pals_health * 0.3) * (new_level-1));
 		reward_score = cost = pals_cost;
@@ -50,7 +50,7 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 
 		break;
 	case BOSS:
-		sprite_surf = load_image("./gfx/enemy/enemy-5-30x30.png");
+		texture = load_image(game->getRenderer(), "./gfx/enemy/enemy-5-30x30.png");
 		move_speed = 40;
 		max_health = boss_health + boss_health_mod * (new_level-1);
 		reward_score = cost = boss_cost;
@@ -88,7 +88,7 @@ Enemy::~Enemy()
 	/// Nothing here
 }
 
-void Enemy::draw(SDL_Surface* dest_surf)
+void Enemy::draw(SDL_Renderer* renderer)
 {
 	/**
 	 * Draw image with compensation for enemy size.
@@ -99,10 +99,12 @@ void Enemy::draw(SDL_Surface* dest_surf)
 	SDL_Rect dest_rect;
 	dest_rect.x = (Sint16)x_pos;
 	dest_rect.y = (Sint16)y_pos;
+	dest_rect.w = width;
+	dest_rect.h = height;
 
 	SDL_Rect src_rect = {0, 0, height, width};
 
-	SDL_BlitSurface(sprite_surf, &src_rect, dest_surf, &dest_rect);
+	SDL_RenderCopy(renderer, texture, &src_rect, &dest_rect);
 }
 
 void Enemy::draw_health_bar(SDL_Renderer* renderer) {
@@ -115,11 +117,12 @@ void Enemy::draw_health_bar(SDL_Renderer* renderer) {
 	double mod = health / (double)max_health;
 	int healthbar_width = (int)(((double)(width - 2)) * mod);
 
-	Uint32 border_color = 0x000000FF; // black
-	Uint32 health_color = 0x00FF00FF; // green
+	// colors are in ABGR mode
+	int border_color = 0x000000FF; // black
+	Uint32 health_color = 0xFF00FF00; // green
 	if (mod < 0.2) health_color = 0xFF0000FF; // red
-	else if (mod < 0.5) health_color = 0xFF7700FF; // orange
-	else if (mod < 0.8) health_color = 0xFFFF00FF; // yellow
+	else if (mod < 0.5) health_color = 0xFF0077FF; // orange
+	else if (mod < 0.8) health_color = 0xFF00FFFF; // yellow
 
 	rectangleColor(renderer, x, y, x + width, y + height, border_color);
 	lineColor(renderer, x + 1, y + 1, x + 1 + healthbar_width, y + 1, health_color);

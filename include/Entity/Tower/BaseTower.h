@@ -31,10 +31,10 @@ public: // Selectors
 	double get_angle();							///<Returns current angle
 
 public:
-	void draw_range(SDL_Surface* dest_surf); ///<Displays range as filled circle
-	void draw_range(SDL_Surface* dest_surf, float x_pos, float y_pos); ///<Displays range as filled circle
-	void draw(SDL_Surface* dest_surf); 				///<Draws the tower onto the destination surface
-	void draw(SDL_Surface* dest_surf, int x, int y);///<Draws the tower onto the destination surface at (X,Y)
+	void drawRange(SDL_Renderer* renderer); ///<Displays range as filled circle
+	void drawRange(SDL_Renderer* renderer, float xPos, float yPos); ///<Displays range as filled circle
+	void draw(SDL_Renderer* renderer); 				///<Draws the tower onto the destination surface
+	void draw(SDL_Renderer* renderer, int x, int y);///<Draws the tower onto the destination surface at (X,Y)
 
 	void update_angle_to_target();					///<Updates the angle to current target
 	void format_angle(double &angle);				///<Formats the angle to 0-360-format.
@@ -85,6 +85,7 @@ public:
 private: // Properties
 	Tile*	tile;
 	towers::Tower* twr_impl;
+	SDL_Renderer* renderer;
 
 private: // Specific variables for calculations etc.
 	Enemy*			current_target;

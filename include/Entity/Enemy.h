@@ -36,7 +36,7 @@ public:
 	Enemy(Game* game, EnemyType type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level);	///< Constructor
 	virtual ~Enemy();			///< Destructor
 
-	void draw(SDL_Surface* dest_surf);					///< Draw image
+	void draw(SDL_Renderer* renderer);					///< Draw image
 	void draw_health_bar(SDL_Renderer* renderer);
 
 	EnemyType get_type();

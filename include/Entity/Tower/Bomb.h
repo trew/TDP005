@@ -14,7 +14,7 @@ namespace towers {
 
 class Bomb: public towers::Tower {
 public:
-	Bomb();
+	Bomb(SDL_Renderer*);
 	virtual ~Bomb();
 
 	void update_informationtext();

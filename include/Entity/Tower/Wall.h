@@ -14,7 +14,7 @@ namespace towers {
 
 class Wall: public towers::Tower {
 public:
-	Wall();
+	Wall(SDL_Renderer*);
 	virtual ~Wall();
 
 	void update_informationtext();

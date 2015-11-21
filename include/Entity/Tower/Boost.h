@@ -14,7 +14,7 @@ namespace towers {
 
 class Boost: public towers::Tower {
 public:
-	Boost();
+	Boost(SDL_Renderer*);
 	virtual ~Boost();
 
 	void update_informationtext();

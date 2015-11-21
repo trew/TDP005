@@ -26,7 +26,7 @@ Projectile::Projectile(Game* game, std::string file, float x_pos_in, float y_pos
 	}
 	x_pos = x_pos_in;
 	y_pos = y_pos_in;
-	sprite_surf = load_image(file.c_str());
+	texture = load_image(game->getRenderer(), file.c_str());
 }
 
 Projectile::~Projectile() {
@@ -55,13 +55,14 @@ void Projectile::update(int delta)
 	y_pos += (movespeed * sin(radianAngle)) * get_game()->get_time_modifier();
 }
 
-void Projectile::draw(SDL_Surface* dest_surf) {
+void Projectile::draw(SDL_Renderer* renderer) {
 	if (!visible)
 		return;
 	SDL_Rect dest_rect;
 	dest_rect.x = (Sint16)x_pos;
 	dest_rect.y = (Sint16)y_pos;
-	SDL_BlitSurface(sprite_surf, NULL, dest_surf, &dest_rect);
+	SDL_QueryTexture(texture, NULL, NULL, &dest_rect.w, &dest_rect.h);
+	SDL_RenderCopy(renderer, texture, NULL, &dest_rect);
 }
 
 bool Projectile::is_dead() {

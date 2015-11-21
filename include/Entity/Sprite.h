@@ -45,7 +45,7 @@ public:
 	Game* get_game();
 
 	/* Sprite specific functions */
-	static SDL_Surface* load_image(std::string file);	///<<Load image from file
+	static SDL_Texture* load_image(SDL_Renderer* renderer, std::string file);	///<<Load image from file
 	void set_type(int newType);	///<Set new type
 	void set_x(float X);		///<Set new x pos
 	void set_y(float Y);		///<Set new y pos
@@ -64,8 +64,8 @@ public:
 	int get_width();		///<Returns width of Sprite
 
 	/* Virtual functions for all inherited objects */
-	virtual void draw(SDL_Surface* dest_surf);	///<Blit sprite to surface
-	virtual void draw(SDL_Surface* dest_surf, int x, int y); ///<Blit sprite to surface
+	virtual void draw(SDL_Renderer* renderer);
+	virtual void draw(SDL_Renderer* renderer, int x, int y);
 	int get_int_type();		///<Returns type
 	float get_distance_to(Sprite *s); ///<Pure virtual
 
@@ -78,7 +78,7 @@ public:
 	virtual void update_text(std::string);		///<Pure virtual
 
 protected:
-	SDL_Surface* sprite_surf;					///<Surface containing the image
+	SDL_Texture* texture;					///<Surface containing the image
 	int type;									///<Current type
 	float x_pos;									///<X position
 	float y_pos;									///<Y position

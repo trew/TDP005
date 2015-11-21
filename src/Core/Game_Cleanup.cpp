@@ -160,10 +160,7 @@ void Game::cleanup()
 	delete SFX_new_highscore;
 	delete SFX_game_over;
 
-	SDL_FreeSurface(screen);
 	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_DestroyTexture(screenTexture);
 
 	TTF_CloseFont(standard_font_48);
 	TTF_CloseFont(standard_font_46);
@@ -174,5 +171,7 @@ void Game::cleanup()
 	TTF_CloseFont(standard_font_12);
 
 	TTF_Quit();
+	IMG_Quit();
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 }

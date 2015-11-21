@@ -9,7 +9,7 @@
 
 namespace towers {
 
-Simple::Simple() {
+Simple::Simple(SDL_Renderer* renderer) : Tower(renderer) {
 	level = 1;
 	max_level = 1;
 	base_range = range = 1.0f;
@@ -19,7 +19,7 @@ Simple::Simple() {
 	projectile_speed = 300;
 	sell_value = cost_buy = 5;
 	cost_upgrade = 20;
-	set_base_cannon_surf(Sprite::load_image("./gfx/tower/tower-simple.png"));
+	setBaseCannonTexture(Sprite::load_image(renderer, "./gfx/tower/tower-simple.png"));
 	update_informationtext();
 }
 

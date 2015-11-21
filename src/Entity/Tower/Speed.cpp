@@ -9,15 +9,15 @@
 
 namespace towers {
 
-Speed::Speed() {
+Speed::Speed(SDL_Renderer* renderer) : Tower(renderer) {
 	level = 1;
 	level_1 = {1.0f, 12, 3, 400.f, 280, 500.f, 0,  70, 0, "./gfx/tower/tower-speed-lvl1.png", "./gfx/tower/cannon-speed.png"};
 	level_2 = {1.2f, 15, 3, 500.f, 200, 550.f, 0, 400, 0, "./gfx/tower/tower-speed-lvl2.png", "./gfx/tower/cannon-speed.png"};
 	level_3 = {1.5f, 25, 3, 600.f, 120, 600.f, 0,   0, 0, "./gfx/tower/tower-speed-lvl3.png", "./gfx/tower/cannon-speed.png"};
 	update_data(level_1);
 	sell_value = 25;
-	set_base_surf(Sprite::load_image(level_1.base_surface_location));
-	set_base_cannon_surf(Sprite::load_image(level_1.cannon_surface_location));
+	setBaseTexture(Sprite::load_image(renderer, level_1.base_surface_location));
+	setBaseCannonTexture(Sprite::load_image(renderer, level_1.cannon_surface_location));
 	update_informationtext();
 }
 
@@ -61,13 +61,13 @@ bool Speed::upgrade(TowerType type) {
 	if (level == 2) {
 		sell_value += level_1.cost_upgrade;
 		update_data(level_2);
-		set_base_surf(Sprite::load_image(level_2.base_surface_location));
-		set_base_cannon_surf(Sprite::load_image(level_2.cannon_surface_location));
+		setBaseTexture(Sprite::load_image(renderer, level_2.base_surface_location));
+		setBaseCannonTexture(Sprite::load_image(renderer, level_2.cannon_surface_location));
 	} else if (level == 3) {
 		update_data(level_3);
 		sell_value += level_2.cost_upgrade;
-		set_base_surf(Sprite::load_image(level_3.base_surface_location));
-		set_base_cannon_surf(Sprite::load_image(level_3.cannon_surface_location));
+		setBaseTexture(Sprite::load_image(renderer, level_3.base_surface_location));
+		setBaseCannonTexture(Sprite::load_image(renderer, level_3.cannon_surface_location));
 	}
 	update_informationtext();
 	return true;

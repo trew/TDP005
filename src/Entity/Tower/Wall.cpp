@@ -9,9 +9,9 @@
 
 namespace towers {
 
-Wall::Wall() {
+Wall::Wall(SDL_Renderer* renderer) : Tower(renderer) {
 	sell_value = cost_buy = 1;
-	set_base_surf(Sprite::load_image("./gfx/tower/wall.png"));
+	setBaseTexture(Sprite::load_image(renderer, "./gfx/tower/wall.png"));
 	update_informationtext();
 }
 

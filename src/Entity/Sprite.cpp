@@ -6,6 +6,7 @@
  */
 
 #include <Entity/Sprite.h>
+#include <Core/Game.h>
 #include <iostream>
 #include <cmath>
 
@@ -14,7 +15,7 @@
 Sprite::Sprite(Game* game): game(game)
 {
 	///Default constructor
-	sprite_surf = NULL;
+	texture = NULL;
 	x_pos = 0;
 	y_pos = 0;
 	height = 0;
@@ -24,12 +25,12 @@ Sprite::Sprite(Game* game): game(game)
 	type = 0;
 }
 
-Sprite::Sprite(Game* game, std::string File, int x, int y, int w, int h): game(game)
+Sprite::Sprite(Game* _game, std::string File, int x, int y, int w, int h): game(_game)
 {
 	/**
 	 * Loads an image to the sprites surface and sets position, height and width. Visible sprite is default.
 	 */
-	if ((sprite_surf = load_image(File.c_str())) == NULL)
+	if ((texture = load_image(game->getRenderer(), File.c_str())) == NULL)
 	{
 		std::cerr << "Image " << File << " could not be loaded." << std::endl;
 		return;
@@ -47,22 +48,23 @@ Sprite::~Sprite()
 	/**
 	 * Free sprite surface and set to NULL.
 	 */
-	SDL_FreeSurface(sprite_surf);
-	sprite_surf = NULL;
+	SDL_DestroyTexture(texture);
+	texture = NULL;
 }
 
-SDL_Surface* Sprite::load_image(std::string file)
+SDL_Texture* Sprite::load_image(SDL_Renderer* renderer, std::string file)
 {
 	/**
 	 * Load an image file and returns an SDL_Surface* . Returns NULL if image cannot be loaded.
 	 */
-	SDL_Surface* return_surf;
-	if ((return_surf = IMG_Load(file.c_str())) == NULL)
+	SDL_Texture* texture = IMG_LoadTexture(renderer, file.c_str());
+	if (texture == NULL)
 	{
 		std::cerr << "Image " << file << " could not be loaded." << std::endl;
 		return NULL;
 	}
-	return return_surf;
+
+	return texture;
 
 }
 
@@ -71,9 +73,9 @@ float Sprite::get_distance_to(Sprite *target)
 	/*
 	 * Calculates the distance between two sprites center positions
 	 */
-	float delta_x = x_pos + (width / 2) - (target->get_x() + target->get_width() / 2);
-	float delta_y = y_pos + (height / 2) - (target->get_y() + target->get_height() / 2);
-	double distance = sqrt( pow(delta_x, 2) + pow(delta_y, 2) );
+	float delta_x = get_center_x() - target->get_center_x();
+	float delta_y = get_center_y() - target->get_center_y();
+	double distance = sqrt( pow(delta_x, 2.f) + pow(delta_y, 2.f) );
 	return (float)distance;
 }
 
@@ -190,15 +192,15 @@ int Sprite::get_int_type()
 /* End setters and getters for Sprite */
 
 /* Virtual functions */
-void Sprite::draw(SDL_Surface* dest_surf)
+void Sprite::draw(SDL_Renderer* renderer)
 {
 	/*
 	 * Virtual function that draws the sprites surface to the screen using its own X and Y coordinates.
 	 */
-	draw(dest_surf, (int)x_pos, (int)y_pos);
+	draw(renderer, (int)x_pos, (int)y_pos);
 }
 
-void Sprite::draw(SDL_Surface* dest_surf, int X, int Y)
+void Sprite::draw(SDL_Renderer* renderer, int X, int Y)
 {
 	/*
 	 * Virtual function that draws the sprites surface to the screen using its own X and Y coordinates.
@@ -208,7 +210,8 @@ void Sprite::draw(SDL_Surface* dest_surf, int X, int Y)
 	SDL_Rect dest_rect;
 	dest_rect.x = X;
 	dest_rect.y = Y;
-	SDL_BlitSurface(sprite_surf, NULL, dest_surf, &dest_rect);
+	SDL_QueryTexture(texture, NULL, NULL, &dest_rect.w, &dest_rect.h);
+	SDL_RenderCopy(renderer, texture, NULL, &dest_rect);
 }
 
 

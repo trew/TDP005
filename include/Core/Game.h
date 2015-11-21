@@ -108,8 +108,6 @@ private:
 	Level* level_control;		//Controls difficulty and enemy waves
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	SDL_Texture* screenTexture;
-	SDL_Surface* screen;		//Main screen, everything visible is blitted to this screen
 	Tile* tile_selection;	//Pointer to a tower, don't delete on cleanup.
 	Tile* last_selected_tile;
 	BaseTower* buildmenu_selection; //The selected tower in the build menu
@@ -294,6 +292,8 @@ public:
 	TowerList* get_towers();
 	EnemyList* get_enemies();
 	ProjectileList* get_projectiles();
+
+	SDL_Renderer* getRenderer() { return renderer; }
 
 	std::string ftos(float);
 

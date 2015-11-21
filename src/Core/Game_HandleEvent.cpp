@@ -512,24 +512,24 @@ void Game::state_gameplay_running(SDL_Event* event)
 		{
 			cancel_selection();
 		}
-		else if (event->key.keysym.sym == SDLK_KP_PLUS) {
-			if (game_speed < 2.f) {
+		else if (event->key.keysym.sym == SDLK_KP_PLUS || event->key.keysym.sym == SDLK_y) {
+//			if (game_speed < 2.f) {
 				game_speed *= 2;
 				std::string s("x");
 				s.append(ftos(game_speed));
 				speed_text->update_text(s);
 				speed_text->set_center_x(585);
 				game_speed == 1.f ? speed_text->hide() : speed_text->show();
-			}
-		} else if (event->key.keysym.sym == SDLK_KP_MINUS) {
-			if (game_speed > .5f) {
+//			}
+		} else if (event->key.keysym.sym == SDLK_KP_MINUS || event->key.keysym.sym == SDLK_u) {
+//			if (game_speed > .5f) {
 				game_speed /= 2;
 				std::string s("x");
 				s.append(ftos(game_speed));
 				speed_text->update_text(s);
 				speed_text->set_center_x(585);
 				game_speed == 1.f ? speed_text->hide() : speed_text->show();
-			}
+//			}
 		}
 		else if (!DEBUGMODE && game_started && event->key.keysym.sym == SDLK_n)
 		{

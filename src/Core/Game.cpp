@@ -69,7 +69,6 @@ Game::Game()
 	error_loading_highscore = NULL;
 	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
 	buildmenu_selection = NULL;
-	screen = NULL;
 	window = NULL;
 	renderer = NULL;
 	esc_back = NULL;
@@ -206,13 +205,13 @@ void Game::update_highscore_sprites()
 			tmp_score = oss_score.str();
 		}
 		if(list_num == 1) {
-			highscore_name_sprites.push_back(new Text(tmp_name, 186, 255, 246, 0, 0, standard_font_48));
-			highscore_score_sprites.push_back(new Text(tmp_score, 186, 255, 246, 0, 0, standard_font_48));
+			highscore_name_sprites.push_back(new Text(renderer, tmp_name, 186, 255, 246, 0, 0, standard_font_48));
+			highscore_score_sprites.push_back(new Text(renderer, tmp_score, 186, 255, 246, 0, 0, standard_font_48));
 		}
 		else
 		{
-			highscore_name_sprites.push_back(new Text(tmp_name, 167, 203, 237, 0, 0, standard_font_20));
-			highscore_score_sprites.push_back(new Text(tmp_score, 167, 203, 237, 0, 0, standard_font_20));
+			highscore_name_sprites.push_back(new Text(renderer, tmp_name, 167, 203, 237, 0, 0, standard_font_20));
+			highscore_score_sprites.push_back(new Text(renderer, tmp_score, 167, 203, 237, 0, 0, standard_font_20));
 		}
 
 		list_num++;

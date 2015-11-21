@@ -48,21 +48,23 @@ BaseTower::BaseTower(Game* game, towers::TowerType type, Tile* tile) :
 	// Toggle smoothing for rotozoom
 	smoothing = 1;
 
+	renderer = game->getRenderer();
+
 	switch (type)
 	{
 	case towers::WALL:
 	{
-		twr_impl = new towers::Wall();
+		twr_impl = new towers::Wall(renderer);
 	}
 		break;
 	case towers::SIMPLE:
 	{
-		twr_impl = new towers::Simple();
+		twr_impl = new towers::Simple(renderer);
 		break;
 	}
 	case towers::BOOST:
 	{
-		twr_impl = new towers::Boost();
+		twr_impl = new towers::Boost(renderer);
 		break;
 	}
 	default:
@@ -78,53 +80,44 @@ BaseTower::~BaseTower() {
 	twr_impl = NULL;
 }
 
-void BaseTower::draw_range(SDL_Surface* dest_surf) {
-	draw_range(dest_surf, x_pos, y_pos);
+void BaseTower::drawRange(SDL_Renderer* renderer) {
+	drawRange(renderer, x_pos, y_pos);
 }
 
-void BaseTower::draw_range(SDL_Surface* dest_surf, float x_pos, float y_pos) {
+void BaseTower::drawRange(SDL_Renderer* renderer, float x_pos, float y_pos) {
 	///Draws a filled circle on the map, showing the range of the tower.
-	/*
-	filledCircleColor(dest_surf, (Sint16) x_pos + TILESIZE / 2,
-			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range_in_pixels(), 0x0000FF11);
-	circleColor(dest_surf, (Sint16) x_pos + TILESIZE / 2,
-			(Sint16) y_pos + TILESIZE / 2, (Sint16) get_range_in_pixels(), 0x5555FF44);
-	*/
+
+//	filledCircleColor(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x0000FF11);
+//	circleColor      (renderer, (Sint16)x_pos + TILESIZE / 2,	(Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x5555FF44);
+	filledCircleRGBA(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0, 0, 0xFF, 0x11);
+	aacircleRGBA(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x55, 0x55, 0xFF, 0x44);
 }
 
-void BaseTower::draw(SDL_Surface* dest_surf) {
-	draw(dest_surf, (int)x_pos, (int)y_pos);
+void BaseTower::draw(SDL_Renderer* renderer) {
+	draw(renderer, (int)x_pos, (int)y_pos);
 }
 
-void BaseTower::draw(SDL_Surface* dest_surf, int x, int y) {
+void BaseTower::draw(SDL_Renderer* renderer, int x, int y) {
 	if (!visible)
 		return;
 	SDL_Rect dest_rect;
 	dest_rect.x = x;
 	dest_rect.y = y;
 
-	SDL_Surface* base_surf = twr_impl->get_base_surface();
-	SDL_Surface* base_cannon_surf = twr_impl->get_base_cannon_surface();
-	if (base_surf != NULL) {
-		SDL_BlitSurface(base_surf, NULL, dest_surf, &dest_rect);
+	SDL_Texture* baseTexture = twr_impl->getBaseTexture();
+	SDL_Texture* baseCannonTexture = twr_impl->getBaseCannonTexture();
+	if (baseTexture != NULL) {
+		SDL_QueryTexture(baseTexture, NULL, NULL, &dest_rect.w, &dest_rect.h);
+		SDL_RenderCopy(renderer, baseTexture, NULL, &dest_rect);
 	}
 
-	if (base_cannon_surf != NULL) {
-		SDL_Surface *cannon_surf_rotated = twr_impl->get_cannon_surface();
-		if (old_angle != current_angle || cannon_surf_rotated == NULL) {
-			cannon_surf_rotated = rotozoomSurface(base_cannon_surf, current_angle, 1, 1);
-			twr_impl->set_cannon_surf(cannon_surf_rotated);
-		}
+	if (baseCannonTexture != NULL) {
+		SDL_QueryTexture(baseCannonTexture, NULL, NULL, &dest_rect.w, &dest_rect.h);
 		old_angle = current_angle;
-
-		SDL_Rect compensation_rect;
-		compensation_rect.x = x - (int) ((double) cannon_surf_rotated->w / 2.0)
-				+ 20;
-		compensation_rect.y = y - (int) ((double) cannon_surf_rotated->h / 2.0)
-				+ 20;
-
-		SDL_BlitSurface(cannon_surf_rotated, NULL, dest_surf,
-				&compensation_rect);
+		SDL_Point center;
+		center.x = dest_rect.w / 2.0;
+		center.y = dest_rect.h / 2.0;
+		SDL_RenderCopyEx(renderer, baseCannonTexture, NULL, &dest_rect, current_angle, &center, SDL_FLIP_NONE);
 	}
 }
 
@@ -133,29 +126,33 @@ bool BaseTower::target_in_range(Enemy *target) {
 }
 
 void BaseTower::update_angle_to_target() {
-	float target_x_pos = current_target->get_x();
-	float target_y_pos = current_target->get_y();
+	float target_x_pos = current_target->get_center_x();
+	float target_y_pos = current_target->get_center_y();
 
 	float distance_to_target = get_distance_to(current_target);
 	// modify aim by considering distance to target and target movespeed
 	if (current_target->get_direction() == RIGHT)
-		target_x_pos += current_target->get_speed() * distance_to_target
-				/ get_projectile_speed();
+	{
+		target_x_pos += current_target->get_speed() * distance_to_target / get_projectile_speed();
+	}
 	else if (current_target->get_direction() == LEFT)
-		target_x_pos -= current_target->get_speed() * distance_to_target
-				/ get_projectile_speed();
+	{
+		target_x_pos -= current_target->get_speed() * distance_to_target / get_projectile_speed();
+	}
 	else if (current_target->get_direction() == DOWN)
-		target_y_pos += current_target->get_speed() * distance_to_target
-				/ get_projectile_speed();
+	{
+		target_y_pos += current_target->get_speed() * distance_to_target / get_projectile_speed();
+	}
 	else if (current_target->get_direction() == UP)
-		target_y_pos -= current_target->get_speed() * distance_to_target
-				/ get_projectile_speed();
+	{
+		target_y_pos -= current_target->get_speed() * distance_to_target / get_projectile_speed();
+	}
 
-	float delta_x = x_pos - target_x_pos;
-	float delta_y = y_pos - target_y_pos;
-	double rad = 180.0f / 3.14159f;
-	target_angle = atan2(delta_x, delta_y) * rad;
-
+	float delta_x = get_center_x() - target_x_pos;
+	float delta_y = get_center_y() - target_y_pos;
+	double radToDeg = 180.f / M_PI;
+	target_angle = (atan2(delta_y, delta_x) * radToDeg) - 90;
+	
 	format_angle(target_angle);
 }
 
@@ -258,7 +255,7 @@ void BaseTower::try_shoot() {
 		if (target_in_range(current_target) && target_in_sight()
 				&& current_target->get_x() > -(current_target->get_width()) && is_loaded()) {
 			ProjectileList* p_list = get_game()->get_projectiles();
-			Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, -(target_angle + 90));
+			Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, current_angle - 90);
 			if (p != NULL) {
 				p_list->push_back(p);
 				loaded = false;
@@ -402,25 +399,25 @@ bool BaseTower::upgrade(towers::TowerType type) {
 			case towers::BASIC:
 			{
 				delete twr_impl;
-				twr_impl = new towers::Basic();
+				twr_impl = new towers::Basic(renderer);
 				return true;
 			}
 			case towers::SPEED:
 			{
 				delete twr_impl;
-				twr_impl = new towers::Speed();
+				twr_impl = new towers::Speed(renderer);
 				return true;
 			}
 			case towers::RANGE:
 			{
 				delete twr_impl;
-				twr_impl = new towers::Range();
+				twr_impl = new towers::Range(renderer);
 				return true;
 			}
 			case towers::BOMB:
 			{
 				delete twr_impl;
-				twr_impl = new towers::Bomb();
+				twr_impl = new towers::Bomb(renderer);
 				return true;
 			}
 			default:

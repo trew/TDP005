@@ -23,26 +23,26 @@ void Game::toggle_fullscreen()
 
 void Game::draw_dev_screen()
 {
-	dev_screen->draw(screen);
+	dev_screen->draw(renderer);
 }
 void Game::draw_introscreen()
 {
-	intro_screen->draw(screen);
+	intro_screen->draw(renderer);
 }
 void Game::draw_view_help()
 {
-	introduction_screen->draw(screen);
-	esc_back->draw(screen);
+	introduction_screen->draw(renderer);
+	esc_back->draw(renderer);
 }
 void Game::draw_mainmenu()
 {
-	main_menu_screen->draw(screen);
+	main_menu_screen->draw(renderer);
 }
 void Game::draw_highscore()
 {
-	highscore_screen->draw(screen);
+	highscore_screen->draw(renderer);
 
-	error_loading_highscore->draw(screen); //Is visible if error, else not.
+	error_loading_highscore->draw(renderer); //Is visible if error, else not.
 	if (game_state == HIGHSCORE)
 	{
 		int y_start = 190;
@@ -73,8 +73,8 @@ void Game::draw_highscore()
 				offset_R = WWIDTH - offset_L;
 			}
 
-			(*iter_highscore_name)->draw(screen, offset_L, y_start + row_height);
-			(*iter_highscore_score)->draw(screen, (offset_R - (*iter_highscore_score)->get_width()), y_start + row_height);
+			(*iter_highscore_name)->draw(renderer, offset_L, y_start + row_height);
+			(*iter_highscore_score)->draw(renderer, (offset_R - (*iter_highscore_score)->get_width()), y_start + row_height);
 
 			counter++;
 			iter_highscore_name++;
@@ -84,12 +84,12 @@ void Game::draw_highscore()
 }
 void Game::draw_gameover()
 {
-	gameover_screen->draw(screen);
-	gameover_score_text->draw(screen, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 260);
+	gameover_screen->draw(renderer);
+	gameover_score_text->draw(renderer, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 260);
 }
 void Game::draw_ingame_menu()
 {
-	ingame_menu_screen->draw(screen);
+	ingame_menu_screen->draw(renderer);
 }
 void Game::draw_optionbox()
 {
@@ -97,17 +97,17 @@ void Game::draw_optionbox()
 		return;
 	for (iter_op_box = optionbox.begin(); iter_op_box != optionbox.end(); iter_op_box++)
 	{
-		(*iter_op_box)->draw(screen);
+		(*iter_op_box)->draw(renderer);
 	}
 }
 void Game::draw_selection()
 {
-	selection_sprite->draw(screen);
+	selection_sprite->draw(renderer);
 
 	BaseTower* t = NULL;
 	if (tile_selection != NULL && tile_selection->get_tower() != NULL) {
 		t = tile_selection->get_tower();
-		t->draw_range(screen);
+		t->drawRange(renderer);
 	} else if (hovered_build_item != NULL) {
 		t = hovered_build_item;
 	} else if (buildmenu_selection != NULL) {
@@ -119,7 +119,7 @@ void Game::draw_selection()
 		Sprite_List* s = t->get_infosprites();
 		for (iter_sel = s->begin(); iter_sel != s->end(); iter_sel++)
 		{
-			(*iter_sel)->draw(screen);
+			(*iter_sel)->draw(renderer);
 		}
 	}
 }
@@ -128,7 +128,7 @@ void Game::draw_enemies()
 	//Draw Enemies on Grid
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{
-		(*iter_enemy)->draw(screen);
+		(*iter_enemy)->draw(renderer);
 	}
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{
@@ -167,7 +167,7 @@ void Game::draw_towers()
 	//Draw Towers on Grid
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		(*iter_tower)->draw(screen);
+		(*iter_tower)->draw(renderer);
 	}
 }
 void Game::draw_projectiles()
@@ -175,7 +175,7 @@ void Game::draw_projectiles()
 	//Draw the exiting projectiles
 	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
 	{
-		(*iter_projectile)->draw(screen);
+		(*iter_projectile)->draw(renderer);
 	}
 }
 void Game::draw_menu_towers()
@@ -183,7 +183,7 @@ void Game::draw_menu_towers()
 	//Draw available towers in menu
 	for (iter_build_obj = build_list.begin(); iter_build_obj != build_list.end(); iter_build_obj++)
 	{
-		(*iter_build_obj)->draw(screen);
+		(*iter_build_obj)->draw(renderer);
 	}
 }
 
@@ -205,12 +205,12 @@ void Game::draw_build_item()
 			if (hovered_tile->get_tower() == NULL)
 			{
 				//There is no tower, draw green square
-				buildmenu_selection->draw(screen, pos_x, pos_y);
-				buildmenu_selection->draw_range(screen, pos_x, pos_y);
+				buildmenu_selection->draw(renderer, pos_x, pos_y);
+				buildmenu_selection->drawRange(renderer, pos_x, pos_y);
 				if (money >= buildmenu_selection->get_cost_buy())
-					free_spot->draw(screen, pos_x, pos_y);
+					free_spot->draw(renderer, pos_x, pos_y);
 				else
-					not_free_spot->draw(screen, pos_x, pos_y);
+					not_free_spot->draw(renderer, pos_x, pos_y);
 			}
 			else if (hovered_tile->get_tower() != NULL)
 			{
@@ -218,15 +218,15 @@ void Game::draw_build_item()
 				//Don't draw tower if there is tower of same type
 				if (buildmenu_selection->get_type() != hovered_tile->get_tower()->get_type())
 				{
-					buildmenu_selection->draw(screen, pos_x, pos_y);
+					buildmenu_selection->draw(renderer, pos_x, pos_y);
 				}
-				buildmenu_selection->draw_range(screen, pos_x, pos_y);
-				not_free_spot->draw(screen, pos_x, pos_y);
+				buildmenu_selection->drawRange(renderer, pos_x, pos_y);
+				not_free_spot->draw(renderer, pos_x, pos_y);
 			}
 		}
 		else
 		{
-			buildmenu_selection->draw(screen, m_x - 20, m_y - 20);
+			buildmenu_selection->draw(renderer, m_x - 20, m_y - 20);
 		}
 	}
 }
@@ -235,7 +235,7 @@ void Game::draw_ingame_buttons()
 	//Draw Buttons
 	for (iter_ingame_button = ingame_buttons.begin(); iter_ingame_button != ingame_buttons.end(); iter_ingame_button++)
 	{
-		(*iter_ingame_button)->draw(screen);
+		(*iter_ingame_button)->draw(renderer);
 	}
 }
 void Game::draw_ingame_menu_buttons()
@@ -243,7 +243,7 @@ void Game::draw_ingame_menu_buttons()
 	//Draw Buttons
 	for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
 	{
-		(*iter_ingame_menu_button)->draw(screen);
+		(*iter_ingame_menu_button)->draw(renderer);
 	}
 }
 void Game::draw_mainmenu_buttons()
@@ -251,56 +251,56 @@ void Game::draw_mainmenu_buttons()
 	//Draw Buttons
 	for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
 	{
-		(*iter_mainmenu_button)->draw(screen);
+		(*iter_mainmenu_button)->draw(renderer);
 	}
 }
 void Game::draw_money_score()
 {
-	money_text->draw(screen);
-	split_money_score->draw(screen);
-	score_text->draw(screen);
-	lives_text->draw(screen);
-	level_text->draw(screen);
-	timer_text->draw(screen);
+	money_text->draw(renderer);
+	split_money_score->draw(renderer);
+	score_text->draw(renderer);
+	lives_text->draw(renderer);
+	level_text->draw(renderer);
+	timer_text->draw(renderer);
 }
 void Game::render_gameplay()
 {
-	map->draw(screen);
+	map->draw(renderer);
 	if (grid_visible)
-		map_grid->draw(screen);
+		map_grid->draw(renderer);
 
-	map_wall->draw(screen);
-	map_entrance->draw(screen);
-	map_exit->draw(screen);
+	map_wall->draw(renderer);
+	map_entrance->draw(renderer);
+	map_exit->draw(renderer);
 
 	draw_boost_connections();
 	draw_towers();
 
-	menu_background->draw(screen);
-	menu_money_score->draw(screen);
-	menu_build->draw(screen);
-	menu_upgrade->draw(screen);
-	menu_info->draw(screen);
-	menu_lives->draw(screen);
+	menu_background->draw(renderer);
+	menu_money_score->draw(renderer);
+	menu_build->draw(renderer);
+	menu_upgrade->draw(renderer);
+	menu_info->draw(renderer);
+	menu_lives->draw(renderer);
 
 	draw_money_score();
 	draw_enemies();
-	speed_text->draw(screen);
+	speed_text->draw(renderer);
 	draw_selection();
-	map_exit->draw(screen);
+	map_exit->draw(renderer);
 	draw_projectiles();
 	draw_menu_towers();
 	draw_ingame_buttons();
 	draw_optionbox();
 	draw_build_item();
 
-	if(!game_started) press_enter_to_start->draw(screen);
+	if (!game_started) press_enter_to_start->draw(renderer);
 
 }
 
 void Game::render()
 {
-	SDL_FillRect(screen, NULL, 0);
+	SDL_RenderClear(renderer);
 
 	if (game_state == DEVSCREEN)
 	{
@@ -346,8 +346,8 @@ void Game::render()
 	else if (game_state == SET_HIGHSCORE)
 	{
 		draw_highscore();
-		gameover_score_text->draw(screen, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 200);
-		input_text->draw(screen, ((WWIDTH / 2) - (input_text->get_width() / 2)), 270);
+		gameover_score_text->draw(renderer, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 200);
+		input_text->draw(renderer, ((WWIDTH / 2) - (input_text->get_width() / 2)), 270);
 
 	}
 
@@ -369,10 +369,7 @@ void Game::render()
 		draw_gameover();
 	}
 
-	fps_text->draw(screen);
+	fps_text->draw(renderer);
 
-	SDL_UpdateTexture(screenTexture, NULL, screen->pixels, screen->pitch);
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
 	SDL_RenderPresent(renderer);
 }
