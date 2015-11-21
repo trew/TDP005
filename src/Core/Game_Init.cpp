@@ -50,7 +50,6 @@ bool Game::init()
 		return false;
 	}
 
-
 	if (Mix_Init(MIX_INIT_OGG) == 0) {
 		std::cerr << Mix_GetError() << std::endl;
 		return false;
@@ -76,6 +75,7 @@ bool Game::init()
 	gameover_score_text = new Text(renderer, "", 167, 203, 237, 0, 0, standard_font_42);
 	error_loading_highscore = new Text(renderer, "Error! Cannot load highscores!", 200, 200, standard_font_42);
 	error_loading_highscore->hide();
+
 
 	press_enter_to_start = new Text(renderer, "Deploy towers, then press enter to start", 70, 550, standard_font_32);
 	esc_back = new Text(renderer, "Esc (back)", 520, 555, standard_font_32);

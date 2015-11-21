@@ -9,24 +9,27 @@
 
 void Game::reset_game()
 {
+	grid->clear_paths();
+	grid->reset();// needs to be done before deleting towers
+
 	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
 	{
 		delete (*iter_enemy);
+		(*iter_enemy) = NULL;
 	}
 	enemy_list.clear();
 
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
 		delete (*iter_tower);
+		(*iter_tower) = NULL;
 	}
 	tower_list.clear();
-
-	grid->clear_paths();
-	grid->reset();
 
 	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
 	{
 		delete (*iter_projectile);
+		(*iter_projectile) = NULL;
 	}
 	projectile_list.clear();
 
@@ -54,10 +57,10 @@ void Game::reset_game()
 
 void Game::cleanup()
 {
-	config->set_value<bool>("fullscreen", fullscreen);
-	config->set_value<int>("sound_volume", Sound::get_volume());
+	//config->set_value<bool>("fullscreen", fullscreen);
+	//config->set_value<int>("sound_volume", Sound::get_volume());
 	//config->set_value<bool>("grid", grid);
-	config->save();
+	//config->save();
 	delete config;
 
 	Mix_CloseAudio();
@@ -73,6 +76,7 @@ void Game::cleanup()
 
 	delete dev_screen;
 	delete intro_screen;
+	delete introduction_screen;
 	delete main_menu_screen;
 	delete highscore_screen;
 	delete ingame_menu_screen;
@@ -92,6 +96,7 @@ void Game::cleanup()
 	delete press_enter_to_start;
 	delete error_loading_highscore;
 	delete esc_back;
+	delete gameover_score_text;
 
 	delete free_spot;
 	delete not_free_spot;
@@ -102,6 +107,9 @@ void Game::cleanup()
 	delete level_text;
 	delete timer_text;
 	delete fps_text;
+	delete speed_text;
+	delete input_text;
+	delete split_money_score;
 
 	delete option_box_BGx1;
 	delete option_box_BGx2;
@@ -145,11 +153,35 @@ void Game::cleanup()
 		delete (*iter_ingame_button);
 	}
 
+	//Delete ingame menu buttons
+	for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
+	{
+		delete (*iter_ingame_menu_button);
+	}
+
+	//Delete buttons
+	for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
+	{
+		delete (*iter_mainmenu_button);
+	}
+
 	//Delete highscore-sprites
+	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)
+	{
+		delete (*iter_highscore);
+		(*iter_highscore) = NULL;
+	}
+
 	for (iter_highscore_name = highscore_name_sprites.begin(); iter_highscore_name != highscore_name_sprites.end(); iter_highscore_name++)
 	{
 		delete (*iter_highscore_name);
 	}
+
+	for (iter_highscore_score = highscore_score_sprites.begin(); iter_highscore_score != highscore_score_sprites.end(); iter_highscore_score++)
+	{
+		delete (*iter_highscore_score);
+	}
+
 
 	delete music;
 	delete SFX_cant_build;

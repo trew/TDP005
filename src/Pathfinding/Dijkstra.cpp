@@ -15,6 +15,11 @@ Dijkstra::Dijkstra(Grid* grid) :
 }
 
 Dijkstra::~Dijkstra() {
+	for (std::map<NodePair, NodePath*>::iterator it = saved_paths.begin(); it != saved_paths.end(); it++)
+	{
+		delete (*it).second;
+		(*it).second = NULL;
+	}
 }
 
 NodePath* Dijkstra::calculate_path(Node* start, Node* dest) {
@@ -31,18 +36,19 @@ NodePath* Dijkstra::calculate_path(Node* start, Node* dest) {
 		(*it)->set_cost_from_start(max_cost);
 	}
 	start->set_cost_from_start(0);
-	while (!prio_queue.empty())
-	{
-		prio_queue.pop();
-	}
 	prio_queue.push(current_node);
-	
+
 	//Core loop
 	while (!prio_queue.empty()) {
 		current_node = prio_queue.top();
 		prio_queue.pop();
+
 		if (current_node == dest) {
 			save_path(start, dest);
+			while (!prio_queue.empty())
+			{
+				prio_queue.pop();
+			}
 			return create_path_copy(saved_paths[NodePair(start, dest)]);
 		}
 
@@ -71,6 +77,7 @@ void Dijkstra::clear_saved_paths() {
 	for (std::map<NodePair, NodePath*>::iterator it = saved_paths.begin();
 			it != saved_paths.end(); it++) {
 		delete (*it).second;
+		(*it).second = NULL;
 	}
 	saved_paths.clear();
 	NodeVector nodes = grid->get_nodes();

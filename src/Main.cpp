@@ -3,6 +3,10 @@
  * (C) 2010 - Samuel Andersson, Björn Ekberg
  */
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #include <Core/Game.h>
 #include <ctime>
 
@@ -16,5 +20,10 @@ int main(int argc, char *argv[]) {
 
 	Game* new_game = new Game();
 
-	return new_game->on_execute();
+	int ret = new_game->on_execute();
+	delete new_game;
+	new_game = NULL;
+
+	_CrtDumpMemoryLeaks();
+	return ret;
 }

@@ -30,18 +30,25 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	if (money < new_tower->get_cost_buy())
 	{
 		delete new_tower;
+		new_tower = NULL;
 		return;
 	}
-
 	new_tower->set_tile(tile);
 	tile->set_tower(new_tower);
 	grid->clear_paths();
 
-	if (grid->get_path(grid->get_start_tile(), grid->get_portal_tile())->size() == 0) {
+	Tile* startTile = grid->get_start_tile();
+	Tile* portalTile = grid->get_portal_tile();
+
+	Path* path = grid->get_path(startTile, portalTile);
+
+	if (path->size() == 0) {
 		tile->set_tower(NULL);
 		grid->clear_paths();
-		grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
-		delete new_tower;
+		Path* new_path = grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
+		delete new_path; new_path = NULL;
+		delete new_tower; new_tower = NULL;
+		delete path; path = NULL;
 		return;
 	}
 
@@ -52,11 +59,16 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 			// couldn't update path, don't place tower
 			tile->set_tower(NULL);
 			grid->clear_paths();
-			grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
-			delete new_tower;
+			Path* new_path = grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
+			delete new_path; new_path = NULL;
+			delete new_tower; new_tower = NULL;
+			delete path; path = NULL;
 			return;
 		}
 	}
+
+	delete path; path = NULL;
+
 	//New tower CAN be placed.
 	SFX_build->play();
 	set_boost_update(true);

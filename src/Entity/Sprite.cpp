@@ -65,7 +65,6 @@ SDL_Texture* Sprite::load_image(SDL_Renderer* renderer, std::string file)
 	}
 
 	return texture;
-
 }
 
 float Sprite::get_distance_to(Sprite *target)

@@ -29,7 +29,7 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 	Tower* new_tower = new Tower(this, tower_type, tile);
 	if (money < new_tower->get_cost_buy())
 	{
-		delete new_tower;
+		delete new_tower; new_tower = NULL;
 		return;
 	}
 
@@ -41,7 +41,7 @@ void Game::create_new_tower(towers::TowerType tower_type, GridPosition position)
 		tile->set_tower(NULL);
 		grid->clear_paths();
 		grid->get_path(grid->get_start_tile(), grid->get_portal_tile());
-		delete new_tower;
+		delete new_tower; new_tower = NULL;
 		return;
 	}
 

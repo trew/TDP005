@@ -85,7 +85,13 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 
 Enemy::~Enemy()
 {
-	/// Nothing here
+	delete current_path;
+	if (current_path != new_path_int)
+	{
+		delete new_path_int;
+	}
+	new_path_int = NULL;
+	current_path = NULL;
 }
 
 void Enemy::draw(SDL_Renderer* renderer)
@@ -152,8 +158,11 @@ bool Enemy::try_update_path()
 			//Enable update if enemy is at its destination
 			path_list->push_back(dest);
 			new_path_int = path_list;
+
 			return true;
 		}
+
+		delete path_list; path_list = NULL;
 		return false;
 	}
 	else

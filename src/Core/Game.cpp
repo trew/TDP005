@@ -23,7 +23,7 @@ TTF_Font* Game::standard_font_12;
 
 Game::Game()
 {
-	level_control = new Level;
+	level_control = new Level();
 	FPS_MAX = 100;						//Defines max FPS. Slow computers may experience lower FPS though.
 	fullscreen = false;
 	game_running = true;
@@ -91,7 +91,14 @@ Grid* Game::get_grid() {
 bool Game::read_highscores_from_file()
 {
 	if (!highscores.empty())
+	{
+		for (HighscoreList::iterator it = highscores.begin(); it != highscores.end(); it++)
+		{
+			delete (*it);
+			(*it) = NULL;
+		}
 		highscores.clear();
+	}
 
 	std::ifstream file_in;
 	file_in.open("highscore");
@@ -169,12 +176,14 @@ void Game::update_highscore_sprites()
 		for(iter_highscore_name = highscore_name_sprites.begin(); iter_highscore_name != highscore_name_sprites.end(); iter_highscore_name++)
 		{
 			delete (*iter_highscore_name);
+			(*iter_highscore_name) = NULL;
 		}
 
 	if(!highscore_score_sprites.empty())
 		for(iter_highscore_score = highscore_score_sprites.begin(); iter_highscore_score != highscore_score_sprites.end(); iter_highscore_score++)
 		{
 			delete (*iter_highscore_score);
+			(*iter_highscore_score) = NULL;
 		}
 
 
@@ -313,7 +322,10 @@ int Game::on_execute()
 	 * It contains the initializing phase, the game loop and finally the cleanup process.
 	 */
 	if (init() == false)
+	{
+		cleanup();
 		return -1;
+	}
 
 	SDL_Event event;
 
@@ -326,6 +338,7 @@ int Game::on_execute()
 	int ev = 0;
 	int upd = 0;
 	int ren = 0;
+	try {
 	while (game_running)
 	{
 		delta = delta_timer->get_ticks();
@@ -347,7 +360,10 @@ int Game::on_execute()
 		}
 	}
 	/* End Game */
-
+	}
+	catch (int e)
+	{
+	}
 	cleanup();
 	return 0;
 }

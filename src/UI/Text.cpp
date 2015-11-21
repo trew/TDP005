@@ -26,6 +26,7 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int x, int y, TTF_Fon
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
 	texture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
+	textSurface = NULL;
 
 	x_pos = x;
 	y_pos = y;
@@ -45,6 +46,7 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, 
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, input_text.c_str(), text_color);
 	texture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
+	textSurface = NULL;
 
 	x_pos = x;
 	y_pos = y;
@@ -54,16 +56,14 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, 
 void Text::update_text(std::string in_text)
 {
 	SDL_DestroyTexture(texture);
+	texture = NULL;
 
-	if (in_text == "") {
-		texture = NULL;
-	}
-
-	else
+	if (in_text != "")
 	{
 		SDL_Surface* textSurface = TTF_RenderText_Blended(font, in_text.c_str(), text_color);
 		texture = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_FreeSurface(textSurface);
+		textSurface = NULL;
 		SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	}
 }

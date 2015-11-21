@@ -205,6 +205,7 @@ void Game::update(int delta)
 			(*iter_projectile)->is_dead())
 		{
 			delete (*iter_projectile);
+			(*iter_projectile) = NULL;
 			iter_projectile = projectile_list.erase(iter_projectile);
 			continue;
 		}
@@ -255,6 +256,7 @@ void Game::update(int delta)
 				}
 
 				delete (*iter_projectile);
+				(*iter_projectile) = NULL;
 				iter_projectile = projectile_list.erase(iter_projectile);
 				projectileIteratorUpdated = true; // indicates that the iterator should not be incremented at the end
 				break;

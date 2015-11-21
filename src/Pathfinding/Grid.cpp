@@ -17,8 +17,10 @@ Grid::Grid() :
 
 Grid::~Grid() {
 	delete pathfinding;
+	pathfinding = NULL;
 	for (std::map<GridPosition, Tile*>::iterator it = tile_map.begin(); it != tile_map.end(); it++) {
 		delete (*it).second;
+		(*it).second = NULL;
 	}
 }
 

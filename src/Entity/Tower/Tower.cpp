@@ -34,8 +34,11 @@ Tower::Tower(SDL_Renderer* _renderer) {
 
 Tower::~Tower() {
 	SDL_DestroyTexture(baseTexture);
+	baseTexture = NULL;
 	SDL_DestroyTexture(cannonTexture);
+	cannonTexture = NULL;
 	SDL_DestroyTexture(baseCannonTexture);
+	baseCannonTexture = NULL;
 	if (infotext != NULL) {
 		for (Sprite_List::iterator it = infotext->begin(); it != infotext->end(); it++) {
 			delete (*it);

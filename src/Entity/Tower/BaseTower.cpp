@@ -87,8 +87,6 @@ void BaseTower::drawRange(SDL_Renderer* renderer) {
 void BaseTower::drawRange(SDL_Renderer* renderer, float x_pos, float y_pos) {
 	///Draws a filled circle on the map, showing the range of the tower.
 
-//	filledCircleColor(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x0000FF11);
-//	circleColor      (renderer, (Sint16)x_pos + TILESIZE / 2,	(Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x5555FF44);
 	filledCircleRGBA(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0, 0, 0xFF, 0x11);
 	aacircleRGBA(renderer, (Sint16)x_pos + TILESIZE / 2, (Sint16)y_pos + TILESIZE / 2, (Sint16)get_range_in_pixels(), 0x55, 0x55, 0xFF, 0x44);
 }
