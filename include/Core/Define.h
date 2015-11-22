@@ -8,6 +8,8 @@
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
+const char* const VERSION = "1.3";
+
 const int STARTING_MONEY = 100;
 const int STARTING_LIVES = 20;
 

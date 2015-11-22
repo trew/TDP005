@@ -7,7 +7,7 @@
 #include <Core/Game.h>
 
 void Game::parse_config() {
-	config = new ConfigFile("tdp005.config");
+	config = new ConfigFile("settings.cfg");
 	fullscreen = config->get_value<bool>("fullscreen", false);
 	sound_volume = config->get_value<int>("sound_volume", 35);
 	grid_visible = config->get_value<bool>("grid", true);
@@ -22,6 +22,8 @@ bool Game::init()
 		return false;
 	}
 
+	const std::string windowTitle = "Tower Defence Pro " + std::string(VERSION) + " © 2010 - 2016 A15 Entertainment";
+
 	if (fullscreen)
 	{
 		if (SDL_CreateWindowAndRenderer(WWIDTH, WHEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer) == -1)
@@ -32,7 +34,7 @@ bool Game::init()
 	}
 	else
 	{
-		window = SDL_CreateWindow("Tower Defence Pro 1.2 © 2010 - 2016 A15 Entertainment", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WWIDTH, WHEIGHT, SDL_WINDOW_OPENGL);
+		window = SDL_CreateWindow(windowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WWIDTH, WHEIGHT, SDL_WINDOW_SHOWN);
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		if (window == NULL || renderer == NULL)
 		{
@@ -58,7 +60,7 @@ bool Game::init()
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 		return false;
 
-	SDL_SetWindowTitle(window, "Tower Defence Pro 1.2 © 2010 - 2016 A15 Entertainment");
+	SDL_SetWindowTitle(window, windowTitle.c_str());
 
 	std::string standard_font = "./fonts/Graffiare.ttf";
 

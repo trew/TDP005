@@ -103,7 +103,20 @@ bool Game::read_highscores_from_file()
 	std::ifstream file_in;
 	file_in.open("highscore");
 	if (!file_in)
-		return false;
+	{
+		// default
+		highscores.push_back(new std::pair<int, std::string>(1000, "Uniden"));
+		highscores.push_back(new std::pair<int, std::string>(500, "Bigby Wolf"));
+		highscores.push_back(new std::pair<int, std::string>(250, "Dilbert"));
+		highscores.push_back(new std::pair<int, std::string>(125, "Ananakinin"));
+		highscores.push_back(new std::pair<int, std::string>(50, "Here's Johnny"));
+		highscores.push_back(new std::pair<int, std::string>(40, "Lady Gaga"));
+		highscores.push_back(new std::pair<int, std::string>(30, "Tomten"));
+		highscores.push_back(new std::pair<int, std::string>(20, "Red Rose"));
+		highscores.push_back(new std::pair<int, std::string>(10, "Blue Screen"));
+		highscores.push_back(new std::pair<int, std::string>(0, "Lab-ASS"));
+		return true;
+	}
 
 	int score;
 	std::string name;

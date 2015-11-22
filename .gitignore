@@ -10,3 +10,4 @@ tdp005.config
 *.sdf
 *.suo
 *.user
+build/*.exe
