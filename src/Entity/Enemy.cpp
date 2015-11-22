@@ -66,8 +66,8 @@ Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_
 	type = _type;
 	reached_goal = false;
 	killed = false;
-	x_pos = x_pos_in;
-	y_pos = y_pos_in;
+	x_pos = (float)x_pos_in;
+	y_pos = (float)y_pos_in;
 	level = new_level;
 
 	x_vel = 0;

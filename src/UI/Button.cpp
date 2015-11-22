@@ -30,8 +30,8 @@ Button::Button(SDL_Renderer* renderer, int type_in, int x, int y, int w, int h, 
 		}
 	}
 
-	x_pos = x;
-	y_pos = y;
+	x_pos = (float)x;
+	y_pos = (float)y;
 	width = w;
 	height = h;
 	is_toggled = false;

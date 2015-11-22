@@ -32,8 +32,8 @@ using namespace std;
 BaseTower::BaseTower(Game* game, towers::TowerType type, Tile* tile) :
 		Sprite(game), tile(tile) {
 	if (tile != NULL) {
-		x_pos = tile->get_x_pixel_pos();
-		y_pos = tile->get_y_pixel_pos();
+		x_pos = (float)tile->get_x_pixel_pos();
+		y_pos = (float)tile->get_y_pixel_pos();
 	}
 	height = 40;
 	width = 40;
@@ -113,8 +113,8 @@ void BaseTower::draw(SDL_Renderer* renderer, int x, int y) {
 		SDL_QueryTexture(baseCannonTexture, NULL, NULL, &dest_rect.w, &dest_rect.h);
 		old_angle = current_angle;
 		SDL_Point center;
-		center.x = dest_rect.w / 2.0;
-		center.y = dest_rect.h / 2.0;
+		center.x = (int)(dest_rect.w / 2.f);
+		center.y = (int)(dest_rect.h / 2.f);
 		SDL_RenderCopyEx(renderer, baseCannonTexture, NULL, &dest_rect, current_angle, &center, SDL_FLIP_NONE);
 	}
 }
@@ -131,19 +131,19 @@ void BaseTower::update_angle_to_target() {
 	// modify aim by considering distance to target and target movespeed
 	if (current_target->get_direction() == RIGHT)
 	{
-		target_x_pos += current_target->get_speed() * distance_to_target / get_projectile_speed();
+		target_x_pos += (float)(current_target->get_speed() * distance_to_target / get_projectile_speed());
 	}
 	else if (current_target->get_direction() == LEFT)
 	{
-		target_x_pos -= current_target->get_speed() * distance_to_target / get_projectile_speed();
+		target_x_pos -= (float)(current_target->get_speed() * distance_to_target / get_projectile_speed());
 	}
 	else if (current_target->get_direction() == DOWN)
 	{
-		target_y_pos += current_target->get_speed() * distance_to_target / get_projectile_speed();
+		target_y_pos += (float)(current_target->get_speed() * distance_to_target / get_projectile_speed());
 	}
 	else if (current_target->get_direction() == UP)
 	{
-		target_y_pos -= current_target->get_speed() * distance_to_target / get_projectile_speed();
+		target_y_pos -= (float)(current_target->get_speed() * distance_to_target / get_projectile_speed());
 	}
 
 	float delta_x = get_center_x() - target_x_pos;
@@ -261,7 +261,7 @@ void BaseTower::try_shoot() {
 		if (target_in_range(current_target) && target_in_sight()
 				&& current_target->get_x() > -(current_target->get_width()) && is_loaded()) {
 			ProjectileList* p_list = get_game()->get_projectiles();
-			Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, current_angle - 90);
+			Projectile* p = twr_impl->spawn_projectile(get_game(), x_pos, y_pos, (float)current_angle - 90);
 			if (p != NULL) {
 				p_list->push_back(p);
 				loaded = false;

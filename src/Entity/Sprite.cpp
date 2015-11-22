@@ -35,8 +35,8 @@ Sprite::Sprite(Game* _game, std::string File, int x, int y, int w, int h): game(
 		std::cerr << "Image " << File << " could not be loaded." << std::endl;
 		return;
 	}
-	x_pos = x;
-	y_pos = y;
+	x_pos = (float)x;
+	y_pos = (float)y;
 	height = h;
 	width = w;
 	selected = false;

@@ -74,8 +74,8 @@ void Game::select(Tile* tile)
 	tower = tile_selection->get_tower();
 
 	selection_sprite->show();
-	selection_sprite->set_x(tile_selection->get_x_pixel_pos() - 2);
-	selection_sprite->set_y(tile_selection->get_y_pixel_pos() - 2);
+	selection_sprite->set_x(tile_selection->get_x_pixel_pos() - 2.f);
+	selection_sprite->set_y(tile_selection->get_y_pixel_pos() - 2.f);
 	if (tower != NULL)
 		tower->set_selected(true);
 	update_option_box();

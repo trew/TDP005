@@ -206,7 +206,7 @@ void Game::draw_build_item()
 			{
 				//There is no tower, draw green square
 				buildmenu_selection->draw(renderer, pos_x, pos_y);
-				buildmenu_selection->drawRange(renderer, pos_x, pos_y);
+				buildmenu_selection->drawRange(renderer, (float)pos_x, (float)pos_y);
 				if (money >= buildmenu_selection->get_cost_buy())
 					free_spot->draw(renderer, pos_x, pos_y);
 				else
@@ -220,7 +220,7 @@ void Game::draw_build_item()
 				{
 					buildmenu_selection->draw(renderer, pos_x, pos_y);
 				}
-				buildmenu_selection->drawRange(renderer, pos_x, pos_y);
+				buildmenu_selection->drawRange(renderer, (float)pos_x, (float)pos_y);
 				not_free_spot->draw(renderer, pos_x, pos_y);
 			}
 		}

@@ -61,7 +61,7 @@ void Game::update_timer() {
 	if(timer == old_timer) return;
 	old_timer = timer;
 	timer_text->update_text(get_timer_str());
-	timer_text->set_x( 590 - timer_text->get_width() );
+	timer_text->set_x((float)(590 - timer_text->get_width()));
 }
 void Game::update_boost() {
 	if (need_boost_update) {

@@ -51,8 +51,8 @@ void Projectile::update(int delta)
 		return;
 	}
 	double radianAngle = conv_degree_to_radian(direction);
-	x_pos += (movespeed * cos(radianAngle)) * get_game()->get_time_modifier();
-	y_pos += (movespeed * sin(radianAngle)) * get_game()->get_time_modifier();
+	x_pos += (float)((movespeed * cos(radianAngle)) * get_game()->get_time_modifier());
+	y_pos += (float)((movespeed * sin(radianAngle)) * get_game()->get_time_modifier());
 }
 
 void Projectile::draw(SDL_Renderer* renderer) {

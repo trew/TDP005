@@ -338,7 +338,7 @@ int Game::on_execute()
 	int ev = 0;
 	int upd = 0;
 	int ren = 0;
-	try {
+
 	while (game_running)
 	{
 		delta = delta_timer->get_ticks();
@@ -360,10 +360,7 @@ int Game::on_execute()
 		}
 	}
 	/* End Game */
-	}
-	catch (int e)
-	{
-	}
+
 	cleanup();
 	return 0;
 }

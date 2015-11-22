@@ -28,8 +28,8 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int x, int y, TTF_Fon
 	SDL_FreeSurface(textSurface);
 	textSurface = NULL;
 
-	x_pos = x;
-	y_pos = y;
+	x_pos = (float)x;
+	y_pos = (float)y;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 }
 
@@ -48,8 +48,8 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, 
 	SDL_FreeSurface(textSurface);
 	textSurface = NULL;
 
-	x_pos = x;
-	y_pos = y;
+	x_pos = (float)x;
+	y_pos = (float)y;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 }
 

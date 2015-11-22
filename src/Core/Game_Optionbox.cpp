@@ -34,8 +34,8 @@ void Game::compose_box_pos(int &optbox_pos_x, int &optbox_pos_y, Sprite *optionb
 	if (optbox_pos_y < 0)
 		optbox_pos_y = -box_offset_y;
 
-	optionbox->set_x(optbox_pos_x);
-	optionbox->set_y(optbox_pos_y);
+	optionbox->set_x((float)optbox_pos_x);
+	optionbox->set_y((float)optbox_pos_y);
 }
 
 void Game::toggle_option_box()
@@ -52,7 +52,7 @@ void Game::toggle_option_box()
 
 void Game::update_option_box()
 {
-	int button_spacing = 27;
+	float button_spacing = 27.f;
 	int button_offset_x = 6;
 	int button_offset_y = 6;
 
@@ -66,8 +66,8 @@ void Game::update_option_box()
 		if (selection_sprite->is_visible())
 		{
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx3);
-			int button_x = optbox_pos_x + button_offset_x;
-			int button_y = optbox_pos_y + button_offset_y;
+			float button_x = (float)(optbox_pos_x + button_offset_x);
+			float button_y = (float)(optbox_pos_y + button_offset_y);
 
 			optionbox.push_back(optionbox_buttonstorage[BUTTON_BASE]);
 			optionbox.back()->set_x(button_x);
@@ -93,8 +93,8 @@ void Game::update_option_box()
 		{
 			optionbox.push_back(option_box_BGx5);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx5);
-			int button_x = optbox_pos_x + button_offset_x;
-			int button_y = optbox_pos_y + button_offset_y;
+			float button_x = (float)(optbox_pos_x + button_offset_x);
+			float button_y = (float)(optbox_pos_y + button_offset_y);
 
 			//Push back the 4 upgrade-buttons + sell-button, offset px apart from each other
 			optionbox.push_back(optionbox_buttonstorage[BUTTON_BASIC]);
@@ -125,8 +125,8 @@ void Game::update_option_box()
 		else if (t->get_level() == t->get_max_level()) {
 			optionbox.push_back(option_box_BGx2);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx2);
-			int button_x = optbox_pos_x + button_offset_x;
-			int button_y = optbox_pos_y + button_offset_y;
+			float button_x = (float)(optbox_pos_x + button_offset_x);
+			float button_y = (float)(optbox_pos_y + button_offset_y);
 
 			optionbox.push_back(optionbox_buttonstorage[BUTTON_NOUPGRADE]);
 			optionbox.back()->set_x(button_x);
@@ -142,8 +142,8 @@ void Game::update_option_box()
 		{
 			optionbox.push_back(option_box_BGx1);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx1);
-			int button_x = optbox_pos_x + button_offset_x;
-			int button_y = optbox_pos_y + button_offset_y;
+			float button_x = (float)(optbox_pos_x + button_offset_x);
+			float button_y = (float)(optbox_pos_y + button_offset_y);
 
 			//Push back a Sell-button
 			optionbox.push_back(optionbox_buttonstorage[BUTTON_SELL]);
@@ -155,8 +155,8 @@ void Game::update_option_box()
 		{
 			optionbox.push_back(option_box_BGx2);
 			compose_box_pos(optbox_pos_x, optbox_pos_y, option_box_BGx2);
-			int button_x = optbox_pos_x + button_offset_x;
-			int button_y = optbox_pos_y + button_offset_y;
+			float button_x = (float)(optbox_pos_x + button_offset_x);
+			float button_y = (float)(optbox_pos_y + button_offset_y);
 
 			optionbox.push_back(optionbox_buttonstorage[BUTTON_UPGRADE]);
 			optionbox.back()->set_x(button_x);

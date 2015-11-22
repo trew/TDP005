@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 	/** Seed srand() */
 	time_t t;
 	time(&t);
-	srand(t);
+	srand((unsigned int) t);
 
 	Game* new_game = new Game();
 
