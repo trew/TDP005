@@ -90,7 +90,7 @@ float Sprite::get_distance_to_edge(Sprite* target)
 
 	float angleInRadians = atan2(deltaY, deltaX);
 
-	float extraLength = (target->get_width() / 2) / cos(angleInRadians);
+	float extraLength = target->get_width() / 2.f ;
 
 	double distance = sqrt(pow(deltaX, 2.f) + pow(deltaY, 2.f));
 	return (float)distance - extraLength;
