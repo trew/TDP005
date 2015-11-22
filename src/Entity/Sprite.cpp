@@ -78,6 +78,24 @@ float Sprite::get_distance_to(Sprite *target)
 	return (float)distance;
 }
 
+float Sprite::get_distance_to_edge(Sprite* target)
+{
+	float x1 = get_center_x();
+	float y1 = get_center_y();
+	float x2 = target->get_center_x();
+	float y2 = target->get_center_y();
+
+	float deltaY = y1 - y2;
+	float deltaX = x1 - x2;
+
+	float angleInRadians = atan2(deltaY, deltaX);
+
+	float extraLength = (target->get_width() / 2) / cos(angleInRadians);
+
+	double distance = sqrt(pow(deltaX, 2.f) + pow(deltaY, 2.f));
+	return (float)distance - extraLength;
+}
+
 bool Sprite::intersects(Sprite* him) {
 	/**
 	 * Perform simple bounding box detection.

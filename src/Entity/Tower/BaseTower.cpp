@@ -120,7 +120,7 @@ void BaseTower::draw(SDL_Renderer* renderer, int x, int y) {
 }
 
 bool BaseTower::target_in_range(Enemy *target) {
-	return get_distance_to(target) <= get_range_in_pixels();
+	return get_distance_to_edge(target) <= get_range_in_pixels();
 }
 
 void BaseTower::update_angle_to_target() {
@@ -208,18 +208,26 @@ void BaseTower::find_new_target() {
 		int enemy_path_length = 99999;
 		for (EnemyList::iterator it = enemy_list->begin(); it != enemy_list->end(); it++) {
 			if (target_in_range((*it))) {
-				if (closest_object == NULL) {
+				float distanceToEnemy = get_distance_to_edge((*it));
+
+				if (closest_object == NULL)
+				{
 					closest_object = (*it);
-					closest_distance = (*it)->get_distance_to(this);
+					closest_distance = distanceToEnemy;
 					enemy_path_length = (*it)->get_path_length();
-				} else if ((*it)->get_path_length() < enemy_path_length) {
+				}
+				else if ((*it)->get_path_length() < enemy_path_length)
+				{
 					closest_object = (*it);
-					closest_distance = (*it)->get_distance_to(this);
+					closest_distance = distanceToEnemy;
 					enemy_path_length = (*it)->get_path_length();
-				} else if ((*it)->get_path_length() == enemy_path_length) {
-					if ((*it)->get_distance_to(this) < closest_distance) {
+				}
+				else if ((*it)->get_path_length() == enemy_path_length)
+				{
+					if (distanceToEnemy < closest_distance)
+					{
 						closest_object = (*it);
-						closest_distance = (*it)->get_distance_to(this);
+						closest_distance = distanceToEnemy;
 						enemy_path_length = (*it)->get_path_length();
 					}
 				}

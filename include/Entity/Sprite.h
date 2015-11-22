@@ -68,6 +68,7 @@ public:
 	virtual void draw(SDL_Renderer* renderer, int x, int y);
 	int get_int_type();		///<Returns type
 	float get_distance_to(Sprite *s); ///<Pure virtual
+	float get_distance_to_edge(Sprite* s);
 
 	virtual void update(int delta);			///<Pure virtual
 

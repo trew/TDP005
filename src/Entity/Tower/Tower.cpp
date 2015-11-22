@@ -14,7 +14,7 @@ namespace towers {
 
 Tower::Tower(SDL_Renderer* _renderer) {
 	renderer = _renderer;
-	spread = 15;
+	spread = 10;
 	base_reloading_time = reloading_time = 0;
 	projectile_speed = 0.0f;
 	boostmod = 0.0f;
