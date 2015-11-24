@@ -129,6 +129,9 @@
     <ClInclude Include="..\include\Entity\Tower\BaseTower.h">
       <Filter>Header Files\Entity\Tower</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -224,5 +227,15 @@
     <ClCompile Include="..\src\Entity\Tower\BaseTower.cpp">
       <Filter>Source Files\Entity\Tower</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\assets\gfx\icon\icon128.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TDP005.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

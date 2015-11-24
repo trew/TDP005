@@ -110,6 +110,7 @@
     <ClInclude Include="..\include\Pathfinding\Grid.h" />
     <ClInclude Include="..\include\Pathfinding\Node.h" />
     <ClInclude Include="..\include\Pathfinding\Tile.h" />
+    <ClInclude Include="..\include\resource.h" />
     <ClInclude Include="..\include\UI\Button.h" />
     <ClInclude Include="..\include\UI\Sound.h" />
     <ClInclude Include="..\include\UI\Text.h" />
@@ -147,6 +148,12 @@
     <ClCompile Include="..\src\UI\Sound.cpp" />
     <ClCompile Include="..\src\UI\Text.cpp" />
     <ClCompile Include="..\src\Utils\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\assets\gfx\icon\icon128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TDP005.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

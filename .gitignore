@@ -5,9 +5,10 @@ dll
 highscore
 
 *.stackdump
-tdp005.config
+settings.cfg
 *.opensdf
 *.sdf
 *.suo
 *.user
 build/*.exe
+*.aps

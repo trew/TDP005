@@ -51,6 +51,7 @@ Source: "{#SDL2_IMAGE_PATH}\lib\x86\zlib1.dll"; DestDir: "{app}"; Flags: ignorev
 Source: "{#SDL2_IMAGE_PATH}\lib\x86\libpng16-16.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; SDL2 TTF
 Source: "{#SDL2_TTF_PATH}\lib\x86\SDL2_ttf.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SDL2_TTF_PATH}\lib\x86\libfreetype-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SDL2_TTF_PATH}\lib\x86\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; SDL2 GFX
 Source: "{#SDL2_GFX_PATH}\lib\x86\SDL2_gfx.dll"; DestDir: "{app}"; Flags: ignoreversion

@@ -5,6 +5,9 @@
  *      Author: samuel
  */
 #include <Core/Game.h>
+#if WIN32
+#include <Windows.h>
+#endif
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -46,6 +49,10 @@ bool Game::init()
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+
+	SDL_Surface* const icon = IMG_Load("./gfx/icon/icon64.png");
+	SDL_SetWindowIcon(window, icon);
+	SDL_FreeSurface(icon);
 
 	if (TTF_Init() < 0) {
 		std::cerr << TTF_GetError() << std::endl;
