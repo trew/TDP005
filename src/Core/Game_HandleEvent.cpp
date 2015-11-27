@@ -615,44 +615,6 @@ void Game::state_introduction(SDL_Event* event)
 	}
 }
 
-void Game::state_mainmenu(SDL_Event* event)
-
-{
-	int m_x, m_y;
-	SDL_GetMouseState(&m_x, &m_y);
-
-	if (event->key.type == SDL_MOUSEBUTTONDOWN)
-	{
-		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
-			{
-				if ((m_x > (*iter_mainmenu_button)->get_x()) && (m_x < (*iter_mainmenu_button)->get_x() + (*iter_mainmenu_button)->get_width()) && (m_y
-						> (*iter_mainmenu_button)->get_y()) && (m_y < (*iter_mainmenu_button)->get_y() + (*iter_mainmenu_button)->get_height()))
-				{
-					switch ((*iter_mainmenu_button)->get_type())
-					{
-					case BUTTON_STARTGAME:
-						reset_game();
-						game_state = GAME_PAUSED;
-						break;
-					case BUTTON_HIGHSCORE:
-						update_highscore_sprites();
-						game_state = HIGHSCORE;
-						break;
-					case BUTTON_VIEW_HELP:
-						game_state = VIEW_HELP;
-						break;
-					case BUTTON_EXITGAME:
-						game_running = false;
-						break;
-					}
-				}
-			}
-		}
-	}
-}
-
 void Game::state_gameover(SDL_Event* event)
 {
 	if (event->key.type == SDL_KEYDOWN)
@@ -807,7 +769,7 @@ void Game::handle_event(SDL_Event* event)
 	}
 	else if (game_state == MAINMENU)
 	{
-		state_mainmenu(event);
+		mainMenuState->handleEvent(*event);
 	}
 	else if (game_state == HIGHSCORE)
 	{

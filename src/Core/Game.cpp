@@ -64,7 +64,7 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	intro_screen = highscore_screen = ingame_menu_screen = main_menu_screen = dev_screen = introduction_screen = gameover_screen = NULL;
+	intro_screen = highscore_screen = ingame_menu_screen = dev_screen = introduction_screen = gameover_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
 	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
@@ -376,6 +376,16 @@ int Game::on_execute()
 
 	cleanup();
 	return 0;
+}
+
+void Game::setState(int state)
+{
+	game_state = state;
+}
+
+void Game::exit()
+{
+	game_running = false;
 }
 
 std::string Game::ftos(float f) {

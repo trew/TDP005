@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Entity\Tower">
       <UniqueIdentifier>{c64854af-3731-444a-b896-2f9e5f64793c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\State">
+      <UniqueIdentifier>{84e65530-d874-4006-8ffb-7113abe258b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{06acd090-98c9-46de-a316-68433ea5cebd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Core\ConfigFile.h">
@@ -131,6 +137,12 @@
     </ClInclude>
     <ClInclude Include="..\include\resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\State\MainMenuState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\State\State.h">
+      <Filter>Header Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Entity\Tower\BaseTower.cpp">
       <Filter>Source Files\Entity\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\State\MainMenuState.cpp">
+      <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

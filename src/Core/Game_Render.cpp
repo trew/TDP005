@@ -34,10 +34,6 @@ void Game::draw_view_help()
 	introduction_screen->draw(renderer);
 	esc_back->draw(renderer);
 }
-void Game::draw_mainmenu()
-{
-	main_menu_screen->draw(renderer);
-}
 void Game::draw_highscore()
 {
 	highscore_screen->draw(renderer);
@@ -246,14 +242,6 @@ void Game::draw_ingame_menu_buttons()
 		(*iter_ingame_menu_button)->draw(renderer);
 	}
 }
-void Game::draw_mainmenu_buttons()
-{
-	//Draw Buttons
-	for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
-	{
-		(*iter_mainmenu_button)->draw(renderer);
-	}
-}
 void Game::draw_money_score()
 {
 	money_text->draw(renderer);
@@ -328,8 +316,7 @@ void Game::render()
 
 	else if (game_state == MAINMENU)
 	{
-		draw_mainmenu();
-		draw_mainmenu_buttons();
+		mainMenuState->render(renderer);
 	}
 
 	else if (game_state == VIEW_HELP)

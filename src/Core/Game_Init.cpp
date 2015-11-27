@@ -5,6 +5,7 @@
  *      Author: samuel
  */
 #include <Core/Game.h>
+#include <State/MainMenuState.h>
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -100,7 +101,6 @@ bool Game::init()
 	dev_screen = new Sprite(this, 		"./gfx/intro/devscreen.png", 0, 0, WWIDTH, WHEIGHT);
 	intro_screen = new Sprite(this, 		"./gfx/intro/introscreen.png", 0, 0, WWIDTH, WHEIGHT);
 	introduction_screen = new Sprite(this, "./gfx/intro/introductscreen.png", 0, 0, WWIDTH, WHEIGHT);
-	main_menu_screen = new Sprite(this, 	"./gfx/menu/mainmenu.png", 0, 0, WWIDTH, WHEIGHT);
 	highscore_screen = new Sprite(this, 	"./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
 	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
 	gameover_screen = new Sprite(this, 	"./gfx/menu/gameover.png", 0, 0, WWIDTH, WHEIGHT);
@@ -191,10 +191,8 @@ bool Game::init()
 	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 329, 325, 142, 39, false, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png"));
 
 	//Main menu buttons
-	mainmenu_buttons.push_back(new Button(renderer, BUTTON_STARTGAME, 272, 230, 257, 53, false, "./gfx/button/mainmenu-startgame-257x53.png", "./gfx/button/mainmenu-startgame-over-267x63.png"));
-	mainmenu_buttons.push_back(new Button(renderer, BUTTON_HIGHSCORE, 287, 300, 226, 52, false, "./gfx/button/mainmenu-highscore-226x52.png", "./gfx/button/mainmenu-highscore-over-236x62.png"));
-	mainmenu_buttons.push_back(new Button(renderer, BUTTON_VIEW_HELP, 343, 370, 115, 50, false, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png"));
-	mainmenu_buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 295, 440, 210, 53, false, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png"));
+	mainMenuState = new MainMenuState(this);
+	mainMenuState->init();
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);

@@ -77,7 +77,6 @@ void Game::cleanup()
 	delete dev_screen;
 	delete intro_screen;
 	delete introduction_screen;
-	delete main_menu_screen;
 	delete highscore_screen;
 	delete ingame_menu_screen;
 	delete gameover_screen;
@@ -160,10 +159,8 @@ void Game::cleanup()
 	}
 
 	//Delete buttons
-	for (iter_mainmenu_button = mainmenu_buttons.begin(); iter_mainmenu_button != mainmenu_buttons.end(); iter_mainmenu_button++)
-	{
-		delete (*iter_mainmenu_button);
-	}
+	mainMenuState->cleanup();
+	delete mainMenuState;
 
 	//Delete highscore-sprites
 	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)

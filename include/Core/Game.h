@@ -43,8 +43,11 @@
 
 #include <Core/ConfigFile.h>
 
+#include <State/MainMenuState.h>
+
 class Level;
 class Timer;
+class MainMenuState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -119,7 +122,6 @@ private:
 	Sprite* dev_screen;
 	Sprite* intro_screen;
 	Sprite* introduction_screen;
-	Sprite* main_menu_screen;
 	Sprite* highscore_screen;
 	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
 	Sprite* gameover_screen;
@@ -188,13 +190,18 @@ private:
 	int  get_highscore_pos();
 	void insert_new_highscore(int new_score, int position, std::string name);
 	void write_highscore_to_file();
+public:
 	void update_highscore_sprites();
-
+private:
 	void show_intro(SDL_Event* event);
 	void update_fps(int delta, int, int, int);
 
 /** Definition in Game_Cleanup.cpp */
+public:
 	void reset_game();							///Resets containers of enemies, towers and variables that change during gameplay.
+	void setState(int state);
+	void exit();
+private:
 	void cleanup();								///Cleanup when exiting game.
 
 /** Definition in Game_Init.cpp    */
@@ -216,7 +223,6 @@ private:
 
 	/** Handle event depending on gamestate */
 	void state_gameplay_running(SDL_Event* event);
-	void state_mainmenu(SDL_Event* event);
 	void state_introduction(SDL_Event* event);
 	void state_gameover(SDL_Event* event);
 	void state_highscore(SDL_Event* event);
@@ -247,7 +253,6 @@ private:
 	void draw_dev_screen();
 	void draw_introscreen();
 	void draw_view_help();
-	void draw_mainmenu();
 	void draw_highscore();
 	void draw_gameover();
 	void draw_ingame_menu(); ///Game paused
@@ -261,7 +266,6 @@ private:
 	void draw_build_item();
 	void draw_ingame_buttons();
 	void draw_ingame_menu_buttons();
-	void draw_mainmenu_buttons();
 	void draw_money_score();
 
 	void render_gameplay();
@@ -298,6 +302,10 @@ public:
 	std::string ftos(float);
 
 private:
+	/* STATES */
+	MainMenuState* mainMenuState;
+
+private:
 /** Sprite containers */
 
 	std::map<int, Sprite*> optionbox_buttonstorage;
@@ -326,9 +334,6 @@ private:
 	Button* sound_button;
 	int sound_btn_repeat_value;
 	int sound_btn_repeat_delay;
-
-	ButtonList mainmenu_buttons;
-	ButtonList::iterator iter_mainmenu_button;
 
 	ButtonList ingame_buttons;
 	ButtonList::iterator iter_ingame_button;
