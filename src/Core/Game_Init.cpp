@@ -5,9 +5,6 @@
  *      Author: samuel
  */
 #include <Core/Game.h>
-#if WIN32
-#include <Windows.h>
-#endif
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
