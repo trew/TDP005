@@ -11,12 +11,14 @@ class HighscoreState : public State
 public:
 	HighscoreState(Game* const game) : State(game) {}
 
-	bool init();
-	void cleanup();
+	bool init() override;
+	void cleanup() override;
 
-	bool handleEvent(const SDL_Event &ev);
-	void update();
-	void render(SDL_Renderer* const renderer);
+	void onEnter() override;
+	void onExit() override;
+
+	bool handleEvent(const SDL_Event &ev) override;
+	void render(SDL_Renderer* const renderer) override;
 
 	bool isQualifyingScore(const int score);
 	void updateHighscoreSprites();

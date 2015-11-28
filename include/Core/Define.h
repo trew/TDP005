@@ -9,6 +9,7 @@
 #define DEFINE_H_
 
 const char* const VERSION = "1.3";
+const bool DEBUGMODE = false;
 
 const int STARTING_MONEY = 100;
 const int STARTING_LIVES = 20;
@@ -34,20 +35,10 @@ const int WHEIGHT 			=	600;
 const int WBPP 				=	32;
 const int TILESIZE 		=	40;
 
-
 const int PLAYERNAME_LENGTH_MAX = 10;
-
-
-const int BUTTON_STARTGAME	= 	1;
-const int BUTTON_HIGHSCORE	=	2;
-const int BUTTON_VIEW_HELP  =   3;
-const int BUTTON_EXITGAME	=	4;
-const int BUTTON_EXITTOMENU	=	5;
-const int BUTTON_RESUMEGAME	=	6;
 
 const int BUTTONS			=	100;
 const int BUTTON_MENU		=	101;
-const int BUTTON_UPGR 		=	102;
 const int BUTTON_BASE		=	103;
 const int BUTTON_BASIC		=	104;
 const int BUTTON_BOMB		=	105;

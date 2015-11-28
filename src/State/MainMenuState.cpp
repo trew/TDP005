@@ -1,15 +1,37 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/HighscoreState.h>
+#include <State/GamePlayState.h>
+#include <Core/GameEngine.h>
 
 bool MainMenuState::init()
 {
-	SDL_Renderer* const renderer = game->getRenderer();
+	SDL_Renderer* const renderer = getRenderer();
 	background = new Sprite(game, "./gfx/menu/mainmenu.png", 0, 0, WWIDTH, WHEIGHT);
-	buttons.push_back(new Button(renderer, BUTTON_STARTGAME, 272, 230, 257, 53, false, "./gfx/button/mainmenu-startgame-257x53.png", "./gfx/button/mainmenu-startgame-over-267x63.png"));
-	buttons.push_back(new Button(renderer, BUTTON_HIGHSCORE, 287, 300, 226, 52, false, "./gfx/button/mainmenu-highscore-226x52.png", "./gfx/button/mainmenu-highscore-over-236x62.png"));
-	buttons.push_back(new Button(renderer, BUTTON_VIEW_HELP, 343, 370, 115, 50, false, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png"));
-	buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 295, 440, 210, 53, false, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png"));
+	buttons.push_back(new Button(renderer, 272, 230, 257, 53, "./gfx/button/mainmenu-startgame-257x53.png", "./gfx/button/mainmenu-startgame-over-267x63.png", [this](Button*) -> bool
+	{
+		game->reset_game();
+		game->gamePlayState->setSubState(GAME_PAUSED);
+		game->getEngine()->setState((State*)game->gamePlayState);
+		return true;
+	}));
+	buttons.push_back(new Button(renderer, 287, 300, 226, 52, "./gfx/button/mainmenu-highscore-226x52.png", "./gfx/button/mainmenu-highscore-over-236x62.png", [this](Button*) -> bool
+	{
+		game->highscoreState->updateHighscoreSprites();
+		game->getEngine()->setState(game->highscoreState);
+		return true;
+	}));
+	buttons.push_back(new Button(renderer, 343, 370, 115, 50, "./gfx/button/mainmenu-help-115x50.png", "./gfx/button/mainmenu-help-over-125x60.png", [this](Button*) -> bool
+	{
+		game->getEngine()->setState((State*)game->viewHelpState);
+		return true;
+	}));
+	buttons.push_back(new Button(renderer, 295, 440, 210, 53, "./gfx/button/mainmenu-exitgame-210x53.png", "./gfx/button/mainmenu-exitgame-over-220x63.png", [this](Button*) -> bool
+	{
+		game->getEngine()->exit();
+		return true;
+	}));
+
 	return true;
 }
 
@@ -34,23 +56,7 @@ bool MainMenuState::handleEvent(const SDL_Event &ev)
 		{
 			if ((*it)->overlaps(m_x, m_y))
 			{
-				switch ((*it)->get_type())
-				{
-				case BUTTON_STARTGAME:
-					game->reset_game();
-					game->setState(GAME_PAUSED);
-					return true;
-				case BUTTON_HIGHSCORE:
-					game->highscoreState->updateHighscoreSprites();
-					game->setState(HIGHSCORE);
-					return true;
-				case BUTTON_VIEW_HELP:
-					game->setState(VIEW_HELP);
-					return true;
-				case BUTTON_EXITGAME:
-					game->exit();
-					return true;
-				}
+				return (*it)->performAction();
 			}
 		}
 	}

@@ -20,11 +20,11 @@ class Projectile: public Sprite
 {
 public:
 	///Creates a projectile using a lot of different parameters.
-	Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double movespeed_in, int damage_in, double splash_area_in, int life_time);
+	Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double movespeed_in, int damage_in, double splash_area_in, const float &life_time);
 	virtual ~Projectile();	///< Destructor
 
 	void draw(SDL_Renderer* renderer);		///< Draw projectile to screen
-	void update(int delta);			///< Update projectile
+	void update(const float &timeStep) override;			///< Update projectile
 
 	int get_damage();		///< Get damage from projectile
 	double get_splash_area();	///< Should be used to give damage to enemies in an area. NOT DONE!
@@ -37,10 +37,13 @@ private:
 	double splash_area;
 
 private:
-	int life_time;
+	/**
+	 * Life time in seconds
+	 */
+	float life_time;
 	bool dead;
 	double conv_radian_to_degree(double a);
-    double conv_degree_to_radian(double a);
+  double conv_degree_to_radian(double a);
 };
 
 #endif /* PROJECTILE_H_ */

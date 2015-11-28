@@ -1,6 +1,7 @@
 #include <State/IntroState.h>
 #include <Core/Define.h>
 #include <SDL2_gfxPrimitives.h>
+#include <Core/GameEngine.h>
 
 bool IntroState::init()
 {
@@ -23,8 +24,7 @@ bool IntroState::handleEvent(const SDL_Event &ev)
 {
 	if (ev.type == SDL_QUIT)
 	{
-		game->exit();
-		game->setState(EXIT);
+		game->getEngine()->exit();
 		return true;
 	}
 	else if (ev.type == SDL_KEYDOWN)
@@ -33,7 +33,7 @@ bool IntroState::handleEvent(const SDL_Event &ev)
 		{
 			if (internalState == INTROSCREEN)
 			{
-				game->setState(MAINMENU);
+				game->getEngine()->setState((State*)game->mainMenuState);
 			}
 			else
 			{
@@ -46,9 +46,8 @@ bool IntroState::handleEvent(const SDL_Event &ev)
 	return false;
 }
 
-void IntroState::update()
+void IntroState::update(const float &timeStep)
 {
-	
 	if (SDL_GetTicks() > (startTime + 6000) && internalState == DEVSCREEN)
 		internalState = INTROSCREEN;
 }

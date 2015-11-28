@@ -1,5 +1,6 @@
 #include <State/GameOverState.h>
 #include <Utils/Utils.h>
+#include <Core/GameEngine.h>
 
 bool GameOverState::init()
 {
@@ -20,7 +21,7 @@ bool GameOverState::handleEvent(const SDL_Event &ev)
 {
 	if (ev.key.type == SDL_KEYDOWN)
 	{
-		game->setState(MAINMENU);
+		game->getEngine()->setState((State*)game->mainMenuState);
 		return true;
 	}
 

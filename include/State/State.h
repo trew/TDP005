@@ -4,8 +4,6 @@
 #include <SDL.h>
 #include <Core/Game.h>
 
-class Game;
-
 class State
 {
 public:
@@ -14,24 +12,22 @@ public:
 	virtual bool init() = 0;
 	virtual void cleanup() = 0;
 
-	virtual void pause() {}
-	virtual void resume() {}
+	virtual void onEnter() {};
+	virtual void onExit() {};
 
 	virtual bool handleEvent(const SDL_Event &ev) { return false; }
-	virtual void update() {}
+	virtual void update(const float &timeStep) {}
 
 	virtual void render(SDL_Renderer* const renderer) {}
 
 	Game* const getGame() { return game; }
-
-	State* const getParent() const { return parent; }
-	const int getParentStateValue() const { return parentStateValue; }
-	void setParent(State* const parent, int stateValue) { this->parent = parent; parentStateValue = stateValue; }
+	SDL_Renderer* const getRenderer() { return renderer; }
 
 protected:
-	State(Game* const game) : game(game) {}
+	State(Game* const game);
 
 	Game* const game;
+	SDL_Renderer* const renderer;
 
 	State* parent;
 	int parentStateValue;

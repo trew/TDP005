@@ -24,26 +24,26 @@ void Tile::set_tower(BaseTower* _tower) {
 	tower = _tower;
 }
 
-BaseTower* Tile::get_tower() {
+BaseTower* const Tile::get_tower() const {
 	return tower;
 }
 
-GridPosition Tile::get_position() {
+const GridPosition& Tile::get_position() const {
 	return position;
 }
 
-float Tile::get_center_x() {
+const float Tile::get_center_x() const {
 	return position.second * TILESIZE + TILESIZE / 2.0f;
 }
 
-float Tile::get_center_y() {
+const float Tile::get_center_y() const {
 	return position.first * TILESIZE + TILESIZE / 2.0f;
 }
 
-int Tile::get_x_pixel_pos() {
+const int Tile::get_x_pixel_pos() const {
 	return position.second * TILESIZE;
 }
 
-int Tile::get_y_pixel_pos() {
+const int Tile::get_y_pixel_pos() const {
 	return position.first * TILESIZE;
 }

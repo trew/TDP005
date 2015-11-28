@@ -24,24 +24,24 @@ public:
 	virtual ~Grid();
 
 	void create_grid(int width, int height);
-	void add_tile(GridPosition pos);
+	void add_tile(const GridPosition &pos);
 
-	Tile* get_tile(GridPosition);
+	Tile* get_tile(const GridPosition &);
 	Tile* get_tile(int row, int col);
 	Tile* get_tile_from_mouse(int mouse_x, int mouse_y);
-	bool is_placeable_tile(Tile*);
+	bool is_placeable_tile(Tile*) const;
 
-	int get_tile_x_position(Tile*); ///< Returns the X position in pixels
-	int get_tile_y_position(Tile*); ///< Returns the Y position in pixels
+	int get_tile_x_position(Tile*) const; ///< Returns the X position in pixels
+	int get_tile_y_position(Tile*) const; ///< Returns the Y position in pixels
 
 
-	BaseTower* get_tower(GridPosition);
-	void set_tower(GridPosition, BaseTower*);
+	BaseTower* get_tower(const GridPosition &);
+	void set_tower(const GridPosition &, BaseTower*);
 
 	Path* get_path(Tile* start, Tile* dest);
 
-	Tile* get_start_tile();
-	Tile* get_portal_tile();
+	Tile* get_start_tile() const;
+	Tile* get_portal_tile() const;
 	void set_start_tile(Tile*);
 	void set_portal_tile(Tile*);
 

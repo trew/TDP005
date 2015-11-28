@@ -1,69 +1,78 @@
-/*
- * ConfigParser.cpp
- *
- *  Created on: 4 mar 2013
- *      Author: Cosmic
- */
-
 #include <Core/ConfigFile.h>
 #include <ctime>
 
-using ConfigUtil::warn;
-
-namespace ConfigUtil {
+namespace ConfigUtil
+{
 	void warn(const std::string &error)
 	{
 		std::cout << "CFG - Warning: " << error << std::endl;
 	}
 }
 
-
-ConfigFile::ConfigFile(const std::string &fn): filename(fn) {
+ConfigFile::ConfigFile(const std::string &fn): filename(fn)
+{
 	parse();
 }
 
-ConfigFile::~ConfigFile() {
+ConfigFile::~ConfigFile()
+{
 }
 
-void ConfigFile::remove_comment(std::string &line) const {
+void ConfigFile::removeComment(std::string &line) const
+{
 	if (line.find('#') != line.npos)
+	{
 		line.erase(line.find('#'));
+	}
 }
 
-bool ConfigFile::only_whitespace(const std::string &line) const {
-	return (line.find_first_not_of(' ') == line.npos);
+bool ConfigFile::isOnlyWhitespace(const std::string &line) const
+{
+	return line.find_first_not_of(' ') == line.npos;
 }
 
-bool ConfigFile::valid_line(const std::string &line) const {
-	// remember to run remove_comment() before this function!
+bool ConfigFile::isValidLine(const std::string &line) const
+{
+	// remember to run removeComment() before this function!
 
 	std::string tmp = line;
 	tmp.erase(0, tmp.find_first_not_of("\t "));
 	if (tmp[0] == '=') // no key was found
+	{
 		return false;
+	}
 
 	// look for value
 	for (size_t i = tmp.find('=') + 1; i < tmp.length(); i++)
+	{
 		if (tmp[i] != ' ')
+		{
 			return true;
+		}
+	}
 
 	// only whitespace was found
 	return false;
 }
 
-void ConfigFile::extract_key(std::string &key, size_t const &sep_pos, const std::string &line) const {
+void ConfigFile::extractKey(std::string &key, const size_t &sep_pos, const std::string &line) const
+{
 	key = line.substr(0, sep_pos);
 	if (key.find('\t') != line.npos || key.find(' ') != line.npos)
+	{
 		key.erase(key.find_first_of("\t "));
+	}
 }
 
-void ConfigFile::extract_value(std::string &value, size_t const &sep_pos, const std::string &line) const {
+void ConfigFile::extractValue(std::string &value, const size_t &sep_pos, const std::string &line) const
+{
 	value = line.substr(sep_pos + 1);
 	value.erase(0, value.find_first_not_of("\t "));
 	value.erase(value.find_last_not_of("\t ") + 1);
 }
 
-void ConfigFile::extract_contents(const std::string &line) {
+void ConfigFile::extractContents(const std::string &line)
+{
 	// called from parse_line(), validated there
 
 	std::string tmp = line;
@@ -72,37 +81,48 @@ void ConfigFile::extract_contents(const std::string &line) {
 	size_t sep_pos = tmp.find('=');
 
 	std::string key, value;
-	extract_key(key, sep_pos, tmp);
-	extract_value(value, sep_pos, tmp);
-	if (!key_exists(key))
+	extractKey(key, sep_pos, tmp);
+	extractValue(value, sep_pos, tmp);
+
+	if (!containsKey(key))
+	{
 		contents.insert(std::pair<std::string, std::string>(key, value));
+	}
 	else
-		warn(key + " was declared at least twice in configuration file.");
+	{
+		ConfigUtil::warn(key + " was declared at least twice in configuration file.");
+	}
 }
 
-void ConfigFile::parse_line(const std::string &line, size_t const line_number) {
+void ConfigFile::parseLine(const std::string &line, size_t const line_number)
+{
 	// validate line
-	if (line.find('=') == line.npos) {
-		warn("Cannot find separator on line: " + Convert::T_to_string(line_number) + "\n");
+	if (line.find('=') == line.npos)
+	{
+		ConfigUtil::warn("Cannot find separator on line: " + Convert::toString(line_number) + "\n");
 		return;
 	}
-	if (!valid_line(line)) {
-		warn("Bad format on line: " + Convert::T_to_string(line_number) + "\n");
+	if (!isValidLine(line))
+	{
+		ConfigUtil::warn("Bad format on line: " + Convert::toString(line_number) + "\n");
 		return;
 	}
 
-	extract_contents(line);
+	extractContents(line);
 }
 
-bool ConfigFile::key_exists(const std::string &key) const {
+bool ConfigFile::containsKey(const std::string &key) const
+{
 	return contents.find(key) != contents.end();
 }
 
-void ConfigFile::parse() {
+void ConfigFile::parse()
+{
 	std::ifstream file;
 	file.open(filename.c_str());
-	if (!file) {
-		warn("File " + filename + " could not be found.");
+	if (!file)
+	{
+		ConfigUtil::warn("File " + filename + " could not be found.");
 		return;
 	}
 
@@ -113,23 +133,29 @@ void ConfigFile::parse() {
 		line_number++;
 		std::string tmp = line;
 		if (tmp.empty() || tmp == "\r" || tmp == "\n")
+		{
 			continue;
+		}
 
-		remove_comment(tmp);
-		if (only_whitespace(tmp))
+		removeComment(tmp);
+		if (isOnlyWhitespace(tmp))
+		{
 			continue;
+		}
 
-		parse_line(tmp, line_number);
+		parseLine(tmp, line_number);
 	}
 
 	file.close();
 }
 
-void ConfigFile::save() const {
+void ConfigFile::save() const
+{
 	std::ofstream file;
 	file.open(filename.c_str());
-	if (!file) {
-		warn("File " + filename + " could not be opened.");
+	if (!file)
+	{
+		ConfigUtil::warn("File " + filename + " could not be opened.");
 		return;
 	}
 
@@ -145,8 +171,10 @@ void ConfigFile::save() const {
 	file << "# Configuration file" << std::endl;
 	file << "# " << buffer << std::endl << std::endl;
 
-	for (std::map<std::string, std::string>::const_iterator it = contents.begin(); it != contents.end(); it++) {
+	for (std::map<std::string, std::string>::const_iterator it = contents.begin(); it != contents.end(); it++)
+	{
 		file << (*it).first << "=" << (*it).second << std::endl;
 	}
+
 	file.close();
 }

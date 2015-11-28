@@ -240,7 +240,7 @@ void Sprite::update_text(std::string){
 
 /*****************************************************************************************/
 /* Virtuals */
-void Sprite::update(int delta)
+void Sprite::update(const float&)
 {
 	///Pure virtual
 }

@@ -1,5 +1,7 @@
 #include <State/HighscoreState.h>
+#include <Core/GameEngine.h>
 #include <Utils/Utils.h>
+#include <Utils/Log.h>
 
 bool HighscoreState::init()
 {
@@ -32,9 +34,22 @@ void HighscoreState::cleanup()
 	}
 }
 
+void HighscoreState::onEnter()
+{
+	if (internalState == ENTER)
+	{
+		SDL_StartTextInput();
+	}
+}
+
+void HighscoreState::onExit()
+{
+	SDL_StopTextInput();
+}
+
 bool HighscoreState::handleEvent(const SDL_Event &ev)
 {
-	if (ev.key.type != SDL_KEYDOWN)
+	if (ev.key.type != SDL_KEYDOWN && ev.type != SDL_TEXTINPUT)
 	{
 		return false;
 	}
@@ -43,7 +58,8 @@ bool HighscoreState::handleEvent(const SDL_Event &ev)
 	{
 		if (ev.key.keysym.sym == SDLK_ESCAPE)
 		{
-			game->setState(MAINMENU);
+			game->getEngine()->setState((State*)game->mainMenuState);
+			internalState = SHOW;
 			return true;
 		}
 	}
@@ -51,7 +67,8 @@ bool HighscoreState::handleEvent(const SDL_Event &ev)
 	{
 		if (ev.key.keysym.sym == SDLK_ESCAPE)
 		{
-			game->setState(MAINMENU);
+			game->getEngine()->setState((State*)game->mainMenuState);
+			internalState = SHOW;
 			return true;
 		}
 		else if (ev.key.keysym.sym == SDLK_RETURN)
@@ -62,42 +79,39 @@ bool HighscoreState::handleEvent(const SDL_Event &ev)
 				writeHighscoreToFile();
 				updateHighscoreSprites();
 
-				game->setState(HIGHSCORE);
 				internalState = SHOW;
 
 				inputText->update_text("Enter your name");
 				return true;
 			}
 		}
-		else if ((ev.key.keysym.sym == SDLK_BACKSPACE) && (playerName.length() != 0))
+		else if (ev.key.keysym.sym == SDLK_BACKSPACE)
 		{
-			playerName.erase(playerName.length() - 1);
-			inputText->update_text(playerName + "_");
+			if (playerName.length() != 0)
+			{
+				playerName.erase(playerName.length() - 1);
+				inputText->update_text(playerName + "_");
+			}
 			return true;
 		}
-	}
-	else if (ev.type == SDL_TEXTINPUT)
-	{
-		if (playerName.length() < PLAYERNAME_LENGTH_MAX - 1)
+		else if (ev.type == SDL_TEXTINPUT)
 		{
-			playerName += ev.text.text;
-			inputText->update_text(playerName + "_");
-			return true;
-		}
-		else if (playerName.length() == PLAYERNAME_LENGTH_MAX - 1)
-		{
-			playerName += ev.text.text;
-			inputText->update_text(playerName);
-			return true;
-		}
+			if (playerName.length() < PLAYERNAME_LENGTH_MAX - 1)
+			{
+				playerName += ev.text.text;
+				inputText->update_text(playerName + "_");
+				return true;
+			}
+			else if (playerName.length() == PLAYERNAME_LENGTH_MAX - 1)
+			{
+				playerName += ev.text.text;
+				inputText->update_text(playerName);
+				return true;
+			}
 
+		}
 	}
 	return false;
-}
-
-void HighscoreState::update()
-{
-
 }
 
 void HighscoreState::render(SDL_Renderer* const renderer)
@@ -210,7 +224,11 @@ const int HighscoreState::getHighscorePos(const int score)
 {
 	if(highscores.empty())
 	{
-		return 0;
+		readHighscoresFromFile();
+		if (highscores.empty())
+		{
+			return 0;
+		}
 	}
 
 	for (unsigned int i = 0; i < 10 && i < highscores.size(); i++)
@@ -233,6 +251,7 @@ const int HighscoreState::getHighscorePos(const int score)
 
 bool HighscoreState::readHighscoresFromFile()
 {
+	LOG_DEBUG << "Reading highscores";
 	if (!highscores.empty())
 	{
 		for (HighscoreList::iterator it = highscores.begin(); it != highscores.end(); it++)
@@ -247,6 +266,7 @@ bool HighscoreState::readHighscoresFromFile()
 	file_in.open("highscore");
 	if (!file_in)
 	{
+		LOG_DEBUG << "Highscore file does not exist. Using default values";
 		// default
 		highscores.push_back(new std::pair<int, std::string>(1000, "Uniden"));
 		highscores.push_back(new std::pair<int, std::string>(500, "Bigby Wolf"));
@@ -266,8 +286,10 @@ bool HighscoreState::readHighscoresFromFile()
 
 	file_in >> score;
 	file_in.get();
+	LOG_DEBUG << "Reading highscore entries from file";
 	while (getline(file_in, name))
 	{
+		LOG_DEBUG << name << " " << score;
 		highscores.push_back(new std::pair<int, std::string>(score, name));
 		file_in >> score;
 		file_in.get();
@@ -279,6 +301,7 @@ bool HighscoreState::readHighscoresFromFile()
 
 void HighscoreState::insertNewHighscore(int newScore, int position, std::string name)
 {
+	LOG_DEBUG << "Inserting highscore(" << name << " " << newScore << " at position " << position;
 	HighscoreList::iterator it = highscores.begin();
 	it += position;
 
@@ -287,6 +310,7 @@ void HighscoreState::insertNewHighscore(int newScore, int position, std::string 
 
 void HighscoreState::writeHighscoreToFile()
 {
+	LOG_DEBUG << "Writing highscores to file";
 	std::ofstream fout;
 	fout.open("highscore");
 
@@ -298,6 +322,7 @@ void HighscoreState::writeHighscoreToFile()
 			break;
 		}
 
+		LOG_DEBUG << (*it)->first << " " << (*it)->second;
 		fout << (*it)->first << " " <<(*it)->second << std::endl;
 	}
 }

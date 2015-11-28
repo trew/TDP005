@@ -1,12 +1,25 @@
 #include <State/InGameMenuState.h>
+#include <Core/GameEngine.h>
 
 bool InGameMenuState::init()
 {
 	inGameMenuScreen = new Sprite(game, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
 
-	inGameMenuButtons.push_back(new Button(game->getRenderer(), BUTTON_RESUMEGAME, 340, 225, 121, 41, false, "./gfx/button/ingamemenu-continue-121x41.png", "./gfx/button/ingamemenu-continue-over-131x51.png"));
-	inGameMenuButtons.push_back(new Button(game->getRenderer(), BUTTON_EXITTOMENU, 317, 275, 166, 40, false, "./gfx/button/ingamemenu-exittomenu-166x40.png", "./gfx/button/ingamemenu-exittomenu-over-176x50.png"));
-	inGameMenuButtons.push_back(new Button(game->getRenderer(), BUTTON_EXITGAME, 329, 325, 142, 39, false, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png"));
+	inGameMenuButtons.push_back(new Button(getRenderer(), 340, 225, 121, 41, "./gfx/button/ingamemenu-continue-121x41.png", "./gfx/button/ingamemenu-continue-over-131x51.png", [this](Button*) -> bool
+	{
+		game->getEngine()->popState();
+		return true;
+	}));
+	inGameMenuButtons.push_back(new Button(getRenderer(), 317, 275, 166, 40, "./gfx/button/ingamemenu-exittomenu-166x40.png", "./gfx/button/ingamemenu-exittomenu-over-176x50.png", [this](Button*) -> bool
+	{
+		game->getEngine()->setState((State*)game->mainMenuState);
+		return true;
+	}));
+	inGameMenuButtons.push_back(new Button(getRenderer(), 329, 325, 142, 39, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png", [this](Button*) -> bool
+	{
+		game->getEngine()->exit();
+		return true;
+	}));
 
 	return true;
 }
@@ -30,7 +43,7 @@ bool InGameMenuState::handleEvent(const SDL_Event &ev)
 	{
 		if (ev.key.keysym.sym == SDLK_ESCAPE)
 		{
-			game->setState(getParentStateValue());
+			game->getEngine()->popState();
 			return true;
 		}
 	}
@@ -43,18 +56,7 @@ bool InGameMenuState::handleEvent(const SDL_Event &ev)
 			{
 				if ((*it)->overlaps(m_x, m_y))
 				{
-					switch ((*it)->get_type())
-					{
-					case BUTTON_RESUMEGAME:
-						game->setState(getParentStateValue());
-						return true;
-					case BUTTON_EXITTOMENU:
-						game->setState(MAINMENU);
-						return true;
-					case BUTTON_EXITGAME:
-						game->exit();
-						return true;
-					}
+					return (*it)->performAction();
 				}
 			}
 		}

@@ -11,9 +11,9 @@ namespace towers {
 
 Range::Range(SDL_Renderer* renderer) : Tower(renderer) {
 	level = 1;
-	level_1 = {2.0f, 30, 3, 250.f, 1500, 600.f, 0,  70, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
-	level_2 = {2.5f, 50, 3, 275.f, 1200, 625.f, 0, 400, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
-	level_3 = {3.0f,100, 3, 300.f, 1000, 650.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
+	level_1 = {2.0f, 30, 3, 250.f, 1.5f, 600.f, 0,  70, 0, "./gfx/tower/tower-range-lvl1.png", "./gfx/tower/cannon-range.png"};
+	level_2 = {2.5f, 50, 3, 275.f, 1.2f, 625.f, 0, 400, 0, "./gfx/tower/tower-range-lvl2.png", "./gfx/tower/cannon-range.png"};
+	level_3 = {3.0f,100, 3, 300.f, 1.f, 650.f, 0,   0, 0, "./gfx/tower/tower-range-lvl3.png", "./gfx/tower/cannon-range.png"};
 	update_data(level_1);
 	sell_value = 25;
 	setBaseTexture(Sprite::load_image(renderer, level_1.base_surface_location));
@@ -29,7 +29,7 @@ void Range::update_informationtext() {
 		add_row_to_information_text("Damage: " + itos(get_damage()));
 	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
-	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
+	add_row_to_information_text("Reload: " + itos((int)(get_reloading_time() * 1000.f)) + "ms");
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + itos(get_cost_upgrade()));
 	add_row_to_information_text("Sell value: " + itos(get_sell_value() / 2));

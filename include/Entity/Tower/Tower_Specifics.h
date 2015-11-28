@@ -31,9 +31,9 @@ int tower_basic_1_damage = 20;
 int tower_basic_2_damage = 30;
 int tower_basic_3_damage = 70;
 // ReloadingTime
-float tower_basic_1_reloadingtime = 20;
-float tower_basic_2_reloadingtime = 18;
-float tower_basic_3_reloadingtime = 14;
+float tower_basic_1_reloadingtime = 20.f;
+float tower_basic_2_reloadingtime = 18.f;
+float tower_basic_3_reloadingtime = 14.f;
 // RotationSpeed
 float tower_basic_1_rotationspeed = 7.0f;
 float tower_basic_2_rotationspeed = 8.0f;
@@ -52,7 +52,7 @@ float tower_speed_1_range = format_range(1.2f);
 float tower_speed_2_range = format_range(1.7f);
 float tower_speed_3_range = format_range(2.0f);
 // Damage
-int tower_speed_1_damage = 16;
+float tower_speed_1_damage = 16;
 int tower_speed_2_damage = 18;
 int tower_speed_3_damage = 30;
 // ReloadingTime

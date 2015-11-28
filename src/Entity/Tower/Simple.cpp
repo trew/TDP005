@@ -13,10 +13,10 @@ Simple::Simple(SDL_Renderer* renderer) : Tower(renderer) {
 	level = 1;
 	max_level = 1;
 	base_range = range = 1.0f;
-	rotation_speed = 450.0;
-	base_reloading_time = reloading_time = 800;
+	rotation_speed = 450.f;
+	base_reloading_time = reloading_time = 0.8f;
 	base_damage = damage = 15;
-	projectile_speed = 300;
+	projectile_speed = 300.f;
 	sell_value = cost_buy = 5;
 	cost_upgrade = 20;
 	setBaseCannonTexture(Sprite::load_image(renderer, "./gfx/tower/tower-simple.png"));
@@ -30,7 +30,7 @@ void Simple::update_informationtext() {
 		add_row_to_information_text("Damage: " + itos(get_damage()));
 	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
-	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
+	add_row_to_information_text("Reload: " + itos((int)(get_reloading_time() * 1000.f)) + "ms");
 	if (get_cost_buy() > 0)
 		add_row_to_information_text("Buy cost: " + itos(get_cost_buy()));
 	if (get_cost_upgrade() > 0)

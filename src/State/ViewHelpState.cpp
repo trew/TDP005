@@ -1,4 +1,5 @@
 #include <State/ViewHelpState.h>
+#include <Core/GameEngine.h>
 
 bool ViewHelpState::init()
 {
@@ -18,7 +19,7 @@ bool ViewHelpState::handleEvent(const SDL_Event &ev)
 {
 	if (ev.key.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_ESCAPE)
 	{
-		game->setState(MAINMENU);
+		game->getEngine()->setState((State*)game->mainMenuState);
 		return true;
 	}
 

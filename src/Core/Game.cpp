@@ -1,5 +1,16 @@
 #include <Core/Game.h>
 #include <Utils/Utils.h>
+#include <State/State.h>
+#include <State/MainMenuState.h>
+#include <State/IntroState.h>
+#include <State/ViewHelpState.h>
+#include <State/HighscoreState.h>
+#include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
+#include <State/GamePlayState.h>
+#include <Core/GameEngine.h>
+#include <Utils/Log.h>
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -25,57 +36,203 @@ TTF_Font* Game::standard_font_12;
 Game::Game()
 {
 	level_control = new Level();
-	FPS_MAX = 100;						//Defines max FPS. Slow computers may experience lower FPS though.
-	fullscreen = false;
-	game_running = true;
-	game_state = DEVSCREEN;			//In which state we start the game.
-	game_started = false;			//If false, display "Press enter to start"
-	tile_selection = NULL;
-	last_selected_tile = NULL;
 	update_enemy_path = false;
 	need_boost_update = true;
 	timer = 0;
-	old_timer = 0;
 	current_fps = 0;
-	fps_timer = delta_timer = NULL;
-	delta = 0;
-	game_speed = 1.f;
 	sound_volume = 0;
 	config = NULL;
 
 	/* Flags */
-	grid_visible = true;
-	option_box_visible = false;
 	music_enabled = true;
 	sound_enabled = true;
-	sound_btn_repeat_delay = 100;
-	sound_btn_repeat_value = sound_btn_repeat_delay;
 
 	money = STARTING_MONEY;
 	score = 0;
 	lives = STARTING_LIVES;
 
 	// initialize pointers to null
-	SFX_build = SFX_cant_build = SFX_game_over = SFX_life_lost = SFX_new_highscore = SFX_sell = SFX_upgrade = music = NULL;
-	menu_build = menu_background = split_money_score = menu_money_score = menu_upgrade = menu_lives = menu_info = NULL;
-	option_box_BGx1 = option_box_BGx2 = option_box_BGx3 = option_box_BGx4 = option_box_BGx5 = option_box_BGx6 = NULL;
-	selection_sprite = free_spot = not_free_spot = NULL;
-	map_exit = map_wall = map_grid = map_entrance = map = NULL;
-	grid = NULL;
-	fps_text = timer_text = speed_text = NULL;
-	press_enter_to_start = NULL;
-	error_loading_highscore = NULL;
-	lives_text = level_text = money_text = score_text = NULL;
-	buildmenu_selection = NULL;
-	window = NULL;
-	renderer = NULL;
-	hovered_build_item = NULL;
-	sound_button = NULL;
+	SFX_build = SFX_game_over = SFX_life_lost = SFX_new_highscore = SFX_sell = SFX_upgrade = music = NULL;
 }
 
 Game::~Game(){
 	///Nothing needed in destructor. Cleanup is run at end of game.
 }
+
+void Game::parseConfig()
+{
+	LOG_INFO << "Parsing config file";
+	config = new ConfigFile("settings.cfg");
+	sound_volume = config->getValue<int>("sound_volume", 35);
+}
+
+bool Game::init()
+{
+	LOG_INFO << "Initializing Game";
+	parseConfig();
+
+	std::string standard_font = "./fonts/Graffiare.ttf";
+
+	standard_font_48 = TTF_OpenFont(standard_font.c_str(), 48);
+	standard_font_46 = TTF_OpenFont(standard_font.c_str(), 46);
+	standard_font_42 = TTF_OpenFont(standard_font.c_str(), 42);
+	standard_font_32 = TTF_OpenFont(standard_font.c_str(), 32);
+	standard_font_20 = TTF_OpenFont(standard_font.c_str(), 20);
+	standard_font_18 = TTF_OpenFont(standard_font.c_str(), 18);
+	standard_font_16 = TTF_OpenFont(standard_font.c_str(), 16);
+	standard_font_12 = TTF_OpenFont(standard_font.c_str(), 12);
+
+	//Load sounds
+
+	SFX_build = new Sound("./snd/SFX_4.wav", false, 0);
+	SFX_sell = new Sound("./snd/SFX_5.wav", false, 0);
+	SFX_upgrade = new Sound("./snd/SFX_2.wav", false, 0);
+	SFX_life_lost = new Sound("./snd/SFX_3.wav", false, 0);
+	SFX_new_highscore = new Sound("./snd/new_highscore.wav", false, 0);
+	SFX_game_over = new Sound("./snd/game_over.wav", false, 0);
+
+	grid = new Grid;
+	grid->create_grid(15, 15);
+	grid->set_portal_tile(grid->get_tile(GridPosition(7, 14)));
+	grid->set_start_tile(grid->get_tile(GridPosition(7, 0)));
+
+	//Main menu buttons
+	mainMenuState = new MainMenuState(this);
+	mainMenuState->init();
+	introState = new IntroState(this);
+	introState->init();
+	viewHelpState = new ViewHelpState(this);
+	viewHelpState->init();
+	highscoreState = new HighscoreState(this);
+	highscoreState->init();
+	gameOverState = new GameOverState(this);
+	gameOverState->init();
+	inGameMenuState = new InGameMenuState(this);
+	inGameMenuState->init();
+	gamePlayState = new GamePlayState(this);
+	gamePlayState->init();
+	gamePlayState->setGridVisible(config->getValue<bool>("grid", true));
+	getEngine()->setState(introState);
+
+	music = new Sound("./snd/Ultrasyd_Lonesome_Robot.ogg", true, -1);
+	Sound::set_volume(sound_volume);
+	if (music_enabled)
+	{
+		music->play();
+	}
+
+	return true;
+}
+
+void Game::reset_game()
+{
+	LOG_INFO << "Resetting Game";
+
+	LOG_DEBUG << "Clearing paths in grid";
+	grid->clear_paths();
+	LOG_DEBUG << "Resetting grid";
+	grid->reset();// needs to be done before deleting towers
+
+	LOG_DEBUG << "Clearing enemies";
+	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
+	{
+		delete (*iter_enemy);
+		(*iter_enemy) = NULL;
+	}
+	enemy_list.clear();
+
+	LOG_DEBUG << "Clearing towers";
+	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
+	{
+		delete (*iter_tower);
+		(*iter_tower) = NULL;
+	}
+	tower_list.clear();
+
+	LOG_DEBUG << "Clearing projectiles";
+	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
+	{
+		delete (*iter_projectile);
+		(*iter_projectile) = NULL;
+	}
+	projectile_list.clear();
+
+	LOG_DEBUG << "Resetting level control";
+	level_control->reset();
+
+	money = STARTING_MONEY;
+	score = 0;
+	lives = STARTING_LIVES;
+	LOG_DEBUG << "Resetting gameplaystate";
+	gamePlayState->reset();
+}
+
+void Game::cleanup()
+{
+	LOG_INFO << "Destroying Game";
+
+	LOG_INFO << "Saving Config File";
+	config->setValue<bool>("fullscreen", false);
+	config->setValue<int>("sound_volume", Sound::get_volume());
+	config->setValue<bool>("grid", gamePlayState->isGridVisible());
+	config->save();
+	delete config;
+
+	delete music;
+
+	delete level_control;
+	delete grid;
+
+	//Delete Enemies on Grid
+	for (iter_enemy = enemy_list.begin(); iter_enemy != enemy_list.end(); iter_enemy++)
+	{
+		delete (*iter_enemy);
+	}
+
+	//Delete Towers on Grid
+	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
+	{
+		delete (*iter_tower);
+	}
+
+	//Delete Towers on Grid
+	for (iter_projectile = projectile_list.begin(); iter_projectile != projectile_list.end(); iter_projectile++)
+	{
+		delete (*iter_projectile);
+	}
+
+	//Delete buttons
+	mainMenuState->cleanup();
+	delete mainMenuState;
+	introState->cleanup();
+	delete introState;
+	viewHelpState->cleanup();
+	delete viewHelpState;
+	highscoreState->cleanup();
+	delete highscoreState;
+	gameOverState->cleanup();
+	delete gameOverState;
+	inGameMenuState->cleanup();
+	delete inGameMenuState;
+	gamePlayState->cleanup();
+	delete gamePlayState;
+
+	delete SFX_build;
+	delete SFX_sell;
+	delete SFX_upgrade;
+	delete SFX_life_lost;
+	delete SFX_new_highscore;
+	delete SFX_game_over;
+
+	TTF_CloseFont(standard_font_48);
+	TTF_CloseFont(standard_font_46);
+	TTF_CloseFont(standard_font_42);
+	TTF_CloseFont(standard_font_20);
+	TTF_CloseFont(standard_font_18);
+	TTF_CloseFont(standard_font_16);
+	TTF_CloseFont(standard_font_12);
+}
+
 
 void Game::set_boost_update(bool val) {
 	need_boost_update = val;
@@ -97,88 +254,16 @@ ProjectileList* Game::get_projectiles() {
 	return &projectile_list;
 }
 
-float Game::get_time_modifier() {
-	return delta / 1000.f * game_speed;
-}
+SDL_Renderer* const Game::getRenderer() const { return engine->getRenderer(); }
 
-float Game::get_game_speed() {
-	return game_speed;
-}
-
-void Game::update_fps(int delta, int ev, int upd, int ren) {
-	if ( fps_timer->get_ticks() < 1000) {
-		current_fps++;
-	} else {
-		fps_timer->start();
-		std::string tmp = "FPS: ";
-		tmp.append(Utils::itos(current_fps));
-		tmp.append(" - Delta: ");
-		tmp.append(Utils::itos(delta));
-		tmp.append(" - Event: ");
-		tmp.append(Utils::itos(ev));
-		tmp.append(" - Update: ");
-		tmp.append(Utils::itos(upd));
-		tmp.append(" - Render: ");
-		tmp.append(Utils::itos(ren));
-		fps_text->update_text(tmp);
-		current_fps = 0;
-	}
-}
-
-int Game::on_execute()
+void Game::sendNewWave()
 {
-	/**
-	 * This is the function that runs the game.
-	 * It contains the initializing phase, the game loop and finally the cleanup process.
-	 */
-	if (init() == false)
+	if (DEBUGMODE)
 	{
-		cleanup();
-		return -1;
+		return;
 	}
 
-	SDL_Event event;
-
-	/* Game */
-	fps_timer->start();
-	delta_timer->start();
-	int ev = 0;
-	int upd = 0;
-	int ren = 0;
-
-	while (game_running)
-	{
-		delta = delta_timer->get_ticks();
-		delta_timer->start();
-		while (SDL_PollEvent(&event))
-		{
-			handle_event(&event);
-			ev = delta_timer->get_ticks();
-		}
-		update((int)(delta * game_speed));
-		upd = delta_timer->get_ticks() - ev;
-
-		update_fps(delta, ev, upd, ren);
-		render();
-		ren = delta_timer->get_ticks() - upd;
-
-		if (delta_timer->get_ticks() < (Uint32)(1000.f / FPS_MAX)) {
-			SDL_Delay( (1000.f / FPS_MAX) - delta_timer->get_ticks());
-		}
-	}
-	/* End Game */
-
-	cleanup();
-	return 0;
+	EnemyList tmp = level_control->get_new_wave(this);
+	get_enemies()->insert(get_enemies()->end(), tmp.begin(), tmp.end());
+	tmp.clear();
 }
-
-void Game::setState(int state)
-{
-	game_state = state;
-}
-
-void Game::exit()
-{
-	game_running = false;
-}
-

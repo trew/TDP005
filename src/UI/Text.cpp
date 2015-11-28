@@ -31,6 +31,8 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int x, int y, TTF_Fon
 	x_pos = (float)x;
 	y_pos = (float)y;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+
+	source = input_text;
 }
 
 Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, int x, int y, TTF_Font* font_in) : Sprite(NULL) {
@@ -51,6 +53,8 @@ Text::Text(SDL_Renderer* renderer, std::string input_text, int r, int g, int b, 
 	x_pos = (float)x;
 	y_pos = (float)y;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+
+	source = input_text;
 }
 
 void Text::update_text(std::string in_text)
@@ -65,6 +69,8 @@ void Text::update_text(std::string in_text)
 		SDL_FreeSurface(textSurface);
 		textSurface = NULL;
 		SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+
+		source = in_text;
 	}
 }
 

@@ -12,7 +12,6 @@ using namespace std;
 
 Button::Button(SDL_Renderer* renderer, int type_in, int x, int y, int w, int h, bool can_toggle_in, std::string std_img_in, std::string second_img_in): Sprite(NULL)
 {
-
 	if ((texture = load_image(renderer, std_img_in.c_str())) == NULL)
 	{
 		std::cerr << "Image " << std_img_in << " could not be loaded." << std::endl;
@@ -37,6 +36,25 @@ Button::Button(SDL_Renderer* renderer, int type_in, int x, int y, int w, int h, 
 	is_toggled = false;
 	can_toggle = can_toggle_in;
 	type = type_in;
+}
+
+Button::Button(SDL_Renderer* const renderer, const int x, const int y, const int w, const int h, std::string img) : Button(renderer, -1, x, y, w, h, false, img)
+{
+}
+
+Button::Button(SDL_Renderer* const renderer, const int x, const int y, const int w, const int h, std::string img, std::function<bool(Button* const ref)> action) : Button(renderer, -1, x, y, w, h, false, img)
+{
+	this->action = action;
+}
+
+Button::Button(SDL_Renderer* const renderer, const int x, const int y, const int w, const int h, std::string img, const std::string img2, std::function<bool(Button* const ref)> action) : Button(renderer, -1, x, y, w, h, false, img, img2)
+{
+	this->action = action;
+}
+
+Button::Button(SDL_Renderer* const renderer, const int x, const int y, const int w, const int h, std::string img, const std::string img2, bool toggleable, std::function<bool(Button* const ref)> action) : Button(renderer, -1, x, y, w, h, toggleable, img, img2)
+{
+	this->action = action;
 }
 
 Button::~Button()
@@ -96,40 +114,12 @@ void Button::draw(SDL_Renderer* renderer)
 	}
 }
 
-void Button::draw(SDL_Renderer* renderer, int x, int y)
+bool Button::performAction()
 {
-	if (!visible)
-		return;
-
-	int m_x, m_y;
-	SDL_GetMouseState(&m_x, &m_y);
-
-	SDL_Rect dest_rect;
-
-	//If mouse is over button
-	if (m_x > x_pos && m_y > y_pos && m_x < x_pos + width && m_y < y_pos + height && second_texture != NULL)
+	if (hasAction())
 	{
-		int textureW, textureH, secondTextureW, secondTextureH;
-		SDL_QueryTexture(texture, NULL, NULL, &textureW, &textureH);
-		SDL_QueryTexture(second_texture, NULL, NULL, &secondTextureW, &secondTextureH);
-
-		dest_rect.x = (Sint16)(x - ((secondTextureW - textureW) / 2.0));
-		dest_rect.y = (Sint16)(y - ((secondTextureH - textureH) / 2.0));
-		dest_rect.w = secondTextureW;
-		dest_rect.h = secondTextureH;
-		SDL_RenderCopy(renderer, second_texture, NULL, &dest_rect);
+		return action(this);
 	}
 
-	else
-	{
-		dest_rect.x = x;
-		dest_rect.y = y;
-		SDL_QueryTexture(texture, NULL, NULL, &dest_rect.w, &dest_rect.h);
-		SDL_RenderCopy(renderer, texture, NULL, &dest_rect);
-	}
-}
-
-void Button::update() {
-	if(can_toggle)
-		is_toggled = !is_toggled;
+	return false;
 }

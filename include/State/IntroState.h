@@ -9,12 +9,12 @@ class IntroState : public State
 public:
 	IntroState(Game* const game) : State(game) {}
 
-	bool init();
-	void cleanup();
+	bool init() override;
+	void cleanup() override;
 
-	bool handleEvent(const SDL_Event &ev);
-	void update();
-	void render(SDL_Renderer* const renderer);
+	bool handleEvent(const SDL_Event &ev) override;
+	void update(const float &timeStep) override;
+	void render(SDL_Renderer* const renderer) override;
 
 private:
 	int internalState;

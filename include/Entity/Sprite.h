@@ -15,11 +15,12 @@
 #include <vector>
 #include <string>
 
-class Sprite;
 class BaseTower;
 class Enemy;
 class Projectile;
 class Button;
+class Game;
+class Sprite;
 typedef std::list<Sprite*> Sprite_List;
 typedef std::list<BaseTower*> TowerList;
 typedef std::list<Enemy*> EnemyList;
@@ -34,7 +35,6 @@ typedef std::pair<int, int> GridPosition;
  *
  */
 
-class Game;
 class Sprite {
 public:
 	/* Constructor & destructor */
@@ -67,10 +67,10 @@ public:
 	virtual void draw(SDL_Renderer* renderer);
 	virtual void draw(SDL_Renderer* renderer, int x, int y);
 	int get_int_type();		///<Returns type
-	float get_distance_to(Sprite *s); ///<Pure virtual
+	float get_distance_to(Sprite *s);
 	float get_distance_to_edge(Sprite* s);
 
-	virtual void update(int delta);			///<Pure virtual
+	virtual void update(const float &timeStep);
 
 	virtual bool intersects(const Sprite* const);
 	virtual bool overlaps(const int &x, const int &y);
