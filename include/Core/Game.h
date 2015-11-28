@@ -49,6 +49,7 @@ class MainMenuState;
 class IntroState;
 class ViewHelpState;
 class HighscoreState;
+class GameOverState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -120,7 +121,6 @@ private:
 
 	/** Sprites */
 	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
-	Sprite* gameover_screen;
 
 	Sprite* map;
 	Sprite* map_grid;
@@ -139,7 +139,6 @@ private:
 	Sprite* press_enter_to_start;
 
 	Sprite* error_loading_highscore;
-	Sprite* gameover_score_text;
 
 	Sprite* lives_text;
 	Sprite* score_text;
@@ -210,7 +209,6 @@ private:
 	/** Handle event depending on gamestate */
 	void state_gameplay_running(SDL_Event* event);
 	void state_introduction(SDL_Event* event);
-	void state_gameover(SDL_Event* event);
 	void state_ingame_menu(SDL_Event* event);
 
 	/** Main function for handling events */
@@ -233,7 +231,6 @@ private:
 
 /** Definition in Game_Render.cpp */
 	void toggle_fullscreen();
-	void draw_gameover();
 	void draw_ingame_menu(); ///Game paused
 	void draw_optionbox();
 	void draw_selection();
@@ -283,6 +280,7 @@ public:
 	MainMenuState* mainMenuState;
 	ViewHelpState* viewHelpState;
 	HighscoreState* highscoreState;
+	GameOverState* gameOverState;
 
 private:
 /** Sprite containers */

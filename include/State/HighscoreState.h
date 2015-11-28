@@ -22,6 +22,7 @@ public:
 	void updateHighscoreSprites();
 	void setInternalState(const int state) { internalState = state; }
 
+	void setScore(const int score);
 private:
 	int internalState;
 

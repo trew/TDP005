@@ -6,6 +6,7 @@ bool HighscoreState::init()
 	internalState = SHOW;
 	inputText = new Text(game->getRenderer(), "Enter your name", 167, 203, 237, 0, 0, game->standard_font_46);
 	highscoreScreen = new Sprite(game, "./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
+	gameoverScoreText = new Text(game->getRenderer(), "", 167, 203, 237, 0, 0, game->standard_font_42);
 	return true;
 }
 
@@ -13,6 +14,7 @@ void HighscoreState::cleanup()
 {
 	delete highscoreScreen;
 	delete inputText;
+	delete gameoverScoreText;
 
 	for (HighscoreList::iterator it = highscores.begin(); it != highscores.end(); it++)
 	{
@@ -303,4 +305,11 @@ void HighscoreState::writeHighscoreToFile()
 bool HighscoreState::isQualifyingScore(const int score)
 {
 	return getHighscorePos(score) != -1;
+}
+
+void HighscoreState::setScore(const int score)
+{
+	std::string str = "Your score: ";
+	str.append(Utils::itos(score));
+	gameoverScoreText->update_text(str);
 }

@@ -10,6 +10,7 @@
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
+#include <State/GameOverState.h>
 #include <Utils/Utils.h>
 #include <string>
 
@@ -620,14 +621,6 @@ void Game::state_introduction(SDL_Event* event)
 	}
 }
 
-void Game::state_gameover(SDL_Event* event)
-{
-	if (event->key.type == SDL_KEYDOWN)
-	{
-		game_state = MAINMENU;
-	}
-}
-
 void Game::state_ingame_menu(SDL_Event* event)
 {
 	int m_x, m_y;
@@ -707,6 +700,13 @@ void Game::handle_event(SDL_Event* event)
 			return;
 		}
 	}
+	else if (game_state == GAMEOVER)
+	{
+		if (gameOverState->handleEvent(*event))
+		{
+			return;
+		}
+	}
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F10)
 	{
@@ -730,10 +730,6 @@ void Game::handle_event(SDL_Event* event)
 	if (game_state == INGAMEMENU)
 	{
 		state_ingame_menu(event);
-	}
-	else if (game_state == GAMEOVER)
-	{
-		state_gameover(event);
 	}
 	else if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
 	{

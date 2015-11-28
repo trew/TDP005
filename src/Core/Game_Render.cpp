@@ -10,6 +10,7 @@
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
+#include <State/GameOverState.h>
 
 void Game::toggle_fullscreen()
 {
@@ -23,12 +24,6 @@ void Game::toggle_fullscreen()
 		SDL_CreateWindowAndRenderer(WWIDTH, WHEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
 		fullscreen = true;
 	}
-}
-
-void Game::draw_gameover()
-{
-	gameover_screen->draw(renderer);
-	gameover_score_text->draw(renderer, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 260);
 }
 void Game::draw_ingame_menu()
 {
@@ -272,7 +267,7 @@ void Game::render()
 	else if (game_state == GAMEOVER)
 	{
 		render_gameplay();
-		draw_gameover();
+		gameOverState->render(renderer);
 	}
 
 	fps_text->draw(renderer);

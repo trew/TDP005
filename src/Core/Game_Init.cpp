@@ -9,6 +9,7 @@
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
+#include <State/GameOverState.h>
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -81,7 +82,6 @@ bool Game::init()
 	standard_font_16 = TTF_OpenFont(standard_font.c_str(), 16);
 	standard_font_12 = TTF_OpenFont(standard_font.c_str(), 12);
 
-	gameover_score_text = new Text(renderer, "", 167, 203, 237, 0, 0, standard_font_42);
 	error_loading_highscore = new Text(renderer, "Error! Cannot load highscores!", 200, 200, standard_font_42);
 	error_loading_highscore->hide();
 
@@ -100,7 +100,6 @@ bool Game::init()
 	map_exit = new Sprite(this, 			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
 
 	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
-	gameover_screen = new Sprite(this, 	"./gfx/menu/gameover.png", 0, 0, WWIDTH, WHEIGHT);
 
 	menu_background = new Sprite(this, 	"./gfx/menu/menu-bg.png", 580, 0, WWIDTH - MENUWIDTH, WHEIGHT);
 	menu_money_score = new Sprite(this, 	"./gfx/menu/menu-money-score-200x90.png", GRIDWIDTH, 50, 200, 90);
@@ -196,6 +195,8 @@ bool Game::init()
 	viewHelpState->init();
 	highscoreState = new HighscoreState(this);
 	highscoreState->init();
+	gameOverState = new GameOverState(this);
+	gameOverState->init();
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);

@@ -9,6 +9,7 @@
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
 #include <State/HighscoreState.h>
+#include <State/GameOverState.h>
 #include <Utils/Utils.h>
 #include <iostream>
 
@@ -140,9 +141,8 @@ void Game::update(int delta)
 			}
 			else
 			{
-				std::string str = "Your score: ";
-				str.append(Utils::itos(score));
-				gameover_score_text->update_text(str);
+				gameOverState->setScore(score);
+				highscoreState->setScore(score);
 
 				if (highscoreState->isQualifyingScore(score))
 				{

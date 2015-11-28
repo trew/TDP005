@@ -10,6 +10,7 @@
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
+#include <State/GameOverState.h>
 
 void Game::reset_game()
 {
@@ -77,7 +78,6 @@ void Game::cleanup()
 	delete map_exit;
 
 	delete ingame_menu_screen;
-	delete gameover_screen;
 
 	delete menu_background;
 	delete menu_money_score;
@@ -92,7 +92,6 @@ void Game::cleanup()
 
 	delete press_enter_to_start;
 	delete error_loading_highscore;
-	delete gameover_score_text;
 
 	delete free_spot;
 	delete not_free_spot;
@@ -163,6 +162,8 @@ void Game::cleanup()
 	delete viewHelpState;
 	highscoreState->cleanup();
 	delete highscoreState;
+	gameOverState->cleanup();
+	delete gameOverState;
 
 	delete music;
 	delete SFX_cant_build;

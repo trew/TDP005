@@ -64,7 +64,7 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	ingame_menu_screen = gameover_screen = NULL;
+	ingame_menu_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
 	lives_text = level_text = money_text = score_text = NULL;
