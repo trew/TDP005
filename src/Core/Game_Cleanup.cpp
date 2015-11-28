@@ -11,6 +11,7 @@
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
 #include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
 
 void Game::reset_game()
 {
@@ -76,8 +77,6 @@ void Game::cleanup()
 	delete map_wall;
 	delete map_entrance;
 	delete map_exit;
-
-	delete ingame_menu_screen;
 
 	delete menu_background;
 	delete menu_money_score;
@@ -147,12 +146,6 @@ void Game::cleanup()
 		delete (*iter_ingame_button);
 	}
 
-	//Delete ingame menu buttons
-	for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
-	{
-		delete (*iter_ingame_menu_button);
-	}
-
 	//Delete buttons
 	mainMenuState->cleanup();
 	delete mainMenuState;
@@ -164,6 +157,8 @@ void Game::cleanup()
 	delete highscoreState;
 	gameOverState->cleanup();
 	delete gameOverState;
+	inGameMenuState->cleanup();
+	delete inGameMenuState;
 
 	delete music;
 	delete SFX_cant_build;

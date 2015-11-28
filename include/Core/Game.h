@@ -50,6 +50,7 @@ class IntroState;
 class ViewHelpState;
 class HighscoreState;
 class GameOverState;
+class InGameMenuState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -81,7 +82,6 @@ private:
 /** *** Game Variables *** */
 	/** Game Values */
 	int game_state;
-	int old_game_state;
 	bool game_running;
 	bool game_started;
 	int FPS_MAX;
@@ -120,8 +120,6 @@ private:
 	ConfigFile* config;
 
 	/** Sprites */
-	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
-
 	Sprite* map;
 	Sprite* map_grid;
 	Sprite* map_entrance;
@@ -209,7 +207,6 @@ private:
 	/** Handle event depending on gamestate */
 	void state_gameplay_running(SDL_Event* event);
 	void state_introduction(SDL_Event* event);
-	void state_ingame_menu(SDL_Event* event);
 
 	/** Main function for handling events */
 	/** This function passes event on to above subroutines */
@@ -231,7 +228,6 @@ private:
 
 /** Definition in Game_Render.cpp */
 	void toggle_fullscreen();
-	void draw_ingame_menu(); ///Game paused
 	void draw_optionbox();
 	void draw_selection();
 	void draw_enemies();
@@ -241,7 +237,6 @@ private:
 	void draw_menu_towers();
 	void draw_build_item();
 	void draw_ingame_buttons();
-	void draw_ingame_menu_buttons();
 	void draw_money_score();
 
 	void render_gameplay();
@@ -281,6 +276,7 @@ public:
 	ViewHelpState* viewHelpState;
 	HighscoreState* highscoreState;
 	GameOverState* gameOverState;
+	InGameMenuState* inGameMenuState;
 
 private:
 /** Sprite containers */
@@ -306,8 +302,6 @@ private:
 	ProjectileList projectile_list;
 	ProjectileList::iterator iter_projectile;
 
-	ButtonList ingame_menu_buttons;
-	ButtonList::iterator iter_ingame_menu_button;
 	Button* sound_button;
 	int sound_btn_repeat_value;
 	int sound_btn_repeat_delay;

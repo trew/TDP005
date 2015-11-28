@@ -10,6 +10,7 @@
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
 #include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -99,8 +100,6 @@ bool Game::init()
 	map_entrance = new Sprite(this, 		"./gfx/map/map-entrance.png", 0, 280, TILESIZE, TILESIZE);
 	map_exit = new Sprite(this, 			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
 
-	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
-
 	menu_background = new Sprite(this, 	"./gfx/menu/menu-bg.png", 580, 0, WWIDTH - MENUWIDTH, WHEIGHT);
 	menu_money_score = new Sprite(this, 	"./gfx/menu/menu-money-score-200x90.png", GRIDWIDTH, 50, 200, 90);
 	menu_build = new Sprite(this, 		"./gfx/menu/menu-build-200x90.png", GRIDWIDTH, 140, 200, 90);
@@ -181,11 +180,6 @@ bool Game::init()
 	ingame_buttons.push_back(new Button(renderer, BUTTON_UPGR, 647, 280, 48, 48, false, "./gfx/button/menu-button-upgrade-48x48.png"));
 	ingame_buttons.push_back(new Button(renderer, BUTTON_SELL, 705, 279, 48, 48, false, "./gfx/button/menu-button-sell-48x48.png"));
 
-	//Ingame menu buttons
-	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_RESUMEGAME, 340, 225, 121, 41, false, "./gfx/button/ingamemenu-continue-121x41.png", "./gfx/button/ingamemenu-continue-over-131x51.png"));
-	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_EXITTOMENU, 317, 275, 166, 40, false, "./gfx/button/ingamemenu-exittomenu-166x40.png", "./gfx/button/ingamemenu-exittomenu-over-176x50.png"));
-	ingame_menu_buttons.push_back(new Button(renderer, BUTTON_EXITGAME, 329, 325, 142, 39, false, "./gfx/button/ingamemenu-exittoos-142x39.png", "./gfx/button/ingamemenu-exittoos-over-152x49.png"));
-
 	//Main menu buttons
 	mainMenuState = new MainMenuState(this);
 	mainMenuState->init();
@@ -197,6 +191,8 @@ bool Game::init()
 	highscoreState->init();
 	gameOverState = new GameOverState(this);
 	gameOverState->init();
+	inGameMenuState = new InGameMenuState(this);
+	inGameMenuState->init();
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);

@@ -11,6 +11,7 @@
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
 #include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
 
 void Game::toggle_fullscreen()
 {
@@ -24,10 +25,6 @@ void Game::toggle_fullscreen()
 		SDL_CreateWindowAndRenderer(WWIDTH, WHEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
 		fullscreen = true;
 	}
-}
-void Game::draw_ingame_menu()
-{
-	ingame_menu_screen->draw(renderer);
 }
 void Game::draw_optionbox()
 {
@@ -176,14 +173,6 @@ void Game::draw_ingame_buttons()
 		(*iter_ingame_button)->draw(renderer);
 	}
 }
-void Game::draw_ingame_menu_buttons()
-{
-	//Draw Buttons
-	for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
-	{
-		(*iter_ingame_menu_button)->draw(renderer);
-	}
-}
 void Game::draw_money_score()
 {
 	money_text->draw(renderer);
@@ -255,8 +244,7 @@ void Game::render()
 	else if (game_state == INGAMEMENU)
 	{
 		render_gameplay();
-		draw_ingame_menu();
-		draw_ingame_menu_buttons();
+		inGameMenuState->render(renderer);
 	}
 
 	else if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)

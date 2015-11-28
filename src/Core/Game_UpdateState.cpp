@@ -10,6 +10,7 @@
 #include <State/IntroState.h>
 #include <State/HighscoreState.h>
 #include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
 #include <Utils/Utils.h>
 #include <iostream>
 

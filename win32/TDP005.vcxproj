@@ -113,6 +113,7 @@
     <ClInclude Include="..\include\resource.h" />
     <ClInclude Include="..\include\State\GameOverState.h" />
     <ClInclude Include="..\include\State\HighscoreState.h" />
+    <ClInclude Include="..\include\State\InGameMenuState.h" />
     <ClInclude Include="..\include\State\IntroState.h" />
     <ClInclude Include="..\include\State\MainMenuState.h" />
     <ClInclude Include="..\include\State\State.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="..\src\Pathfinding\Tile.cpp" />
     <ClCompile Include="..\src\State\GameOverState.cpp" />
     <ClCompile Include="..\src\State\HighscoreState.cpp" />
+    <ClCompile Include="..\src\State\InGameMenuState.cpp" />
     <ClCompile Include="..\src\State\IntroState.cpp" />
     <ClCompile Include="..\src\State\MainMenuState.cpp" />
     <ClCompile Include="..\src\State\ViewHelpState.cpp" />

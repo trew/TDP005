@@ -34,7 +34,6 @@ Game::Game()
 	last_selected_tile = NULL;
 	update_enemy_path = false;
 	need_boost_update = true;
-	old_game_state = 0;
 	timer = 0;
 	old_timer = 0;
 	current_fps = 0;
@@ -64,7 +63,6 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	ingame_menu_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
 	lives_text = level_text = money_text = score_text = NULL;

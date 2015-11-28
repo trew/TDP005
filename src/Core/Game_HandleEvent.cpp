@@ -11,6 +11,7 @@
 #include <State/ViewHelpState.h>
 #include <State/HighscoreState.h>
 #include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
 #include <Utils/Utils.h>
 #include <string>
 
@@ -441,7 +442,7 @@ void Game::left_mousebutton(int m_x, int m_y)
 				}
 
 				if ((*iter_ingame_button)->get_type() == BUTTON_MENU) {
-					old_game_state = game_state;
+					inGameMenuState->setParent(NULL, game_state);
 					game_state = INGAMEMENU;
 				}
 
@@ -621,49 +622,6 @@ void Game::state_introduction(SDL_Event* event)
 	}
 }
 
-void Game::state_ingame_menu(SDL_Event* event)
-{
-	int m_x, m_y;
-	SDL_GetMouseState(&m_x, &m_y);
-
-	if (event->key.type == SDL_KEYDOWN)
-	{
-		if (event->key.keysym.sym == SDLK_ESCAPE)
-		{
-			game_state = old_game_state;
-		}
-	}
-
-	else if (event->key.type == SDL_MOUSEBUTTONDOWN)
-	{
-		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			for (iter_ingame_menu_button = ingame_menu_buttons.begin(); iter_ingame_menu_button != ingame_menu_buttons.end(); iter_ingame_menu_button++)
-			{
-				if ((m_x > (*iter_ingame_menu_button)->get_x())
-						&& (m_x < (*iter_ingame_menu_button)->get_x() + (*iter_ingame_menu_button)->get_width()) && (m_y
-						> (*iter_ingame_menu_button)->get_y())
-						&& (m_y < (*iter_ingame_menu_button)->get_y() + (*iter_ingame_menu_button)->get_height()))
-				{
-					switch ((*iter_ingame_menu_button)->get_type())
-					{
-					case BUTTON_RESUMEGAME:
-						game_state = old_game_state;
-						break;
-					case BUTTON_EXITTOMENU:
-						//reset_game();
-						game_state = MAINMENU;
-						break;
-					case BUTTON_EXITGAME:
-						game_running = false;
-						break;
-					}
-				}
-			}
-		}
-	}
-}
-
 void Game::handle_event(SDL_Event* event)
 {
 	if (event->type == SDL_QUIT)
@@ -707,33 +665,29 @@ void Game::handle_event(SDL_Event* event)
 			return;
 		}
 	}
-
-	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F10)
+	else if (game_state == INGAMEMENU)
 	{
-		if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
+		if (inGameMenuState->handleEvent(*event))
 		{
-			old_game_state = game_state;
-			game_state = INGAMEMENU;
+			return;
 		}
-		else if (game_state == INGAMEMENU) {
-			game_state = old_game_state;
-		}
-	}
-
-	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F11)
-		fps_text->is_visible() ? fps_text->hide() : fps_text->show();
-
-	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F12)
-		toggle_fullscreen();
-
-
-	if (game_state == INGAMEMENU)
-	{
-		state_ingame_menu(event);
 	}
 	else if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
 	{
+		if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F10)
+		{
+			inGameMenuState->setParent(NULL, game_state);
+			game_state = INGAMEMENU;
+		}
+		else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F11)
+		{
+			fps_text->is_visible() ? fps_text->hide() : fps_text->show();
+		}
+		else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F12)
+		{
+			toggle_fullscreen();
+		}
+
 		state_gameplay_running(event);
 	}
-
 }
