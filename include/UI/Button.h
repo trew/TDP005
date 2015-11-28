@@ -28,6 +28,7 @@ public:
 	int get_type() { return type; }
 
 private:
+	void* action;
 	int type;
 	SDL_Texture* second_texture;
 	bool can_toggle;

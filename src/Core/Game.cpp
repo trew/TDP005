@@ -64,7 +64,7 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	intro_screen = highscore_screen = ingame_menu_screen = dev_screen = introduction_screen = gameover_screen = NULL;
+	highscore_screen = ingame_menu_screen = introduction_screen = gameover_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
 	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
@@ -241,53 +241,6 @@ void Game::update_highscore_sprites()
 	}
 }
 
-void Game::show_intro(SDL_Event* event)
-{
-	unsigned int starttime = SDL_GetTicks();
-	while (game_state == DEVSCREEN)
-	{
-		render();
-		while (SDL_PollEvent(event))
-		{
-			if (event->type == SDL_QUIT)
-			{
-				game_running = false;
-				game_state = EXIT;
-				break;
-			}
-			else if (event->type == SDL_KEYDOWN)
-			{
-				if (event->key.keysym.sym == SDLK_ESCAPE)
-					game_state = INTROSCREEN;
-				if (event->key.keysym.sym == SDLK_SPACE)
-					game_state = INTROSCREEN;
-				if (event->key.keysym.sym == SDLK_F12)
-					toggle_fullscreen();
-			}
-		}
-
-		//Automaticly switch to Introscreen
-		if (SDL_GetTicks() > (starttime + 6000) && game_state == DEVSCREEN)
-			game_state = INTROSCREEN;
-	}
-
-	while (game_state == INTROSCREEN)
-	{
-		render();
-		while (SDL_PollEvent(event))
-		{
-			if (event->type == SDL_QUIT)
-			{
-				game_running = false;
-				game_state = EXIT;
-				break;
-			}
-			else if (event->type == SDL_KEYDOWN)
-				game_state = MAINMENU;
-		}
-	}
-}
-
 TowerList* Game::get_towers() {
 	return &tower_list;
 }
@@ -342,9 +295,6 @@ int Game::on_execute()
 
 	SDL_Event event;
 
-	/* Introscreen */
-	show_intro(&event);
-
 	/* Game */
 	fps_timer->start();
 	delta_timer->start();
@@ -368,8 +318,8 @@ int Game::on_execute()
 		render();
 		ren = delta_timer->get_ticks() - upd;
 
-		if (delta_timer->get_ticks() < (Uint32)(1000 / FPS_MAX)) {
-			SDL_Delay( (1000 / FPS_MAX) - delta_timer->get_ticks());
+		if (delta_timer->get_ticks() < (Uint32)(1000.f / FPS_MAX)) {
+			SDL_Delay( (1000.f / FPS_MAX) - delta_timer->get_ticks());
 		}
 	}
 	/* End Game */

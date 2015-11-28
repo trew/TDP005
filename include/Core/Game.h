@@ -43,11 +43,10 @@
 
 #include <Core/ConfigFile.h>
 
-#include <State/MainMenuState.h>
-
 class Level;
 class Timer;
 class MainMenuState;
+class IntroState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -119,8 +118,6 @@ private:
 	ConfigFile* config;
 
 	/** Sprites */
-	Sprite* dev_screen;
-	Sprite* intro_screen;
 	Sprite* introduction_screen;
 	Sprite* highscore_screen;
 	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
@@ -193,7 +190,6 @@ private:
 public:
 	void update_highscore_sprites();
 private:
-	void show_intro(SDL_Event* event);
 	void update_fps(int delta, int, int, int);
 
 /** Definition in Game_Cleanup.cpp */
@@ -250,8 +246,6 @@ private:
 
 /** Definition in Game_Render.cpp */
 	void toggle_fullscreen();
-	void draw_dev_screen();
-	void draw_introscreen();
 	void draw_view_help();
 	void draw_highscore();
 	void draw_gameover();
@@ -303,6 +297,7 @@ public:
 
 private:
 	/* STATES */
+	IntroState* introState;
 	MainMenuState* mainMenuState;
 
 private:

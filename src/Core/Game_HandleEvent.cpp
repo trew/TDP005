@@ -6,6 +6,8 @@
  */
 
 #include <Core/Game.h>
+#include <State/MainMenuState.h>
+#include <State/IntroState.h>
 #include <string>
 
 bool Game::is_arrow_key(SDL_Event* event)
@@ -738,6 +740,14 @@ void Game::handle_event(SDL_Event* event)
 	if (event->type == SDL_QUIT)
 	{
 		game_running = false;
+	}
+
+	if (game_state == DEVSCREEN || game_state == INTROSCREEN)
+	{
+		if (introState->handleEvent(*event))
+		{
+			return;
+		}
 	}
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F10)

@@ -6,6 +6,8 @@
  */
 
 #include <Core/Game.h>
+#include <State/MainMenuState.h>
+#include <State/IntroState.h>
 
 void Game::toggle_fullscreen()
 {
@@ -21,14 +23,6 @@ void Game::toggle_fullscreen()
 	}
 }
 
-void Game::draw_dev_screen()
-{
-	dev_screen->draw(renderer);
-}
-void Game::draw_introscreen()
-{
-	intro_screen->draw(renderer);
-}
 void Game::draw_view_help()
 {
 	introduction_screen->draw(renderer);
@@ -290,28 +284,9 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 
-	if (game_state == DEVSCREEN)
+	if (game_state == DEVSCREEN || game_state == INTROSCREEN)
 	{
-		unsigned int initial_delay = 1000;
-		unsigned int fadeout_time = 3000;
-		int alpha_level = 255 - ((SDL_GetTicks() - initial_delay) / 5);
-
-		if (alpha_level < 0)
-			alpha_level = 0;
-
-		if (SDL_GetTicks() > initial_delay && SDL_GetTicks() <= fadeout_time)
-		{
-			draw_dev_screen();
-			boxRGBA(renderer, 0, 0, WWIDTH, WHEIGHT, 0, 0, 0, alpha_level);
-		}
-
-		else if (SDL_GetTicks() > initial_delay)
-			draw_dev_screen();
-	}
-
-	else if (game_state == INTROSCREEN)
-	{
-		draw_introscreen();
+		introState->render(renderer);
 	}
 
 	else if (game_state == MAINMENU)

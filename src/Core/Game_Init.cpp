@@ -6,6 +6,7 @@
  */
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
+#include <State/IntroState.h>
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -98,8 +99,6 @@ bool Game::init()
 	map_entrance = new Sprite(this, 		"./gfx/map/map-entrance.png", 0, 280, TILESIZE, TILESIZE);
 	map_exit = new Sprite(this, 			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
 
-	dev_screen = new Sprite(this, 		"./gfx/intro/devscreen.png", 0, 0, WWIDTH, WHEIGHT);
-	intro_screen = new Sprite(this, 		"./gfx/intro/introscreen.png", 0, 0, WWIDTH, WHEIGHT);
 	introduction_screen = new Sprite(this, "./gfx/intro/introductscreen.png", 0, 0, WWIDTH, WHEIGHT);
 	highscore_screen = new Sprite(this, 	"./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
 	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
@@ -193,6 +192,8 @@ bool Game::init()
 	//Main menu buttons
 	mainMenuState = new MainMenuState(this);
 	mainMenuState->init();
+	introState = new IntroState(this);
+	introState->init();
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);

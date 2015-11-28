@@ -60,8 +60,8 @@ public:
 	float get_center_y();
 	float get_x();		///<returns x position
 	float get_y();		///<Returns y position
-	int get_height();		///<Returns height of Sprite
-	int get_width();		///<Returns width of Sprite
+	const int get_height() const;		///<Returns height of Sprite
+	const int get_width() const;		///<Returns width of Sprite
 
 	/* Virtual functions for all inherited objects */
 	virtual void draw(SDL_Renderer* renderer);
@@ -72,8 +72,8 @@ public:
 
 	virtual void update(int delta);			///<Pure virtual
 
-	virtual bool intersects(Sprite*);
-	virtual bool overlaps(int x, int y);
+	virtual bool intersects(const Sprite* const);
+	virtual bool overlaps(const int &x, const int &y);
 
 	/* Text specific */
 	virtual void update_text(std::string);		///<Pure virtual

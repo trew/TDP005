@@ -11,13 +11,12 @@ public:
 	bool init();
 	void cleanup();
 
-	bool handleEvent(SDL_Event &ev);
-	void update();
+	bool handleEvent(const SDL_Event &ev);
 	void render(SDL_Renderer* const renderer);
 
 private:
-	ButtonList mainmenu_buttons;
-	Sprite* main_menu_screen;
+	ButtonList buttons;
+	Sprite* background;
 };
 
 #endif

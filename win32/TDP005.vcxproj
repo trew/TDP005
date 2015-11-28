@@ -111,6 +111,7 @@
     <ClInclude Include="..\include\Pathfinding\Node.h" />
     <ClInclude Include="..\include\Pathfinding\Tile.h" />
     <ClInclude Include="..\include\resource.h" />
+    <ClInclude Include="..\include\State\IntroState.h" />
     <ClInclude Include="..\include\State\MainMenuState.h" />
     <ClInclude Include="..\include\State\State.h" />
     <ClInclude Include="..\include\UI\Button.h" />
@@ -146,6 +147,7 @@
     <ClCompile Include="..\src\Pathfinding\Grid.cpp" />
     <ClCompile Include="..\src\Pathfinding\Node.cpp" />
     <ClCompile Include="..\src\Pathfinding\Tile.cpp" />
+    <ClCompile Include="..\src\State\IntroState.cpp" />
     <ClCompile Include="..\src\State\MainMenuState.cpp" />
     <ClCompile Include="..\src\UI\Button.cpp" />
     <ClCompile Include="..\src\UI\Sound.cpp" />

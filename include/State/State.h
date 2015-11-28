@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <Core/Game.h>
 
+class Game;
+
 class State
 {
 public:
@@ -15,10 +17,10 @@ public:
 	virtual void pause() {}
 	virtual void resume() {}
 
-	virtual bool handleEvent(SDL_Event &ev) = 0;
-	virtual void update() = 0;
+	virtual bool handleEvent(const SDL_Event &ev) { return false; }
+	virtual void update() {}
 
-	virtual void render(SDL_Renderer* const renderer) = 0;
+	virtual void render(SDL_Renderer* const renderer) {}
 
 	Game* const getGame() { return game; }
 

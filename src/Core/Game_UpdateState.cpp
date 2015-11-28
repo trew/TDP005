@@ -6,6 +6,8 @@
  */
 
 #include <Core/Game.h>
+#include <State/MainMenuState.h>
+#include <State/IntroState.h>
 #include <iostream>
 
 std::string Game::itos(int i)
@@ -82,6 +84,12 @@ void Game::get_rewards(Enemy* enemy) {
 
 void Game::update(int delta)
 {
+	if (game_state == DEVSCREEN || game_state == INTROSCREEN)
+	{
+		introState->update();
+		return;
+	}
+
 	int mx, my;
 	Uint8 mousestate = SDL_GetMouseState(&mx, &my);
 	if (mousestate & SDL_BUTTON(SDL_BUTTON_LEFT)) {
