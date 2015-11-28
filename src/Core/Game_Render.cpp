@@ -8,6 +8,7 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
+#include <State/ViewHelpState.h>
 
 void Game::toggle_fullscreen()
 {
@@ -23,11 +24,6 @@ void Game::toggle_fullscreen()
 	}
 }
 
-void Game::draw_view_help()
-{
-	introduction_screen->draw(renderer);
-	esc_back->draw(renderer);
-}
 void Game::draw_highscore()
 {
 	highscore_screen->draw(renderer);
@@ -296,10 +292,9 @@ void Game::render()
 
 	else if (game_state == VIEW_HELP)
 	{
-		draw_view_help();
+		viewHelpState->render(renderer);
 	}
-
-
+	
 	else if (game_state == HIGHSCORE)
 	{
 		draw_highscore();

@@ -147,6 +147,9 @@
     <ClInclude Include="..\include\State\IntroState.h">
       <Filter>Header Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\State\ViewHelpState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -246,6 +249,9 @@
       <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="..\src\State\IntroState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\State\ViewHelpState.cpp">
       <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>

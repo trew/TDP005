@@ -47,6 +47,7 @@ class Level;
 class Timer;
 class MainMenuState;
 class IntroState;
+class ViewHelpState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -118,7 +119,6 @@ private:
 	ConfigFile* config;
 
 	/** Sprites */
-	Sprite* introduction_screen;
 	Sprite* highscore_screen;
 	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
 	Sprite* gameover_screen;
@@ -138,7 +138,6 @@ private:
 	Sprite* selection_sprite;		//Sprite indicating which object is selected
 
 	Sprite* press_enter_to_start;
-	Sprite* esc_back;
 
 	Sprite* input_text;				///Test displayed when typing in name at highscore
 	Sprite* error_loading_highscore;
@@ -222,7 +221,6 @@ private:
 	void state_introduction(SDL_Event* event);
 	void state_gameover(SDL_Event* event);
 	void state_highscore(SDL_Event* event);
-	void state_view_help(SDL_Event* event);
 	void state_set_highscore(SDL_Event* event);
 	void state_ingame_menu(SDL_Event* event);
 
@@ -246,7 +244,6 @@ private:
 
 /** Definition in Game_Render.cpp */
 	void toggle_fullscreen();
-	void draw_view_help();
 	void draw_highscore();
 	void draw_gameover();
 	void draw_ingame_menu(); ///Game paused
@@ -291,7 +288,7 @@ public:
 	EnemyList* get_enemies();
 	ProjectileList* get_projectiles();
 
-	SDL_Renderer* getRenderer() { return renderer; }
+	SDL_Renderer* const getRenderer() { return renderer; }
 
 	std::string ftos(float);
 
@@ -299,6 +296,7 @@ private:
 	/* STATES */
 	IntroState* introState;
 	MainMenuState* mainMenuState;
+	ViewHelpState* viewHelpState;
 
 private:
 /** Sprite containers */

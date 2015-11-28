@@ -64,14 +64,13 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	highscore_screen = ingame_menu_screen = introduction_screen = gameover_screen = NULL;
+	highscore_screen = ingame_menu_screen = gameover_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
 	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
 	buildmenu_selection = NULL;
 	window = NULL;
 	renderer = NULL;
-	esc_back = NULL;
 	hovered_build_item = NULL;
 	sound_button = NULL;
 }

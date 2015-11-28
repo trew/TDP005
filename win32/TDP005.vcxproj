@@ -114,6 +114,7 @@
     <ClInclude Include="..\include\State\IntroState.h" />
     <ClInclude Include="..\include\State\MainMenuState.h" />
     <ClInclude Include="..\include\State\State.h" />
+    <ClInclude Include="..\include\State\ViewHelpState.h" />
     <ClInclude Include="..\include\UI\Button.h" />
     <ClInclude Include="..\include\UI\Sound.h" />
     <ClInclude Include="..\include\UI\Text.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="..\src\Pathfinding\Tile.cpp" />
     <ClCompile Include="..\src\State\IntroState.cpp" />
     <ClCompile Include="..\src\State\MainMenuState.cpp" />
+    <ClCompile Include="..\src\State\ViewHelpState.cpp" />
     <ClCompile Include="..\src\UI\Button.cpp" />
     <ClCompile Include="..\src\UI\Sound.cpp" />
     <ClCompile Include="..\src\UI\Text.cpp" />

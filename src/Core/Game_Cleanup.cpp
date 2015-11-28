@@ -8,6 +8,7 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
+#include <State/ViewHelpState.h>
 
 void Game::reset_game()
 {
@@ -76,7 +77,6 @@ void Game::cleanup()
 	delete map_entrance;
 	delete map_exit;
 
-	delete introduction_screen;
 	delete highscore_screen;
 	delete ingame_menu_screen;
 	delete gameover_screen;
@@ -94,7 +94,6 @@ void Game::cleanup()
 
 	delete press_enter_to_start;
 	delete error_loading_highscore;
-	delete esc_back;
 	delete gameover_score_text;
 
 	delete free_spot;
@@ -163,6 +162,8 @@ void Game::cleanup()
 	delete mainMenuState;
 	introState->cleanup();
 	delete introState;
+	viewHelpState->cleanup();
+	delete viewHelpState;
 
 	//Delete highscore-sprites
 	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)

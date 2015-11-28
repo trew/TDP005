@@ -8,6 +8,7 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
+#include <State/ViewHelpState.h>
 #include <string>
 
 bool Game::is_arrow_key(SDL_Event* event)
@@ -637,18 +638,6 @@ void Game::state_highscore(SDL_Event* event)
 	}
 }
 
-void Game::state_view_help(SDL_Event* event)
-{
-	if (event->key.type == SDL_KEYDOWN)
-	{
-		if (event->key.keysym.sym == SDLK_ESCAPE)
-		{
-			game_state = MAINMENU;
-		}
-	}
-}
-
-
 void Game::state_set_highscore(SDL_Event* event)
 {
 	if (event->key.type == SDL_KEYDOWN)
@@ -739,12 +728,27 @@ void Game::handle_event(SDL_Event* event)
 {
 	if (event->type == SDL_QUIT)
 	{
-		game_running = false;
+		exit();
+		return;
 	}
 
 	if (game_state == DEVSCREEN || game_state == INTROSCREEN)
 	{
 		if (introState->handleEvent(*event))
+		{
+			return;
+		}
+	}
+	else if (game_state == VIEW_HELP)
+	{
+		if (viewHelpState->handleEvent(*event))
+		{
+			return;
+		}
+	}
+	else if (game_state == MAINMENU)
+	{
+		if (mainMenuState->handleEvent(*event))
 		{
 			return;
 		}
@@ -773,14 +777,6 @@ void Game::handle_event(SDL_Event* event)
 	{
 		state_ingame_menu(event);
 	}
-	else if (game_state == VIEW_HELP)
-	{
-		state_view_help(event);
-	}
-	else if (game_state == MAINMENU)
-	{
-		mainMenuState->handleEvent(*event);
-	}
 	else if (game_state == HIGHSCORE)
 	{
 		state_highscore(event);
@@ -789,9 +785,6 @@ void Game::handle_event(SDL_Event* event)
 	else if (game_state == GAMEOVER)
 	{
 		state_gameover(event);
-	}
-	else if (game_state == VIEW_HELP) {
-		state_view_help(event);
 	}
 	else if (game_state == SET_HIGHSCORE)
 	{

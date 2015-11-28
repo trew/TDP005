@@ -7,6 +7,7 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
+#include <State/ViewHelpState.h>
 
 void Game::parse_config() {
 	config = new ConfigFile("settings.cfg");
@@ -86,7 +87,6 @@ bool Game::init()
 
 
 	press_enter_to_start = new Text(renderer, "Deploy towers, then press enter to start", 70, 550, standard_font_32);
-	esc_back = new Text(renderer, "Esc (back)", 520, 555, standard_font_32);
 
 	grid = new Grid;
 	grid->create_grid(15, 15);
@@ -99,7 +99,6 @@ bool Game::init()
 	map_entrance = new Sprite(this, 		"./gfx/map/map-entrance.png", 0, 280, TILESIZE, TILESIZE);
 	map_exit = new Sprite(this, 			"./gfx/map/map-portal.png", 520, 239, TILESIZE, TILESIZE);
 
-	introduction_screen = new Sprite(this, "./gfx/intro/introductscreen.png", 0, 0, WWIDTH, WHEIGHT);
 	highscore_screen = new Sprite(this, 	"./gfx/menu/highscore.png", 0, 0, WWIDTH, WHEIGHT);
 	ingame_menu_screen = new Sprite(this, "./gfx/menu/ingamemenu.png", 0, 0, WWIDTH, WHEIGHT);
 	gameover_screen = new Sprite(this, 	"./gfx/menu/gameover.png", 0, 0, WWIDTH, WHEIGHT);
@@ -194,6 +193,8 @@ bool Game::init()
 	mainMenuState->init();
 	introState = new IntroState(this);
 	introState->init();
+	viewHelpState = new ViewHelpState(this);
+	viewHelpState->init();
 
 	//Green and red rects
 	free_spot = new Sprite(this, "./gfx/misc/spot-free-4.png", 0, 0, 40, 40);
