@@ -1,4 +1,5 @@
 #include <Core/Game.h>
+#include <Utils/Utils.h>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -54,7 +55,6 @@ Game::Game()
 	money = STARTING_MONEY;
 	score = 0;
 	lives = STARTING_LIVES;
-	playername = ""; 	//Set when entering highscore
 
 	// initialize pointers to null
 	SFX_build = SFX_cant_build = SFX_game_over = SFX_life_lost = SFX_new_highscore = SFX_sell = SFX_upgrade = music = NULL;
@@ -64,10 +64,10 @@ Game::Game()
 	map_exit = map_wall = map_grid = map_entrance = map = NULL;
 	grid = NULL;
 	fps_text = timer_text = speed_text = NULL;
-	highscore_screen = ingame_menu_screen = gameover_screen = NULL;
+	ingame_menu_screen = gameover_screen = NULL;
 	press_enter_to_start = NULL;
 	error_loading_highscore = NULL;
-	input_text = lives_text = level_text = money_text = gameover_score_text = score_text = NULL;
+	lives_text = level_text = money_text = score_text = NULL;
 	buildmenu_selection = NULL;
 	window = NULL;
 	renderer = NULL;
@@ -85,159 +85,6 @@ void Game::set_boost_update(bool val) {
 
 Grid* Game::get_grid() {
 	return grid;
-}
-
-bool Game::read_highscores_from_file()
-{
-	if (!highscores.empty())
-	{
-		for (HighscoreList::iterator it = highscores.begin(); it != highscores.end(); it++)
-		{
-			delete (*it);
-			(*it) = NULL;
-		}
-		highscores.clear();
-	}
-
-	std::ifstream file_in;
-	file_in.open("highscore");
-	if (!file_in)
-	{
-		// default
-		highscores.push_back(new std::pair<int, std::string>(1000, "Uniden"));
-		highscores.push_back(new std::pair<int, std::string>(500, "Bigby Wolf"));
-		highscores.push_back(new std::pair<int, std::string>(250, "Dilbert"));
-		highscores.push_back(new std::pair<int, std::string>(125, "Ananakinin"));
-		highscores.push_back(new std::pair<int, std::string>(50, "Here's Johnny"));
-		highscores.push_back(new std::pair<int, std::string>(40, "Lady Gaga"));
-		highscores.push_back(new std::pair<int, std::string>(30, "Tomten"));
-		highscores.push_back(new std::pair<int, std::string>(20, "Red Rose"));
-		highscores.push_back(new std::pair<int, std::string>(10, "Blue Screen"));
-		highscores.push_back(new std::pair<int, std::string>(0, "Lab-ASS"));
-		return true;
-	}
-
-	int score;
-	std::string name;
-
-	file_in >> score;
-	file_in.get();
-	while (getline(file_in, name))
-	{
-		highscores.push_back(new std::pair<int, std::string>(score, name));
-		file_in >> score;
-		file_in.get();
-	}
-
-	file_in.close();
-	return true;
-}
-
-int Game::get_highscore_pos()
-{
-	if(highscores.empty()) return 0;
-
-	for (unsigned int i = 0; i < 10 && i < highscores.size(); i++)
-	{
-		if (score > highscores[i]->first)
-		{
-			return i;
-		}
-	}
-
-	if(highscores.size() < 10)
-		return highscores.size();
-
-	else
-		return -1;
-}
-
-void Game::insert_new_highscore(int new_score, int position, std::string name)
-{
-
-
-	iter_highscore = highscores.begin();
-
-	for (int i = 0; i < position; i++)
-		iter_highscore++;
-
-	highscores.insert(iter_highscore, new std::pair<int, std::string>(new_score, name));
-}
-
-void Game::write_highscore_to_file()
-{
-	std::ofstream fout;
-	fout.open("highscore");
-
-	int score_count = 0;
-	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)
-	{
-		if (score_count == 10)
-			break;
-
-		fout << (*iter_highscore)->first << " " <<(*iter_highscore)->second << std::endl;
-
-		score_count++;
-	}
-}
-
-void Game::update_highscore_sprites()
-{
-	// Delete earlier sprites
-	if(!highscore_name_sprites.empty())
-		for(iter_highscore_name = highscore_name_sprites.begin(); iter_highscore_name != highscore_name_sprites.end(); iter_highscore_name++)
-		{
-			delete (*iter_highscore_name);
-			(*iter_highscore_name) = NULL;
-		}
-
-	if(!highscore_score_sprites.empty())
-		for(iter_highscore_score = highscore_score_sprites.begin(); iter_highscore_score != highscore_score_sprites.end(); iter_highscore_score++)
-		{
-			delete (*iter_highscore_score);
-			(*iter_highscore_score) = NULL;
-		}
-
-
-	highscore_name_sprites.clear();
-	highscore_score_sprites.clear();
-
-	//Error check!
-	if(!read_highscores_from_file()) {
-		error_loading_highscore->show();
-		return;
-	}
-	error_loading_highscore->hide();
-
-	std::string tmp_name = "";
-	std::string tmp_score = "";
-
-	int list_num = 1;
-	iter_highscore = highscores.begin();
-	while(iter_highscore != highscores.end())
-	{
-		{
-			std::ostringstream oss_name;
-			oss_name << itos(list_num) << ". " << (*iter_highscore)->second;
-			tmp_name = oss_name.str();
-
-			std::ostringstream oss_score;
-			oss_score << (*iter_highscore)->first;
-			tmp_score = oss_score.str();
-		}
-		if(list_num == 1) {
-			highscore_name_sprites.push_back(new Text(renderer, tmp_name, 186, 255, 246, 0, 0, standard_font_48));
-			highscore_score_sprites.push_back(new Text(renderer, tmp_score, 186, 255, 246, 0, 0, standard_font_48));
-		}
-		else
-		{
-			highscore_name_sprites.push_back(new Text(renderer, tmp_name, 167, 203, 237, 0, 0, standard_font_20));
-			highscore_score_sprites.push_back(new Text(renderer, tmp_score, 167, 203, 237, 0, 0, standard_font_20));
-		}
-
-		list_num++;
-		iter_highscore++;
-	}
 }
 
 TowerList* Game::get_towers() {
@@ -266,15 +113,15 @@ void Game::update_fps(int delta, int ev, int upd, int ren) {
 	} else {
 		fps_timer->start();
 		std::string tmp = "FPS: ";
-		tmp.append(itos(current_fps));
+		tmp.append(Utils::itos(current_fps));
 		tmp.append(" - Delta: ");
-		tmp.append(itos(delta));
+		tmp.append(Utils::itos(delta));
 		tmp.append(" - Event: ");
-		tmp.append(itos(ev));
+		tmp.append(Utils::itos(ev));
 		tmp.append(" - Update: ");
-		tmp.append(itos(upd));
+		tmp.append(Utils::itos(upd));
 		tmp.append(" - Render: ");
-		tmp.append(itos(ren));
+		tmp.append(Utils::itos(ren));
 		fps_text->update_text(tmp);
 		current_fps = 0;
 	}
@@ -337,8 +184,3 @@ void Game::exit()
 	game_running = false;
 }
 
-std::string Game::ftos(float f) {
-	std::stringstream ss;
-	ss << f;
-	return ss.str();
-}

@@ -48,6 +48,7 @@ class Timer;
 class MainMenuState;
 class IntroState;
 class ViewHelpState;
+class HighscoreState;
 typedef std::vector<std::pair<int, std::string>* > HighscoreList;
 typedef std::pair<int, int> GridPosition;
 typedef std::map<GridPosition, Sprite*> GridMap;
@@ -101,7 +102,6 @@ private:
 	BaseTower* hovered_build_item;	///Set if player has selected a tower from the building menu.
 
 	/** Player values */
-	std::string playername;		///Entered when achieving place in highscore
 	int lives;
 	int score;
 	int money;
@@ -119,7 +119,6 @@ private:
 	ConfigFile* config;
 
 	/** Sprites */
-	Sprite* highscore_screen;
 	Sprite* ingame_menu_screen;		//When pausing the game (pressing F10 in game)
 	Sprite* gameover_screen;
 
@@ -139,7 +138,6 @@ private:
 
 	Sprite* press_enter_to_start;
 
-	Sprite* input_text;				///Test displayed when typing in name at highscore
 	Sprite* error_loading_highscore;
 	Sprite* gameover_score_text;
 
@@ -181,14 +179,6 @@ private:
 /** *** Game Functions *** */
 /** Definition in Game.cpp */
 	void set_boost_update(bool);
-
-	bool read_highscores_from_file();
-	int  get_highscore_pos();
-	void insert_new_highscore(int new_score, int position, std::string name);
-	void write_highscore_to_file();
-public:
-	void update_highscore_sprites();
-private:
 	void update_fps(int delta, int, int, int);
 
 /** Definition in Game_Cleanup.cpp */
@@ -196,6 +186,7 @@ public:
 	void reset_game();							///Resets containers of enemies, towers and variables that change during gameplay.
 	void setState(int state);
 	void exit();
+	const int getScore() { return score; }
 private:
 	void cleanup();								///Cleanup when exiting game.
 
@@ -220,8 +211,6 @@ private:
 	void state_gameplay_running(SDL_Event* event);
 	void state_introduction(SDL_Event* event);
 	void state_gameover(SDL_Event* event);
-	void state_highscore(SDL_Event* event);
-	void state_set_highscore(SDL_Event* event);
 	void state_ingame_menu(SDL_Event* event);
 
 	/** Main function for handling events */
@@ -244,7 +233,6 @@ private:
 
 /** Definition in Game_Render.cpp */
 	void toggle_fullscreen();
-	void draw_highscore();
 	void draw_gameover();
 	void draw_ingame_menu(); ///Game paused
 	void draw_optionbox();
@@ -265,7 +253,6 @@ private:
 /** Definition in Game_UpdateState.cpp */
 
 	/**Update text sprites */
-	std::string itos(int i);
 	std::string get_lives_str();
 	std::string get_money_str();
 	std::string get_score_str();
@@ -290,13 +277,12 @@ public:
 
 	SDL_Renderer* const getRenderer() { return renderer; }
 
-	std::string ftos(float);
-
-private:
+public:
 	/* STATES */
 	IntroState* introState;
 	MainMenuState* mainMenuState;
 	ViewHelpState* viewHelpState;
+	HighscoreState* highscoreState;
 
 private:
 /** Sprite containers */
@@ -332,16 +318,6 @@ private:
 	ButtonList::iterator iter_ingame_button;
 
 	Sprite_List::iterator iter_sel;
-
-	HighscoreList highscores;
-	HighscoreList::iterator iter_highscore;
-
-	std::vector<Sprite*> highscore_name_sprites;
-	std::vector<Sprite*>::iterator iter_highscore_name;
-
-	std::vector<Sprite*> highscore_score_sprites;
-	std::vector<Sprite*>::iterator iter_highscore_score;
-
 };
 
 #endif /* GAME_H_ */

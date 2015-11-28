@@ -9,6 +9,7 @@
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
+#include <State/HighscoreState.h>
 
 void Game::toggle_fullscreen()
 {
@@ -24,50 +25,6 @@ void Game::toggle_fullscreen()
 	}
 }
 
-void Game::draw_highscore()
-{
-	highscore_screen->draw(renderer);
-
-	error_loading_highscore->draw(renderer); //Is visible if error, else not.
-	if (game_state == HIGHSCORE)
-	{
-		int y_start = 190;
-		int row_height = 0;
-
-		int offset_L = 150;
-		int offset_R = WWIDTH - offset_L;
-
-		int counter = 1;
-		iter_highscore_name = highscore_name_sprites.begin();
-		iter_highscore_score = highscore_score_sprites.begin();
-
-		while (iter_highscore_name != highscore_name_sprites.end() && iter_highscore_score != highscore_score_sprites.end())
-		{
-			if (counter == 1)
-				row_height += 0;
-
-			else if (counter == 2)
-			{
-				row_height += 60;
-				offset_L += 40;
-				offset_R = 800 - offset_L;
-			}
-			else
-			{
-				row_height += 30;
-				offset_L += 25 - (counter * 2);
-				offset_R = WWIDTH - offset_L;
-			}
-
-			(*iter_highscore_name)->draw(renderer, offset_L, y_start + row_height);
-			(*iter_highscore_score)->draw(renderer, (offset_R - (*iter_highscore_score)->get_width()), y_start + row_height);
-
-			counter++;
-			iter_highscore_name++;
-			iter_highscore_score++;
-		}
-	}
-}
 void Game::draw_gameover()
 {
 	gameover_screen->draw(renderer);
@@ -295,17 +252,9 @@ void Game::render()
 		viewHelpState->render(renderer);
 	}
 	
-	else if (game_state == HIGHSCORE)
+	else if (game_state == HIGHSCORE || game_state == SET_HIGHSCORE)
 	{
-		draw_highscore();
-	}
-
-	else if (game_state == SET_HIGHSCORE)
-	{
-		draw_highscore();
-		gameover_score_text->draw(renderer, ((WWIDTH / 2) - (gameover_score_text->get_width() / 2)), 200);
-		input_text->draw(renderer, ((WWIDTH / 2) - (input_text->get_width() / 2)), 270);
-
+		highscoreState->render(renderer);
 	}
 
 	else if (game_state == INGAMEMENU)

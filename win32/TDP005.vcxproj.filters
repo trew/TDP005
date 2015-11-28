@@ -150,6 +150,12 @@
     <ClInclude Include="..\include\State\ViewHelpState.h">
       <Filter>Header Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\State\HighscoreState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Utils\Utils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -253,6 +259,12 @@
     </ClCompile>
     <ClCompile Include="..\src\State\ViewHelpState.cpp">
       <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\State\HighscoreState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\Utils.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

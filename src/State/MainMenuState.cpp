@@ -1,5 +1,6 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
+#include <State/HighscoreState.h>
 
 bool MainMenuState::init()
 {
@@ -40,7 +41,7 @@ bool MainMenuState::handleEvent(const SDL_Event &ev)
 					game->setState(GAME_PAUSED);
 					return true;
 				case BUTTON_HIGHSCORE:
-					game->update_highscore_sprites();
+					game->highscoreState->updateHighscoreSprites();
 					game->setState(HIGHSCORE);
 					return true;
 				case BUTTON_VIEW_HELP:

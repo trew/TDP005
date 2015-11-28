@@ -8,36 +8,29 @@
 #include <Core/Game.h>
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
+#include <State/HighscoreState.h>
+#include <Utils/Utils.h>
 #include <iostream>
 
-std::string Game::itos(int i)
-{
-	std::stringstream s_stream;
-	s_stream << i;
-	std::string tmp;
-	s_stream >> tmp;
-	return tmp;
-}
-
 std::string Game::get_lives_str() {
-	return itos(lives);
+	return Utils::itos(lives);
 }
 
 std::string Game::get_money_str() {
 	std::string return_str = "$";
-	return return_str.append(itos(money));
+	return return_str.append(Utils::itos(money));
 }
 std::string Game::get_score_str() {
-	return itos(score);
+	return Utils::itos(score);
 }
 std::string Game::get_level_str() {
 	std::string tmp = "Wave: ";
-	return tmp.append(itos(level_control->get_level()));
+	return tmp.append(Utils::itos(level_control->get_level()));
 }
 std::string Game::get_timer_str() {
 	if (level_control->time_before_next_wave() == -1) return "Press N for next wave";
 	std::string tmp = "Next wave in: ";
-	return (tmp.append(itos(level_control->time_before_next_wave())));
+	return (tmp.append(Utils::itos(level_control->time_before_next_wave())));
 }
 
 void Game::update_lives() {
@@ -148,13 +141,14 @@ void Game::update(int delta)
 			else
 			{
 				std::string str = "Your score: ";
-				str.append(itos(score));
+				str.append(Utils::itos(score));
 				gameover_score_text->update_text(str);
 
-				if(!read_highscores_from_file() || (get_highscore_pos() != -1))
+				if (highscoreState->isQualifyingScore(score))
 				{
 					SFX_new_highscore->play();
 					game_state = SET_HIGHSCORE;
+					highscoreState->setInternalState(ENTER);
 				}
 				else
 				{

@@ -9,6 +9,8 @@
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
+#include <State/HighscoreState.h>
+#include <Utils/Utils.h>
 #include <string>
 
 bool Game::is_arrow_key(SDL_Event* event)
@@ -531,7 +533,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 			if (game_speed < 2.f) {
 				game_speed *= 2;
 				std::string s("x");
-				s.append(ftos(game_speed));
+				s.append(Utils::ftos(game_speed));
 				speed_text->update_text(s);
 				speed_text->set_center_x(585);
 				game_speed == 1.f ? speed_text->hide() : speed_text->show();
@@ -540,7 +542,7 @@ void Game::state_gameplay_running(SDL_Event* event)
 			if (game_speed > .5f) {
 				game_speed /= 2;
 				std::string s("x");
-				s.append(ftos(game_speed));
+				s.append(Utils::ftos(game_speed));
 				speed_text->update_text(s);
 				speed_text->set_center_x(585);
 				game_speed == 1.f ? speed_text->hide() : speed_text->show();
@@ -626,61 +628,6 @@ void Game::state_gameover(SDL_Event* event)
 	}
 }
 
-void Game::state_highscore(SDL_Event* event)
-{
-	if (event->key.type == SDL_KEYDOWN)
-	{
-		if (event->key.keysym.sym == SDLK_ESCAPE)
-		{
-			error_loading_highscore->hide();
-			game_state = MAINMENU;
-		}
-	}
-}
-
-void Game::state_set_highscore(SDL_Event* event)
-{
-	if (event->key.type == SDL_KEYDOWN)
-	{
-		if (event->key.keysym.sym == SDLK_ESCAPE)
-		{
-			//reset_game();
-			game_state = MAINMENU;
-		}
-		else if (event->key.keysym.sym == SDLK_RETURN)
-		{
-			if (playername != "")
-			{
-				insert_new_highscore(score, get_highscore_pos(), playername);
-				write_highscore_to_file();
-				update_highscore_sprites();
-
-				//reset_game();
-				game_state = HIGHSCORE;
-
-			}
-		}
-		else if ((event->key.keysym.sym == SDLK_BACKSPACE) && (playername.length() != 0))
-		{
-			playername.erase(playername.length() - 1);
-			input_text->update_text(playername + "_");
-		}
-	}
-	else if (event->type == SDL_TEXTINPUT)
-	{
-		if (playername.length() < PLAYERNAME_LENGTH_MAX - 1)
-		{
-			playername += event->text.text;
-			input_text->update_text(playername + "_");
-		}
-		else if (playername.length() == PLAYERNAME_LENGTH_MAX - 1)
-		{
-			playername += event->text.text;
-			input_text->update_text(playername);
-		}
-	}
-}
-
 void Game::state_ingame_menu(SDL_Event* event)
 {
 	int m_x, m_y;
@@ -753,6 +700,13 @@ void Game::handle_event(SDL_Event* event)
 			return;
 		}
 	}
+	else if (game_state == HIGHSCORE || game_state == SET_HIGHSCORE)
+	{
+		if (highscoreState->handleEvent(*event))
+		{
+			return;
+		}
+	}
 
 	else if (event->key.type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_F10)
 	{
@@ -777,18 +731,9 @@ void Game::handle_event(SDL_Event* event)
 	{
 		state_ingame_menu(event);
 	}
-	else if (game_state == HIGHSCORE)
-	{
-		state_highscore(event);
-	}
-
 	else if (game_state == GAMEOVER)
 	{
 		state_gameover(event);
-	}
-	else if (game_state == SET_HIGHSCORE)
-	{
-		state_set_highscore(event);
 	}
 	else if (game_state == GAMEPLAY_RUNNING || game_state == GAME_PAUSED)
 	{

@@ -9,6 +9,7 @@
 #include <State/MainMenuState.h>
 #include <State/IntroState.h>
 #include <State/ViewHelpState.h>
+#include <State/HighscoreState.h>
 
 void Game::reset_game()
 {
@@ -48,8 +49,6 @@ void Game::reset_game()
 	money = STARTING_MONEY;
 	score = 0;
 	lives = STARTING_LIVES;
-	playername = "";
-	input_text->update_text("Enter your name");
 	game_started = false;
 
 	update_score();
@@ -77,7 +76,6 @@ void Game::cleanup()
 	delete map_entrance;
 	delete map_exit;
 
-	delete highscore_screen;
 	delete ingame_menu_screen;
 	delete gameover_screen;
 
@@ -106,7 +104,6 @@ void Game::cleanup()
 	delete timer_text;
 	delete fps_text;
 	delete speed_text;
-	delete input_text;
 	delete split_money_score;
 
 	delete option_box_BGx1;
@@ -164,24 +161,8 @@ void Game::cleanup()
 	delete introState;
 	viewHelpState->cleanup();
 	delete viewHelpState;
-
-	//Delete highscore-sprites
-	for (iter_highscore = highscores.begin(); iter_highscore != highscores.end(); iter_highscore++)
-	{
-		delete (*iter_highscore);
-		(*iter_highscore) = NULL;
-	}
-
-	for (iter_highscore_name = highscore_name_sprites.begin(); iter_highscore_name != highscore_name_sprites.end(); iter_highscore_name++)
-	{
-		delete (*iter_highscore_name);
-	}
-
-	for (iter_highscore_score = highscore_score_sprites.begin(); iter_highscore_score != highscore_score_sprites.end(); iter_highscore_score++)
-	{
-		delete (*iter_highscore_score);
-	}
-
+	highscoreState->cleanup();
+	delete highscoreState;
 
 	delete music;
 	delete SFX_cant_build;
