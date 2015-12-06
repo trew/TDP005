@@ -26,7 +26,7 @@ public:
 
 	int get_level();				///< Get current level
 
-	bool time_to_send_wave(int delta);		///< Time to send next wave?
+	bool time_to_send_wave(const float &timeStep);		///< Time to send next wave?
 	bool last_enemy_is_sent();		///< Is last enemy on grid?
 	void set_last_enemy_sent();		///< Last enemy is on grid
 	void reset();					///< Reset level to 1

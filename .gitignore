@@ -12,3 +12,4 @@ settings.cfg
 *.user
 build/*.exe
 *.aps
+output.log

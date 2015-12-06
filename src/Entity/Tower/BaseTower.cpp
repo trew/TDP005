@@ -22,6 +22,7 @@
 #include <Entity/Tower/Speed.h>
 #include <Entity/Tower/Bomb.h>
 #include <Entity/Tower/Range.h>
+#include <Core/GameEngine.h>
 
 /*
  * Constructors / Deconstructors
@@ -162,23 +163,23 @@ void BaseTower::format_angle(double &angle) {
 		angle += 360.0;
 }
 
-void BaseTower::update_aim(int delta) {
+void BaseTower::update_aim(const float &timeStep) {
 	update_angle_to_target();
 
-	if (current_angle - target_angle > -(get_rotation_speed() * get_game()->get_time_modifier())
-			&& current_angle - target_angle < get_rotation_speed() * get_game()->get_time_modifier())
+	if (current_angle - target_angle > -(get_rotation_speed() * timeStep)
+			&& current_angle - target_angle < get_rotation_speed() * timeStep)
 		current_angle = target_angle;
 
 	else if (current_angle != target_angle) {
 		if (target_angle > current_angle + 180)
-			rotation_modifier = -get_rotation_speed() * get_game()->get_time_modifier();
+			rotation_modifier = -get_rotation_speed() * timeStep;
 
 		else if (current_angle > target_angle
 				&& current_angle - target_angle < 180)
-			rotation_modifier = -get_rotation_speed() * get_game()->get_time_modifier();
+			rotation_modifier = -get_rotation_speed() * timeStep;
 
 		else
-			rotation_modifier = get_rotation_speed() * get_game()->get_time_modifier();
+			rotation_modifier = get_rotation_speed() * timeStep;
 	}
 	rotate(rotation_modifier);
 }
@@ -238,9 +239,9 @@ void BaseTower::find_new_target() {
 	}
 }
 
-void BaseTower::reload(int delta) {
+void BaseTower::reload(const float &timeStep) {
 	if (!loaded) {
-		reload_timer -= delta;
+		reload_timer -= timeStep;
 		if (reload_timer <= 0) {
 			reload_timer = get_reloading_time();
 			loaded = true;
@@ -309,19 +310,19 @@ void BaseTower::update_boost() {
 	}
 }
 
-void BaseTower::update(int delta) {
+void BaseTower::update(const float &timeStep) {
 	///Updates the state of the current tower which includes rotating, reloading and finding new targets.
 
 	EnemyList* enemy_list = get_game()->get_enemies();
 	EnemyList::iterator iter_object = enemy_list->begin();
-	reload(delta);
+	reload(timeStep);
 	if (!enemy_list->empty()) {
 		rotation_modifier = 0.0;
 		format_angle(current_angle);
 		find_new_target();
 		if (current_target != NULL) {
 			if (target_in_range(current_target)) {
-				update_aim(delta);
+				update_aim(timeStep);
 				try_shoot();
 			}
 		}
@@ -373,7 +374,7 @@ float BaseTower::get_rotation_speed() {
 int BaseTower::get_spread() {
 	return twr_impl != NULL ? twr_impl->get_spread() : 0;
 }
-int BaseTower::get_reloading_time() {
+const float BaseTower::get_reloading_time() {
 	return twr_impl != NULL ? twr_impl->get_reloading_time() : 0;
 }
 float BaseTower::get_boostmod() {

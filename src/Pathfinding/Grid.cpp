@@ -67,7 +67,7 @@ void Grid::create_grid(int _width, int _height) {
 	connect_neighbors();
 }
 
-void Grid::add_tile(GridPosition position) {
+void Grid::add_tile(const GridPosition &position) {
 	/**
 	 * Adds a tile to the grid. Do not forget to add neighbors to this tile!
 	 */
@@ -77,7 +77,7 @@ void Grid::add_tile(GridPosition position) {
 	}
 }
 
-Tile* Grid::get_tile(GridPosition position) {
+Tile* Grid::get_tile(const GridPosition &position) {
 	return tile_map[position];
 }
 
@@ -93,7 +93,7 @@ Tile* Grid::get_tile_from_mouse(int mouse_x, int mouse_y) {
 	return get_tile(GridPosition(y / TILESIZE, x / TILESIZE));
 }
 
-bool Grid::is_placeable_tile(Tile* tile) {
+bool Grid::is_placeable_tile(Tile* tile) const {
 	/**
 	 * This function does not tell the whole truth whether a tile is placeable or not!
 	 * The pathfinding algorithm must run in order to really ensure that a tower is
@@ -104,19 +104,19 @@ bool Grid::is_placeable_tile(Tile* tile) {
 			&& tile != get_portal_tile();
 }
 
-int Grid::get_tile_x_position(Tile* tile) {
+int Grid::get_tile_x_position(Tile* tile) const {
 	return tile->get_position().second * TILESIZE;
 }
 
-int Grid::get_tile_y_position(Tile* tile) {
+int Grid::get_tile_y_position(Tile* tile) const {
 	return tile->get_position().first * TILESIZE;
 }
 
-BaseTower* Grid::get_tower(GridPosition position) {
+BaseTower* Grid::get_tower(const GridPosition &position) {
 	return tile_map[position]->get_tower();
 }
 
-void Grid::set_tower(GridPosition position, BaseTower* tower) {
+void Grid::set_tower(const GridPosition &position, BaseTower* tower) {
 	tile_map[position]->set_tower(tower);
 }
 
@@ -124,11 +124,11 @@ Path* Grid::get_path(Tile* start, Tile* dest) {
 	return (Path*)(pathfinding->get_path(start, dest));
 }
 
-Tile* Grid::get_start_tile() {
+Tile* Grid::get_start_tile() const {
 	return start_tile;
 }
 
-Tile* Grid::get_portal_tile() {
+Tile* Grid::get_portal_tile() const {
 	return portal_tile;
 }
 

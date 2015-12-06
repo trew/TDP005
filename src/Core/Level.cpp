@@ -72,9 +72,9 @@ EnemyList Level::get_new_wave(Game* game) {
 	return enemies_in_wave;
 }
 
-bool Level::time_to_send_wave(int delta) {
+bool Level::time_to_send_wave(const float &timeStep) {
 	if (!last_enemy_sent) return false;
-	timer -= delta;
+	timer -= (int)(timeStep * 1000.f); // TODO change timer to use seconds instead of milliseconds
 	return timer <= 0;
 }
 

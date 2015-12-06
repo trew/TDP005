@@ -17,14 +17,14 @@ class Tile : public Node {
 public:
 	virtual ~Tile();
 
-	BaseTower* get_tower();
-	void set_tower(BaseTower*);
+	BaseTower* const get_tower() const;
+	void set_tower(BaseTower* const);
 
-	GridPosition get_position();
-	float get_center_x();
-	float get_center_y();
-	int get_x_pixel_pos();
-	int get_y_pixel_pos();
+	const GridPosition& get_position() const;
+	const float get_center_x() const;
+	const float get_center_y() const;
+	const int get_x_pixel_pos() const;
+	const int get_y_pixel_pos() const;
 private:
 	Tile(int row, int col);
 	GridPosition position;

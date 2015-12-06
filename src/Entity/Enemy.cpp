@@ -10,6 +10,7 @@
 #include <Entity/Enemy_Specifics.h>
 #include <iostream>
 #include <SDL2_gfxPrimitives.h>
+#include <Core/GameEngine.h>
 
 Enemy::Enemy(Game* game, EnemyType _type, int x_pos_in, int y_pos_in, int width_in, int height_in, int new_level): Sprite(game)
 {
@@ -211,7 +212,7 @@ Direction Enemy::move_dir()
 	return direction;
 }
 
-void Enemy::move(int delta)
+void Enemy::move(const float &timeStep)
 {
 	/**
 	 * Execute movement in movement direction.
@@ -221,26 +222,26 @@ void Enemy::move(int delta)
 	{
 	case RIGHT:
 	{
-		x_vel = move_speed * get_game()->get_time_modifier();
+		x_vel = move_speed * timeStep;
 		y_vel = 0;
 		break;
 	}
 	case LEFT:
 	{
-		x_vel = -(move_speed * get_game()->get_time_modifier());
+		x_vel = -(move_speed * timeStep);
 		y_vel = 0;
 		break;
 	}
 	case UP:
 	{
 		x_vel = 0;
-		y_vel = -(move_speed * get_game()->get_time_modifier());
+		y_vel = -(move_speed * timeStep);
 		break;
 	}
 	case DOWN:
 	{
 		x_vel = 0;
-		y_vel = move_speed * get_game()->get_time_modifier();
+		y_vel = move_speed * timeStep;
 		break;
 	}
 	default:
@@ -303,12 +304,12 @@ void Enemy::move(int delta)
 
 }
 
-void Enemy::update(int delta)
+void Enemy::update(const float &timeStep)
 {
 	/// Checks if enemy is dead and execute movement.
 	if (health <= 0)
 		killed = true;
-	move(delta);
+	move(timeStep);
 }
 
 void Enemy::take_damage(int dmg)

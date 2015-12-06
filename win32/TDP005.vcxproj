@@ -91,6 +91,8 @@
     <ClInclude Include="..\include\Core\ConfigFile.h" />
     <ClInclude Include="..\include\Core\Define.h" />
     <ClInclude Include="..\include\Core\Game.h" />
+    <ClInclude Include="..\include\Core\GameEngine.h" />
+    <ClInclude Include="..\include\Core\GameSettings.h" />
     <ClInclude Include="..\include\Core\Level.h" />
     <ClInclude Include="..\include\Entity\Enemy.h" />
     <ClInclude Include="..\include\Entity\Enemy_Specifics.h" />
@@ -111,20 +113,27 @@
     <ClInclude Include="..\include\Pathfinding\Node.h" />
     <ClInclude Include="..\include\Pathfinding\Tile.h" />
     <ClInclude Include="..\include\resource.h" />
+    <ClInclude Include="..\include\State\GameOverState.h" />
+    <ClInclude Include="..\include\State\GamePlayState.h" />
+    <ClInclude Include="..\include\State\HighscoreState.h" />
+    <ClInclude Include="..\include\State\InGameMenuState.h" />
+    <ClInclude Include="..\include\State\IntroState.h" />
+    <ClInclude Include="..\include\State\MainMenuState.h" />
+    <ClInclude Include="..\include\State\State.h" />
+    <ClInclude Include="..\include\State\ViewHelpState.h" />
     <ClInclude Include="..\include\UI\Button.h" />
     <ClInclude Include="..\include\UI\Sound.h" />
     <ClInclude Include="..\include\UI\Text.h" />
+    <ClInclude Include="..\include\Utils\FPS.h" />
+    <ClInclude Include="..\include\Utils\Log.h" />
     <ClInclude Include="..\include\Utils\Timer.h" />
+    <ClInclude Include="..\include\Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Core\ConfigFile.cpp" />
     <ClCompile Include="..\src\Core\Game.cpp" />
-    <ClCompile Include="..\src\Core\Game_Cleanup.cpp" />
+    <ClCompile Include="..\src\Core\GameEngine.cpp" />
     <ClCompile Include="..\src\Core\Game_HandleEvent.cpp" />
-    <ClCompile Include="..\src\Core\Game_HandleSelection.cpp" />
-    <ClCompile Include="..\src\Core\Game_Init.cpp" />
-    <ClCompile Include="..\src\Core\Game_Optionbox.cpp" />
-    <ClCompile Include="..\src\Core\Game_Render.cpp" />
     <ClCompile Include="..\src\Core\Game_UpdateState.cpp" />
     <ClCompile Include="..\src\Core\Level.cpp" />
     <ClCompile Include="..\src\Entity\Enemy.cpp" />
@@ -144,10 +153,20 @@
     <ClCompile Include="..\src\Pathfinding\Grid.cpp" />
     <ClCompile Include="..\src\Pathfinding\Node.cpp" />
     <ClCompile Include="..\src\Pathfinding\Tile.cpp" />
+    <ClCompile Include="..\src\State\GameOverState.cpp" />
+    <ClCompile Include="..\src\State\GamePlayState.cpp" />
+    <ClCompile Include="..\src\State\HighscoreState.cpp" />
+    <ClCompile Include="..\src\State\InGameMenuState.cpp" />
+    <ClCompile Include="..\src\State\IntroState.cpp" />
+    <ClCompile Include="..\src\State\MainMenuState.cpp" />
+    <ClCompile Include="..\src\State\State.cpp" />
+    <ClCompile Include="..\src\State\ViewHelpState.cpp" />
     <ClCompile Include="..\src\UI\Button.cpp" />
     <ClCompile Include="..\src\UI\Sound.cpp" />
     <ClCompile Include="..\src\UI\Text.cpp" />
+    <ClCompile Include="..\src\Utils\FPS.cpp" />
     <ClCompile Include="..\src\Utils\Timer.cpp" />
+    <ClCompile Include="..\src\Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\assets\gfx\icon\icon128.ico" />

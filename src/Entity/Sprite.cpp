@@ -96,7 +96,7 @@ float Sprite::get_distance_to_edge(Sprite* target)
 	return (float)distance - extraLength;
 }
 
-bool Sprite::intersects(Sprite* him) {
+bool Sprite::intersects(const Sprite* const him) {
 	/**
 	 * Perform simple bounding box detection.
 	 * Returns true if the other sprite intersects with us
@@ -110,7 +110,7 @@ bool Sprite::intersects(Sprite* him) {
 	return true;
 }
 
-bool Sprite::overlaps(int x, int y) {
+bool Sprite::overlaps(const int &x, const int &y) {
 	/**
 	 * Returns true if the pixel can be found within this sprite
 	 */
@@ -190,12 +190,12 @@ float Sprite::get_y()
 	///Returns y position
 	return y_pos;
 }
-int Sprite::get_height()
+const int Sprite::get_height() const
 {
 	///Returns height of Sprite
 	return height;
 }
-int Sprite::get_width()
+const int Sprite::get_width() const
 {
 	///Returns width of Sprite
 	return width;
@@ -240,7 +240,7 @@ void Sprite::update_text(std::string){
 
 /*****************************************************************************************/
 /* Virtuals */
-void Sprite::update(int delta)
+void Sprite::update(const float&)
 {
 	///Pure virtual
 }
