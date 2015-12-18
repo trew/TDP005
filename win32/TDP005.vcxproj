@@ -86,6 +86,9 @@
       <AdditionalLibraryDirectories>$(SDL2_PATH)\lib\x86;$(SDL2_IMAGE_PATH)\lib\x86;$(SDL2_TTF_PATH)\lib\x86;$(SDL2_GFX_PATH)\lib\x86;$(SDL2_MIXER_PATH)\lib\x86;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_gfx.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>generate-version-header.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Core\ConfigFile.h" />
@@ -128,6 +131,7 @@
     <ClInclude Include="..\include\Utils\Log.h" />
     <ClInclude Include="..\include\Utils\Timer.h" />
     <ClInclude Include="..\include\Utils\Utils.h" />
+    <ClInclude Include="..\include\version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Core\ConfigFile.cpp" />
