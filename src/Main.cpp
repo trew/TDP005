@@ -3,7 +3,7 @@
  * (C) 2010 - Samuel Andersson, Björn Ekberg
  */
 
-#ifdef _WIN32
+#if defined(_WIN32) && (_DEBUG)
 #define _CRTDBG_MAP_ALLOC
 #include <cstdlib>
 #include <crtdbg.h>
@@ -22,9 +22,13 @@ int main(int argc, char *argv[])
 	time(&t);
 	srand((unsigned int) t);
 
+#ifdef _DEBUG
 	Log::reportingLevel() = logDEBUG;
+#else
+	Log::reportingLevel() = logWARNING;
+#endif
 	FILE* logFd;
-	fopen_s(&logFd, "output.log", "w");
+	fopen_s(&logFd, "log.txt", "w");
 	Output2FILE::stream() = logFd;
 
 	int ret = 0;
@@ -41,7 +45,7 @@ int main(int argc, char *argv[])
 	delete game;
 
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined (_DEBUG)
 	_CrtDumpMemoryLeaks();
 #endif
 	return ret;
