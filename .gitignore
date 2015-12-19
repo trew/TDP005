@@ -12,3 +12,5 @@ settings.cfg
 *.user
 build/*.exe
 *.aps
+output.log
+include/version.h

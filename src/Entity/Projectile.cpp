@@ -8,22 +8,24 @@
 #include <Entity/Projectile.h>
 #include <Core/Game.h>
 #include <Core/Define.h>
+#include <core/GameEngine.h>
 #include <cmath>
 #include <string>
 #include <iostream>
 
-Projectile::Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double move_speed_in, int damage_in, double splash_area_in, int time)
+Projectile::Projectile(Game* game, std::string file, float x_pos_in, float y_pos_in, double direction_in , double move_speed_in, int damage_in, double splash_area_in, const float &time)
 :Sprite(game), movespeed(move_speed_in), direction(direction_in), damage(damage_in), splash_area(splash_area_in)
 {
 	dead = false;
-	if(splash_area>0) {
+	if(splash_area > 0)
+	{
 		type = PROJECTILE_BOMB;
-		life_time = time;
 	}
-	else {
+	else
+	{
 		type = PROJECTILE;
-		life_time = time;
 	}
+	life_time = time;
 	x_pos = x_pos_in;
 	y_pos = y_pos_in;
 	texture = load_image(game->getRenderer(), file.c_str());
@@ -43,16 +45,16 @@ double Projectile::conv_degree_to_radian(double a)
 }
 
 
-void Projectile::update(int delta)
+void Projectile::update(const float &timeStep)
 {
-	life_time -= delta;
+	life_time -= timeStep;
 	if (life_time < 0) {
 		dead = true;
 		return;
 	}
 	double radianAngle = conv_degree_to_radian(direction);
-	x_pos += (float)((movespeed * cos(radianAngle)) * get_game()->get_time_modifier());
-	y_pos += (float)((movespeed * sin(radianAngle)) * get_game()->get_time_modifier());
+	x_pos += (float)((movespeed * cos(radianAngle)) * timeStep);
+	y_pos += (float)((movespeed * sin(radianAngle)) * timeStep);
 }
 
 void Projectile::draw(SDL_Renderer* renderer) {

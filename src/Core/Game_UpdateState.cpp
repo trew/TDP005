@@ -6,100 +6,38 @@
  */
 
 #include <Core/Game.h>
+#include <State/MainMenuState.h>
+#include <State/IntroState.h>
+#include <State/HighscoreState.h>
+#include <State/GameOverState.h>
+#include <State/InGameMenuState.h>
+#include <State/GamePlayState.h>
+#include <Utils/Utils.h>
 #include <iostream>
+#include <Core/GameEngine.h>
 
-std::string Game::itos(int i)
-{
-	std::stringstream s_stream;
-	s_stream << i;
-	std::string tmp;
-	s_stream >> tmp;
-	return tmp;
-}
-
-std::string Game::get_lives_str() {
-	return itos(lives);
-}
-
-std::string Game::get_money_str() {
-	std::string return_str = "$";
-	return return_str.append(itos(money));
-}
-std::string Game::get_score_str() {
-	return itos(score);
-}
-std::string Game::get_level_str() {
-	std::string tmp = "Wave: ";
-	return tmp.append(itos(level_control->get_level()));
-}
-std::string Game::get_timer_str() {
-	if (level_control->time_before_next_wave() == -1) return "Press N for next wave";
-	std::string tmp = "Next wave in: ";
-	return (tmp.append(itos(level_control->time_before_next_wave())));
-}
-
-void Game::update_lives() {
-	lives_text->update_text(get_lives_str());
-	lives_text->set_x(menu_money_score->get_x() + 50);
-}
-
-void Game::update_money() {
-	money_text->update_text(get_money_str());
-	money_text->set_x(menu_money_score->get_x() + (180 - money_text->get_width()) );
-}
-
-void Game::update_score() {
-	score_text->update_text(get_score_str());
-	score_text->set_x(menu_money_score->get_x() + (180 - score_text->get_width()) );
-}
-void Game::update_level() {
-	level_text->update_text(get_level_str());
-}
-void Game::update_timer() {
-	if (DEBUGMODE) return;
-	timer = level_control->time_before_next_wave();
-	if(timer == old_timer) return;
-	old_timer = timer;
-	timer_text->update_text(get_timer_str());
-	timer_text->set_x((float)(590 - timer_text->get_width()));
-}
 void Game::update_boost() {
 	if (need_boost_update) {
 		for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++) {
 			(*iter_tower)->update_boost();
 		}
+
 		need_boost_update = false;
 	}
-
 }
 
 void Game::get_rewards(Enemy* enemy) {
 	score += enemy->get_reward_score();
 	money += enemy->get_reward_money();
-	update_score();
-	update_money();
 }
 
-void Game::update(int delta)
+void Game::update(const float &timeStep)
 {
-	int mx, my;
-	Uint8 mousestate = SDL_GetMouseState(&mx, &my);
-	if (mousestate & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-		sound_btn_repeat_value -= delta;
-		if (sound_btn_repeat_value < 0) {
-			sound_btn_repeat_value = sound_btn_repeat_delay;
-			if (sound_button->overlaps(mx, my)) {
-				handle_soundbutton(mx, my);
-			}
-		}
-	}
-
-	if (game_state != GAMEPLAY_RUNNING) {
+	if (gamePlayState->getSubState() != GAMEPLAY_RUNNING) {
 		update_boost();
 		return;
 	}
 
-	update_timer();
 	iter_enemy = enemy_list.begin();
 	while(iter_enemy != enemy_list.end())
 	{
@@ -108,7 +46,7 @@ void Game::update(int delta)
 			(*iter_enemy)->update_path();
 		}
 
-		(*iter_enemy)->update(delta);
+		(*iter_enemy)->update(timeStep);
 
 		if ((*iter_enemy)->is_killed())						//Enemy was killed
 		{
@@ -139,23 +77,21 @@ void Game::update(int delta)
 			}
 			else
 			{
-				std::string str = "Your score: ";
-				str.append(itos(score));
-				gameover_score_text->update_text(str);
+				gameOverState->setScore(score);
+				highscoreState->setScore(score);
 
-				if(!read_highscores_from_file() || (get_highscore_pos() != -1))
+				if (highscoreState->isQualifyingScore(score))
 				{
 					SFX_new_highscore->play();
-					game_state = SET_HIGHSCORE;
+					getEngine()->setState(highscoreState);
+					highscoreState->setInternalState(ENTER);
 				}
 				else
 				{
 					SFX_game_over->play();
-					game_state = GAMEOVER;
+					getEngine()->setState(gameOverState);
 				}
 			}
-
-			update_lives();
 
 			for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 			{
@@ -182,7 +118,7 @@ void Game::update(int delta)
 
 	for (iter_tower = tower_list.begin(); iter_tower != tower_list.end(); iter_tower++)
 	{
-		(*iter_tower)->update(delta);
+		(*iter_tower)->update(timeStep);
 	}
 
 	ProjectileList new_projectiles;
@@ -190,7 +126,7 @@ void Game::update(int delta)
 	while (iter_projectile != projectile_list.end())
 	{
 		bool projectileIteratorUpdated = false;
-		(*iter_projectile)->update(delta);
+		(*iter_projectile)->update(timeStep);
 
 		float p_x, p_y; // Projectile X and Y position
 		int p_w, p_h;
@@ -277,6 +213,8 @@ void Game::update(int delta)
 			(enemy_list.back()->get_x() >= 0 && !level_control->last_enemy_is_sent()) ) {
 		level_control->set_last_enemy_sent();
 	}
-	if (level_control->time_to_send_wave(delta))
-		send_new_wave();
+	if (level_control->time_to_send_wave(timeStep))
+	{
+		sendNewWave();
+	}
 }

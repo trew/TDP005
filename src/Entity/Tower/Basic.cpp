@@ -10,9 +10,9 @@
 namespace towers {
 
 Basic::Basic(SDL_Renderer* renderer) : Tower(renderer) {
-	level_1 = {1.2f, 20, 3, 350.f,  700,  550.f, 0,  70, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
-	level_2 = {1.5f, 35, 3, 400.f,  600,  575.f, 0, 400, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
-	level_3 = {2.0f, 80, 3, 500.f,  450,  600.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
+	level_1 = {1.2f, 20, 3, 350.f,  0.7f,  550.f, 0,  70, 0, "./gfx/tower/tower-basic-lvl1.png", "./gfx/tower/cannon-basic.png"};
+	level_2 = {1.5f, 35, 3, 400.f,  0.6f,  575.f, 0, 400, 0, "./gfx/tower/tower-basic-lvl2.png", "./gfx/tower/cannon-basic.png"};
+	level_3 = {2.0f, 80, 3, 500.f,  0.45f,  600.f, 0,   0, 0, "./gfx/tower/tower-basic-lvl3.png", "./gfx/tower/cannon-basic.png"};
 	level = 1;
 	update_data(level_1);
 	sell_value = 25;
@@ -29,7 +29,7 @@ void Basic::update_informationtext() {
 		add_row_to_information_text("Damage: " + itos(get_damage()));
 	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
-	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
+	add_row_to_information_text("Reload: " + itos((int)(get_reloading_time() * 1000.f)) + "ms");
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + itos(get_cost_upgrade()));
 	add_row_to_information_text("Sell value: " + itos(get_sell_value() / 2));

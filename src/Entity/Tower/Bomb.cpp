@@ -11,9 +11,9 @@ namespace towers {
 
 Bomb::Bomb(SDL_Renderer* renderer) : Tower(renderer)  {
 	level = 1;
-	level_1 = {1.0f, 20, 3, 300.f, 2000, 200.f, 0,  70, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
-	level_2 = {1.5f, 35, 3, 350.f, 1800, 250.f, 0, 400, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
-	level_3 = {2.0f, 60, 3, 400.f, 1600, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
+	level_1 = {1.0f, 20, 3, 300.f, 2.f, 200.f, 0,  70, 0, "./gfx/tower/tower-bomb-lvl1.png", "./gfx/tower/cannon-bomb.png"};
+	level_2 = {1.5f, 35, 3, 350.f, 1.8f, 250.f, 0, 400, 0, "./gfx/tower/tower-bomb-lvl2.png", "./gfx/tower/cannon-bomb.png"};
+	level_3 = {2.0f, 60, 3, 400.f, 1.6f, 300.f, 0,   0, 0, "./gfx/tower/tower-bomb-lvl3.png", "./gfx/tower/cannon-bomb.png"};
 	update_data(level_1);
 	sell_value = 25;
 	setBaseTexture(Sprite::load_image(renderer, level_1.base_surface_location));
@@ -29,7 +29,7 @@ void Bomb::update_informationtext() {
 		add_row_to_information_text("Damage: " + itos(get_damage()));
 	if (get_range_in_pixels() > 0)
 		add_row_to_information_text("Range: " + ftos(get_range()));
-	add_row_to_information_text("Reload: " + itos(get_reloading_time()) + "ms");
+	add_row_to_information_text("Reload: " + itos((int)(get_reloading_time() * 1000.f)) + "ms");
 	if (get_cost_upgrade() > 0)
 		add_row_to_information_text("Upgrade cost: " + itos(get_cost_upgrade()));
 	add_row_to_information_text("Sell value: " + itos(get_sell_value() / 2));

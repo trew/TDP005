@@ -40,7 +40,7 @@ public:
 	void draw_health_bar(SDL_Renderer* renderer);
 
 	EnemyType get_type();
-	void update(int delta);										///< Update state of enemy
+	void update(const float &timeStep) override;										///< Update state of enemy
 	void take_damage(int dmg);							///< Recieve damage
 	bool is_killed() { return killed; }					///< Is enemy killed by player?
 	bool has_reached_goal() { return reached_goal; }	///< Has enemy reached its goal?
@@ -66,7 +66,7 @@ private:
 	Tile* current_destination;
 
 	Direction move_dir();		///< Move direction
-	void move(int delta);		///< Execute movement
+	void move(const float &timeStep);		///< Execute movement
 
 	float x_vel, y_vel;
 	float move_speed;

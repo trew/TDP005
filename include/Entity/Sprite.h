@@ -15,11 +15,12 @@
 #include <vector>
 #include <string>
 
-class Sprite;
 class BaseTower;
 class Enemy;
 class Projectile;
 class Button;
+class Game;
+class Sprite;
 typedef std::list<Sprite*> Sprite_List;
 typedef std::list<BaseTower*> TowerList;
 typedef std::list<Enemy*> EnemyList;
@@ -34,7 +35,6 @@ typedef std::pair<int, int> GridPosition;
  *
  */
 
-class Game;
 class Sprite {
 public:
 	/* Constructor & destructor */
@@ -60,20 +60,20 @@ public:
 	float get_center_y();
 	float get_x();		///<returns x position
 	float get_y();		///<Returns y position
-	int get_height();		///<Returns height of Sprite
-	int get_width();		///<Returns width of Sprite
+	const int get_height() const;		///<Returns height of Sprite
+	const int get_width() const;		///<Returns width of Sprite
 
 	/* Virtual functions for all inherited objects */
 	virtual void draw(SDL_Renderer* renderer);
 	virtual void draw(SDL_Renderer* renderer, int x, int y);
 	int get_int_type();		///<Returns type
-	float get_distance_to(Sprite *s); ///<Pure virtual
+	float get_distance_to(Sprite *s);
 	float get_distance_to_edge(Sprite* s);
 
-	virtual void update(int delta);			///<Pure virtual
+	virtual void update(const float &timeStep);
 
-	virtual bool intersects(Sprite*);
-	virtual bool overlaps(int x, int y);
+	virtual bool intersects(const Sprite* const);
+	virtual bool overlaps(const int &x, const int &y);
 
 	/* Text specific */
 	virtual void update_text(std::string);		///<Pure virtual

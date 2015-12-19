@@ -15,7 +15,7 @@ namespace towers {
 Tower::Tower(SDL_Renderer* _renderer) {
 	renderer = _renderer;
 	spread = 10;
-	base_reloading_time = reloading_time = 0;
+	base_reloading_time = reloading_time = 0.f;
 	projectile_speed = 0.0f;
 	boostmod = 0.0f;
 	base_damage = damage = 0;
@@ -180,16 +180,25 @@ float Tower::get_rotation_speed() {
 int Tower::get_spread() {
 	return spread;
 }
-int Tower::get_reloading_time() {
+
+const float Tower::get_reloading_time() const
+{
 	return reloading_time;
 }
-void Tower::set_reloading_time(int time) {
-	if (time < 10)
-		time = 10;
-	reloading_time = time;
+
+void Tower::set_reloading_time(const float &time)
+{
+	float newTime = time;
+	if (newTime < 0.01f)
+	{
+		newTime = 0.01f;
+	}
+	reloading_time = newTime;
 	update_informationtext();
 }
-int Tower::get_base_reloading_time() const {
+
+const float Tower::get_base_reloading_time() const
+{
 	return base_reloading_time;
 }
 
