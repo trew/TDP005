@@ -5,7 +5,7 @@
 #define MyAppPublisher "A15 Entertainment"
 #define MyAppExeName "TDP005.exe"
 #define OutputDir SourcePath
-#define AppVersion "1.3"
+#define AppVersion GetFileVersion('..\win32\Release\TDP005.exe')
 
 #define SDL2_PATH GetEnv('SDL2_PATH')
 #define SDL2_IMAGE_PATH GetEnv('SDL2_IMAGE_PATH')
@@ -43,6 +43,7 @@ Source: "..\assets\fonts\*"; DestDir: "{app}\fonts"; Flags: ignoreversion
 Source: "..\assets\gfx\*"; DestDir: "{app}\gfx"; Flags: ignoreversion recursesubdirs
 Source: "..\assets\snd\*"; DestDir: "{app}\snd"; Flags: ignoreversion
 Source: "..\LICENCE.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\CREDITS.md"; DestDir: "{app}"; Flags: ignoreversion
 ; SDL2
 Source: "{#SDL2_PATH}\lib\x86\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; SDL2 Image

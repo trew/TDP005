@@ -1,2 +1,6 @@
+#define VER_FILE_VERSION 1, 0, 0
+#define VER_FILE_VERSION_STR "1.0.0"
+#define VER_PRODUCT_VERSION VER_FILE_VERSION
+#define VER_PRODUCT_VERSION_STR VER_FILE_VERSION_STR
 const char* const FULL_VERSION = "1.0.0-dev";
 const char* const VERSION = "1.0.0";
