@@ -93,7 +93,7 @@ bool GamePlayState::init()
 
 	SFX_cant_build = new Sound("./snd/SFX_1.wav", false, 0);
 
-	sound_btn_repeat_delay = 0.25f;
+	sound_btn_repeat_delay = 0.13f;
 	sound_btn_repeat_value = sound_btn_repeat_delay;
 
 	map = new Sprite(game, "./gfx/map/map.png", 0, 0, GRIDWIDTH, GRIDHEIGHT);
@@ -926,8 +926,8 @@ void GamePlayState::update(const float &timeStep)
 					if (my >= btn->get_y() + 6 && my <= btn->get_y() + 19)
 					{
 						// this is the plus sign, increase volume
-						bool wasDisabled = !Sound::enabled();
-						Sound::set_volume(Sound::get_volume() + 1);
+						bool wasDisabled = !Sound::isSoundEnabled();
+						Sound::setVolume(Sound::getVolume() + 1);
 						if (wasDisabled)
 						{
 							LOG_DEBUG << "Turning on music";
@@ -935,7 +935,7 @@ void GamePlayState::update(const float &timeStep)
 						}
 						else
 						{
-							LOG_DEBUG << "New music volume: " << Sound::get_volume();
+							LOG_DEBUG << "New music volume: " << Sound::getVolume();
 						}
 
 						sound_btn_repeat_value = sound_btn_repeat_delay;
@@ -943,16 +943,16 @@ void GamePlayState::update(const float &timeStep)
 					else if (my >= btn->get_y() + 22 && my <= btn->get_y() + 35)
 					{
 						// this is the minus sign, decrease volume
-						if (Sound::get_volume() > 0)
+						if (Sound::getVolume() > 0)
 						{
-							if (Sound::set_volume(Sound::get_volume() - 1) == 0)
+							if (Sound::setVolume(Sound::getVolume() - 1) == 0)
 							{
 								LOG_DEBUG << "Turning off music";
 								game->setMusicPlaying(false);
 							}
 							else
 							{
-								LOG_DEBUG << "New music volume: " << Sound::get_volume();
+								LOG_DEBUG << "New music volume: " << Sound::getVolume();
 							}
 						}
 

@@ -115,7 +115,7 @@ bool Game::init()
 	getEngine()->setState(introState);
 
 	music = new Sound("./snd/Ultrasyd_Lonesome_Robot.ogg", true, -1);
-	Sound::set_volume(sound_volume);
+	Sound::setVolume(sound_volume);
 	if (music_enabled)
 	{
 		music->play();
@@ -173,7 +173,7 @@ void Game::cleanup()
 
 	LOG_INFO << "Saving Config File";
 	config->setValue<bool>("fullscreen", false);
-	config->setValue<int>("sound_volume", Sound::get_volume());
+	config->setValue<int>("sound_volume", Sound::getVolume());
 	config->setValue<bool>("grid", gamePlayState->isGridVisible());
 	config->save();
 	delete config;
