@@ -50,7 +50,7 @@ bool MainMenuState::handleEvent(const SDL_Event &ev)
 	int m_x, m_y;
 	SDL_GetMouseState(&m_x, &m_y);
 
-	if (ev.key.type == SDL_MOUSEBUTTONUP && ev.button.button == SDL_BUTTON_LEFT)
+	if (ev.key.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_LEFT)
 	{
 		for (ButtonList::iterator it = buttons.begin(); it != buttons.end(); it++)
 		{
