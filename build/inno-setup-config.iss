@@ -5,7 +5,7 @@
 #define MyAppPublisher "A15 Entertainment"
 #define MyAppExeName "TDP005.exe"
 #define OutputDir SourcePath
-#define AppVersion GetFileVersion('..\win32\Release\TDP005.exe')
+#define AppVersion GetStringFileInfo('..\win32\Release\TDP005.exe', 'ProductVersion')
 
 #define SDL2_PATH GetEnv('SDL2_PATH')
 #define SDL2_IMAGE_PATH GetEnv('SDL2_IMAGE_PATH')
