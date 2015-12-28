@@ -3,6 +3,11 @@
 #include <Utils/Utils.h>
 #include <Utils/Log.h>
 
+std::string getHighscoreFile()
+{
+  return Utils::getAppDataDirectory("highscore.txt");
+}
+
 bool HighscoreState::init()
 {
 	internalState = SHOW;
@@ -263,7 +268,7 @@ bool HighscoreState::readHighscoresFromFile()
 	}
 
 	std::ifstream file_in;
-	file_in.open("highscore");
+	file_in.open(getHighscoreFile());
 	if (!file_in)
 	{
 		LOG_DEBUG << "Highscore file does not exist. Using default values";
@@ -312,7 +317,7 @@ void HighscoreState::writeHighscoreToFile()
 {
 	LOG_DEBUG << "Writing highscores to file";
 	std::ofstream fout;
-	fout.open("highscore");
+	fout.open(getHighscoreFile());
 
 	int score_count = 0;
 	for (HighscoreList::iterator it = highscores.begin(); it != highscores.end(); it++)

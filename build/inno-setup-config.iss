@@ -65,10 +65,9 @@ Source: "{#SDL2_MIXER_PATH}\lib\x86\libogg-0.dll"; DestDir: "{app}"; Flags: igno
 Source: "vcredist_x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 [UninstallDelete]
-Type: files; Name: "{app}\settings.cfg"
-Type: files; Name: "{app}\highscore"
 Type: files; Name: "{userappdata}\{#MyAppName}\settings.cfg"
-Type: files; Name: "{userappdata}\{#MyAppName}\highscore"
+Type: files; Name: "{userappdata}\{#MyAppName}\highscore.txt"
+Type: files; Name: "{userappdata}\{#MyAppName}\log.txt"
 Type: dirifempty; Name: "{userappdata}\{#MyAppName}"
 
 [Icons]

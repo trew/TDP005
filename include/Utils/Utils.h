@@ -11,6 +11,8 @@ namespace Utils
 std::string itos(int i);
 std::string ftos(float);
 const bool isArrowKey(const SDL_Event &ev);
+std::string getAppDataDirectory(std::string);
+
 }
 
 #endif
