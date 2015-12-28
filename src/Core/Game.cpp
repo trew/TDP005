@@ -62,7 +62,7 @@ Game::~Game(){
 void Game::parseConfig()
 {
 	LOG_INFO << "Parsing config file";
-	config = new ConfigFile("settings.cfg");
+	config = new ConfigFile(Utils::getAppDataDirectory("settings.cfg"));
 	sound_volume = config->getValue<int>("sound_volume", 35);
 }
 

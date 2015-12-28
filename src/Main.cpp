@@ -14,6 +14,7 @@
 #include <ctime>
 #include <memory>
 #include <Utils/Log.h>
+#include <Utils/Utils.h>
 
 int main(int argc, char *argv[])
 {
@@ -28,8 +29,12 @@ int main(int argc, char *argv[])
 	Log::reportingLevel() = logWARNING;
 #endif
 	FILE* logFd;
-	fopen_s(&logFd, "log.txt", "w");
-	Output2FILE::stream() = logFd;
+  std::string logFile = Utils::getAppDataDirectory("log.txt");
+  errno_t err = fopen_s(&logFd, logFile.c_str(), "w");
+  if (err == 0)
+  {
+  	Output2FILE::stream() = logFd;
+  }
 
 	int ret = 0;
 	Game* game = new Game();

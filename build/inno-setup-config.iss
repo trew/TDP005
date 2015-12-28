@@ -5,7 +5,7 @@
 #define MyAppPublisher "A15 Entertainment"
 #define MyAppExeName "TDP005.exe"
 #define OutputDir SourcePath
-#define AppVersion GetFileVersion('..\win32\Release\TDP005.exe')
+#define AppVersion GetStringFileInfo('..\win32\Release\TDP005.exe', 'ProductVersion')
 
 #define SDL2_PATH GetEnv('SDL2_PATH')
 #define SDL2_IMAGE_PATH GetEnv('SDL2_IMAGE_PATH')
@@ -62,10 +62,13 @@ Source: "{#SDL2_MIXER_PATH}\lib\x86\libvorbis-0.dll"; DestDir: "{app}"; Flags: i
 Source: "{#SDL2_MIXER_PATH}\lib\x86\libvorbisfile-3.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SDL2_MIXER_PATH}\lib\x86\libogg-0.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "vcredist_x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 [UninstallDelete]
-Type: files; Name: "{app}\settings.cfg"
-Type: files; Name: "{app}\highscore"
+Type: files; Name: "{userappdata}\{#MyAppName}\settings.cfg"
+Type: files; Name: "{userappdata}\{#MyAppName}\highscore.txt"
+Type: files; Name: "{userappdata}\{#MyAppName}\log.txt"
+Type: dirifempty; Name: "{userappdata}\{#MyAppName}"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -74,4 +77,39 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{tmp}\vcredist_x86.exe"; Check: VCRedistNeedsInstall
 
+[Code]
+#IFDEF UNICODE
+  #DEFINE AW "W"
+#ELSE
+  #DEFINE AW "A"
+#ENDIF
+type
+  INSTALLSTATE = Longint;
+const
+  INSTALLSTATE_INVALIDARG = -2;  // An invalid parameter was passed to the function.
+  INSTALLSTATE_UNKNOWN = -1;     // The product is neither advertised or installed.
+  INSTALLSTATE_ADVERTISED = 1;   // The product is advertised but not installed.
+  INSTALLSTATE_ABSENT = 2;       // The product is installed for a different user.
+  INSTALLSTATE_DEFAULT = 5;      // The product is installed for the current user.
+
+  // Visual C++ 2013 Redistributable 12.0.21005
+  VC_2013_REDIST_X86_MIN = '{13A4EE12-23EA-3371-91EE-EFB36DDFFF3E}';
+  VC_2013_REDIST_X64_MIN = '{A749D8E6-B613-3BE3-8F5F-045C84EBA29B}';
+
+  VC_2013_REDIST_X86_ADD = '{F8CFEB22-A2E7-3971-9EDA-4B11EDEFC185}';
+  VC_2013_REDIST_X64_ADD = '{929FBD26-9020-399B-9A7A-751D61F0B942}';
+
+function MsiQueryProductState(szProduct: string): INSTALLSTATE; 
+  external 'MsiQueryProductState{#AW}@msi.dll stdcall';
+
+function VCVersionInstalled(const ProductID: string): Boolean;
+begin
+  Result := MsiQueryProductState(ProductID) = INSTALLSTATE_DEFAULT;
+end;
+
+function VCRedistNeedsInstall: Boolean;
+begin
+  Result := not ((VCVersionInstalled(VC_2013_REDIST_X86_MIN) and VCVersionInstalled(VC_2013_REDIST_X86_ADD)));
+end;
